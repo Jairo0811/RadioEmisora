@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.27428.2015
+# Visual Studio Version 18
+VisualStudioVersion = 18.6.11828.311 oobstable
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProyectoFinalDCU", "ProyectoFinalDCU\ProyectoFinalDCU.csproj", "{A141C13B-269A-4D1F-875C-FB8EC0AC38D3}"
 EndProject

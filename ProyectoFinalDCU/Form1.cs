@@ -1,92 +1,199 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Drawing;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace ProyectoFinalDCU
 {
     public partial class Form1 : Form
     {
+        private readonly List<Emisora> emisoras = new List<Emisora>
+{
+    new Emisora("Mortal 104.9 FM", "Urbano - Hip Hop", ""),
+    new Emisora("Cima 100.5 FM", "Pop - Baladas", ""),
+    new Emisora("Fuego 90.1 FM", "Urbano - Reggaetón", ""),
+    new Emisora("Escándalo 102.5 FM", "Variada", ""),
+    new Emisora("Disco 106.1 FM", "Pop - Disco", ""),
+    new Emisora("Radio Disney 97.3 FM", "Pop - Juvenil", ""),
+    new Emisora("Radio Popular 950 AM", "Noticias - Informativa", ""),
+    new Emisora("Z 101.3 FM", "Noticias - Opinión", ""),
+    new Emisora("Primera 88.1 FM", "Variada", ""),
+    new Emisora("Alofoke 99.3 FM", "Urbano - Entretenimiento", ""),
+    new Emisora("Independencia 93.3 FM", "Variada", ""),
+    new Emisora("La Mega 97.9 FM", "Urbano - Tropical", ""),
+
+    // Prueba técnica para validar reproducción
+    new Emisora("Radio de Prueba", "Prueba", "https://stream.live.vc.bbcmedia.co.uk/bbc_world_service")
+};
+        private List<Emisora> emisorasFiltradas;
+
         public Form1()
         {
             InitializeComponent();
+
+            txtBuscar.Text = "Buscar emisora...";
+            txtBuscar.ForeColor = Color.FromArgb(150, 160, 185);
+
+            emisorasFiltradas = new List<Emisora>(emisoras);
+            CargarEmisoras(emisorasFiltradas);
+
+            lblEstado.Text = "EN ESPERA";
+            lblEmisoraActual.Text = "Selecciona FM";
+            lblCategoria.Text = "Radio dominicana";
+            lblAhoraSuena.Text = "🎵 Ahora suena: ninguna emisora";
         }
 
+        private void CargarEmisoras(List<Emisora> lista)
+        {
+            ListadoDeEmisoras.Items.Clear();
+
+            foreach (Emisora emisora in lista)
+                ListadoDeEmisoras.Items.Add(emisora.Nombre);
+
+            ListadoDeEmisoras.SelectedIndex = -1;
+        }
+
+        private void EscucharEmisora_Click(object sender, EventArgs e)
+        {
+            if (ListadoDeEmisoras.SelectedIndex < 0)
+            {
+                MessageBox.Show("Selecciona una emisora.", "Aviso", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            Emisora emisoraSeleccionada = emisorasFiltradas[ListadoDeEmisoras.SelectedIndex];
+
+            if (string.IsNullOrWhiteSpace(emisoraSeleccionada.Url))
+            {
+                MessageBox.Show(
+                    "Esta emisora todavía no tiene un stream directo configurado.",
+                    "Stream no disponible",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Information
+                );
+
+                lblEstado.Text = "STREAM NO DISPONIBLE";
+                lblEstado.ForeColor = Color.FromArgb(220, 180, 60);
+                return;
+            }
+
+            try
+            {
+                lblEstado.Text = "CONECTANDO";
+                lblEstado.ForeColor = Color.FromArgb(45, 180, 255);
+
+                axWindowsMediaPlayer1.URL = emisoraSeleccionada.Url;
+                axWindowsMediaPlayer1.Ctlcontrols.play();
+
+                lblEstado.Text = "REPRODUCIENDO";
+                lblEstado.ForeColor = Color.FromArgb(40, 220, 120);
+
+                lblEmisoraActual.Text = emisoraSeleccionada.Nombre;
+                lblCategoria.Text = emisoraSeleccionada.Categoria;
+                lblAhoraSuena.Text = "🎵 Ahora suena: " + emisoraSeleccionada.Nombre;
+            }
+            catch (Exception ex)
+            {
+                lblEstado.Text = "ERROR";
+                lblEstado.ForeColor = Color.FromArgb(220, 60, 75);
+
+                MessageBox.Show(
+                    "No se pudo reproducir la emisora.\n\nDetalle: " + ex.Message,
+                    "Error de reproducción",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Error
+                );
+            }
+        }
+
+        private void btnDetener_Click(object sender, EventArgs e)
+        {
+            axWindowsMediaPlayer1.Ctlcontrols.stop();
+
+            lblEstado.Text = "DETENIDO";
+            lblEstado.ForeColor = Color.FromArgb(220, 60, 75);
+            lblAhoraSuena.Text = "🎵 Ahora suena: ninguna emisora";
+        }
+
+        private void btnActualizar_Click(object sender, EventArgs e)
+        {
+            txtBuscar.Text = "Buscar emisora...";
+            txtBuscar.ForeColor = Color.FromArgb(150, 160, 185);
+
+            emisorasFiltradas = new List<Emisora>(emisoras);
+            CargarEmisoras(emisorasFiltradas);
+
+            lblEstado.Text = "LISTA ACTUALIZADA";
+            lblEstado.ForeColor = Color.FromArgb(45, 180, 255);
+        }
+
+        private void btnFavoritos_Click(object sender, EventArgs e)
+        {
+            MessageBox.Show(
+                "Función de favoritos pendiente para la versión 2.1.",
+                "Favoritos",
+                MessageBoxButtons.OK,
+                MessageBoxIcon.Information
+            );
+        }
+
+        private void btnAcercaDe_Click(object sender, EventArgs e)
+        {
+            FrmAcercaDe acercaDe = new FrmAcercaDe();
+            acercaDe.ShowDialog();
+        }
+
+        private void btnSalir_Click(object sender, EventArgs e)
+        {
+            Application.Exit();
+        }
 
         private void ListadoDeEmisoras_SelectedIndexChanged(object sender, EventArgs e)
         {
-            ListadoDeEmisoras.Items.Add("Radio Popular 950 AM");
-            ListadoDeEmisoras.Items.Add("Pimera 88.1 FM");
-            ListadoDeEmisoras.Items.Add("Fuego 90.1 FM");
-            ListadoDeEmisoras.Items.Add("Radio Cima 100.5 FM");
-            ListadoDeEmisoras.Items.Add("Z 101.3 FM");
-            ListadoDeEmisoras.Items.Add("Escandalo 102.5 FM");
-            ListadoDeEmisoras.Items.Add("Mortal 104.9 FM");
-            ListadoDeEmisoras.Items.Add("La Bacana 105.9 FM FM");
-            ListadoDeEmisoras.Items.Add("Disco 106.1 FM");
-        }
-
-        private void ListadoDeEmisoras_Click(object sender, EventArgs e)
-        {
-            string URL = string.Empty;
-
-            switch (ListadoDeEmisoras.SelectedIndex)
+            if (ListadoDeEmisoras.SelectedIndex >= 0)
             {
-                case 1:
-                    URL = "http://www.radios.com.do/popular-santo-domingo/";
-                    break;
+                Emisora emisoraSeleccionada = emisorasFiltradas[ListadoDeEmisoras.SelectedIndex];
 
-                case 2:
-                    URL = "http://www.radios.com.do/#primera-88-1-fm";
-                    break;
+                lblEstado.Text = "SELECCIONADA";
+                lblEstado.ForeColor = Color.FromArgb(45, 180, 255);
 
-                case 3:
-                    URL = "http://www.radios.com.do/fuego-90-fm/";
-                    break;
-
-                case 4:
-                    URL = "http://www.radios.com.do/cima/";
-                    break;
-
-                case 5:
-                    URL = "http://www.radios.com.do/la-z/";
-                    break;
-
-                case 6:
-                    URL = "http://www.radios.com.do/escandalo-fm-santo-domingo/";
-                    break;
-
-                case 7:
-                    URL = "http://www.mortal1049.com/";
-                    break;
-
-                case 8:
-                    URL = "http://www.radios.com.do/la-bakana-105-9/";
-                    break;
-
-                case 9:
-                    URL = "http://www.radios.com.do/disco/";
-                    break;
-
-                default:
-                    MessageBox.Show("Selecciona una emisora", "ERROR", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    break;
-
+                lblEmisoraActual.Text = emisoraSeleccionada.Nombre;
+                lblCategoria.Text = emisoraSeleccionada.Categoria;
             }
-            if (!URL.Equals("")) axWindowsMediaPlayer1.URL = URL;
         }
 
-        private void Form1_Rezise(object sender, EventArgs e)
+        private void txtBuscar_TextChanged(object sender, EventArgs e)
         {
-            axWindowsMediaPlayer1.Width = this.Width - 30;
-            ListadoDeEmisoras.Width = this.Width - 30;
-            EscucharEmisora.Width = this.Width - 30;
+            if (txtBuscar.Text == "Buscar emisora...")
+                return;
+
+            string texto = txtBuscar.Text.ToLower();
+
+            emisorasFiltradas = emisoras
+                .Where(x => x.Nombre.ToLower().Contains(texto) || x.Categoria.ToLower().Contains(texto))
+                .ToList();
+
+            CargarEmisoras(emisorasFiltradas);
         }
-        
+
+        private void Form1_Resize(object sender, EventArgs e)
+        {
+            // El diseño usa paneles fijos por ahora.
+        }
+    }
+
+    public class Emisora
+    {
+        public string Nombre { get; set; }
+        public string Categoria { get; set; }
+        public string Url { get; set; }
+
+        public Emisora(string nombre, string categoria, string url)
+        {
+            Nombre = nombre;
+            Categoria = categoria;
+            Url = url;
+        }
     }
 }
