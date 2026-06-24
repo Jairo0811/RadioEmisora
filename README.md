@@ -16,7 +16,7 @@ Aplicación de escritorio desarrollada en **C# Windows Forms** para la reproducc
 | 👨‍🎓 Estudiante | Francis Jairo Matías Rosario |
 | 🆔 Matrícula | 2015-2984 |
 | 📖 Asignatura | Diseño Centrado en el Usuario (SOF-010) |
-| 👨‍🏫 Profesor | Juan Martínez |
+| 👨‍🏫 Profesor | Juan Martínez López |
 | 📅 Período Académico | Por confirmar |
 | 🏫 Institución | Instituto Tecnológico de Las Américas (ITLA) |
 
