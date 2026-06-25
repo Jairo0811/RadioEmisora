@@ -1,13 +1,13 @@
 ﻿using System;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
-using System.IO;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Windows;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
+using System.Windows.Threading;
 using RadioEmisoraRD.Helpers;
 using RadioEmisoraRD.Models;
 using RadioEmisoraRD.Services;
@@ -17,6 +17,9 @@ namespace RadioEmisoraRD.ViewModels
     public class MainViewModel : INotifyPropertyChanged
     {
         private readonly MediaPlayerService playerService = new MediaPlayerService();
+        private readonly DispatcherTimer equalizerTimer = new DispatcherTimer();
+        private readonly DispatcherTimer toastTimer = new DispatcherTimer();
+        private readonly Random random = new Random();
 
         private string textoBusqueda = "";
         private string filtroActual = "Todas";
@@ -25,9 +28,15 @@ namespace RadioEmisoraRD.ViewModels
         private string ahoraSuena = "🎵 Ahora suena: ninguna emisora";
         private double volumen = 0.80;
         private bool mostrarDashboard = true;
+        private bool reproduciendo = false;
+        private bool pausado = false;
+        private Visibility toastVisibility = Visibility.Collapsed;
+        private string toastTitulo = "";
+        private string toastMensaje = "";
         private AppConfig config;
 
-        public string FmAmTexto => $"{TotalFM} / {TotalAM}";
+        private double bar1 = 18, bar2 = 28, bar3 = 42, bar4 = 58, bar5 = 42, bar6 = 28, bar7 = 18;
+
         public ObservableCollection<Emisora> TodasLasEmisoras { get; set; }
         public ObservableCollection<Emisora> EmisorasFiltradas { get; set; }
 
@@ -44,7 +53,6 @@ namespace RadioEmisoraRD.ViewModels
         public event Action? RequestAbout;
         public event Action? RequestExit;
 
-
         public MainViewModel()
         {
             config = ConfigService.Cargar();
@@ -55,6 +63,9 @@ namespace RadioEmisoraRD.ViewModels
             foreach (Emisora emisora in TodasLasEmisoras)
                 emisora.Logo = ObtenerRutaLogo(emisora.Logo);
 
+            volumen = config.Volumen;
+            playerService.Volume = volumen;
+
             ReproducirCommand = new RelayCommand(_ => Reproducir());
             DetenerCommand = new RelayCommand(_ => Detener());
             ActualizarCommand = new RelayCommand(_ => Actualizar());
@@ -64,7 +75,15 @@ namespace RadioEmisoraRD.ViewModels
             SalirCommand = new RelayCommand(_ => RequestExit?.Invoke());
             EntrarReproductorCommand = new RelayCommand(_ => EntrarAlReproductor());
 
-            playerService.Volume = volumen;
+            equalizerTimer.Interval = TimeSpan.FromMilliseconds(180);
+            equalizerTimer.Tick += (s, e) => AnimarEcualizador();
+
+            toastTimer.Interval = TimeSpan.FromSeconds(3);
+            toastTimer.Tick += (s, e) =>
+            {
+                ToastVisibility = Visibility.Collapsed;
+                toastTimer.Stop();
+            };
 
             AplicarFavoritosGuardados();
             FiltrarEmisoras();
@@ -122,12 +141,29 @@ namespace RadioEmisoraRD.ViewModels
             {
                 volumen = value;
                 playerService.Volume = volumen;
+                config.Volumen = volumen;
+                ConfigService.Guardar(config);
+
                 OnPropertyChanged();
                 OnPropertyChanged(nameof(VolumenTexto));
             }
         }
 
         public string VolumenTexto => $"{(int)(Volumen * 100)}%";
+
+        public string TextoBotonReproducir
+        {
+            get
+            {
+                if (reproduciendo)
+                    return "⏸ Pausar";
+
+                if (pausado)
+                    return "▶ Continuar";
+
+                return "▶ Reproducir";
+            }
+        }
 
         public string NombreActual => EmisoraSeleccionada?.Nombre ?? "Selecciona FM";
 
@@ -145,8 +181,14 @@ namespace RadioEmisoraRD.ViewModels
                 if (EmisoraSeleccionada == null)
                     return EstadoReproductor;
 
-                if (EstadoReproductor == "REPRODUCIENDO")
-                    return "REPRODUCIENDO";
+                if (reproduciendo)
+                    return "▶ REPRODUCIENDO";
+
+                if (pausado)
+                    return "⏸ PAUSADO";
+
+                if (EstadoReproductor == "DETENIDO")
+                    return "■ DETENIDO";
 
                 return EmisoraSeleccionada.Estado;
             }
@@ -207,22 +249,66 @@ namespace RadioEmisoraRD.ViewModels
         public int TotalEmisoras => TodasLasEmisoras.Count;
         public int TotalFavoritas => TodasLasEmisoras.Count(e => e.EsFavorita);
         public int TotalFiltradas => EmisorasFiltradas.Count;
+        public int TotalFM => TodasLasEmisoras.Count(e => e.Frecuencia.Contains("FM"));
+        public int TotalAM => TodasLasEmisoras.Count(e => e.Frecuencia.Contains("AM"));
+        public int TotalOnline => TodasLasEmisoras.Count(e => e.Frecuencia.Contains("Online"));
+        public string FmAmTexto => $"{TotalFM} / {TotalAM}";
 
         public string UltimaEmisoraTexto =>
             string.IsNullOrWhiteSpace(config.UltimaEmisora)
                 ? "Ninguna todavía"
                 : config.UltimaEmisora;
 
-        public string HistorialTexto
+        public ObservableCollection<string> HistorialDashboard
         {
             get
             {
                 if (config.Historial == null || config.Historial.Count == 0)
-                    return "Sin historial por ahora.";
+                    return new ObservableCollection<string> { "Sin historial por ahora." };
 
-                return string.Join("\n", config.Historial.Take(6).Select(x => "• " + x));
+                return new ObservableCollection<string>(
+                    config.Historial.Take(5).Select(x => "📻 " + x)
+                );
             }
         }
+
+        public Visibility ToastVisibility
+        {
+            get => toastVisibility;
+            set
+            {
+                toastVisibility = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public string ToastTitulo
+        {
+            get => toastTitulo;
+            set
+            {
+                toastTitulo = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public string ToastMensaje
+        {
+            get => toastMensaje;
+            set
+            {
+                toastMensaje = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public double Bar1 { get => bar1; set { bar1 = value; OnPropertyChanged(); } }
+        public double Bar2 { get => bar2; set { bar2 = value; OnPropertyChanged(); } }
+        public double Bar3 { get => bar3; set { bar3 = value; OnPropertyChanged(); } }
+        public double Bar4 { get => bar4; set { bar4 = value; OnPropertyChanged(); } }
+        public double Bar5 { get => bar5; set { bar5 = value; OnPropertyChanged(); } }
+        public double Bar6 { get => bar6; set { bar6 = value; OnPropertyChanged(); } }
+        public double Bar7 { get => bar7; set { bar7 = value; OnPropertyChanged(); } }
 
         private void EntrarAlReproductor()
         {
@@ -233,31 +319,91 @@ namespace RadioEmisoraRD.ViewModels
 
         public void Reproducir()
         {
+            if (reproduciendo)
+            {
+                playerService.Pause();
+
+                reproduciendo = false;
+                pausado = true;
+                EstadoReproductor = "PAUSADO";
+
+                equalizerTimer.Stop();
+                ActualizarEstadoTarjetas();
+
+                OnPropertyChanged(nameof(TextoBotonReproducir));
+                OnPropertyChanged(nameof(EstadoActual));
+
+                MostrarToast("⏸ Pausado", EmisoraSeleccionada?.Nombre ?? "Reproducción pausada");
+                return;
+            }
+
+            if (pausado)
+            {
+                playerService.Resume();
+
+                reproduciendo = true;
+                pausado = false;
+                EstadoReproductor = "REPRODUCIENDO";
+
+                equalizerTimer.Start();
+                ActualizarEstadoTarjetas();
+
+                OnPropertyChanged(nameof(TextoBotonReproducir));
+                OnPropertyChanged(nameof(EstadoActual));
+
+                MostrarToast("▶ Continuando", EmisoraSeleccionada?.Nombre ?? "Reproducción reanudada");
+                return;
+            }
+
             if (EmisoraSeleccionada == null)
             {
                 EstadoReproductor = "SELECCIONA UNA EMISORA";
+                MostrarToast("Aviso", "Selecciona una emisora primero.");
                 return;
             }
 
             if (string.IsNullOrWhiteSpace(EmisoraSeleccionada.StreamUrl))
             {
                 EstadoReproductor = "STREAM NO DISPONIBLE";
+                MostrarToast("Stream no disponible", EmisoraSeleccionada.Nombre);
                 return;
             }
 
             playerService.Play(EmisoraSeleccionada.StreamUrl);
 
+            reproduciendo = true;
+            pausado = false;
             EstadoReproductor = "REPRODUCIENDO";
             AhoraSuena = "🎵 Ahora suena: " + EmisoraSeleccionada.Nombre;
 
             AgregarAlHistorial(EmisoraSeleccionada.Nombre);
+
+            equalizerTimer.Start();
+            ActualizarEstadoTarjetas();
+
+            OnPropertyChanged(nameof(TextoBotonReproducir));
+            OnPropertyChanged(nameof(EstadoActual));
+
+            MostrarToast("▶ Reproduciendo", EmisoraSeleccionada.Nombre);
         }
 
         public void Detener()
         {
             playerService.Stop();
+
+            reproduciendo = false;
+            pausado = false;
             EstadoReproductor = "DETENIDO";
             AhoraSuena = "🎵 Ahora suena: ninguna emisora";
+
+            equalizerTimer.Stop();
+            ResetearEcualizador();
+            ActualizarEstadoTarjetas();
+
+            OnPropertyChanged(nameof(TextoBotonReproducir));
+            OnPropertyChanged(nameof(EstadoActual));
+
+            MostrarToast("⏹ Detenido", "Reproducción detenida.");
         }
 
         public void Actualizar()
@@ -270,6 +416,7 @@ namespace RadioEmisoraRD.ViewModels
             Detener();
 
             EstadoReproductor = "LISTA ACTUALIZADA";
+            MostrarToast("↻ Lista actualizada", "Catálogo restaurado.");
         }
 
         public void AlternarFavorito()
@@ -277,11 +424,11 @@ namespace RadioEmisoraRD.ViewModels
             if (EmisoraSeleccionada == null)
             {
                 AhoraSuena = "☆ Selecciona una emisora para agregarla a favoritos";
+                MostrarToast("Favoritos", "Selecciona una emisora primero.");
                 return;
             }
 
             EmisoraSeleccionada.EsFavorita = !EmisoraSeleccionada.EsFavorita;
-
             GuardarFavoritos();
 
             OnPropertyChanged(nameof(TextoFavorito));
@@ -293,6 +440,11 @@ namespace RadioEmisoraRD.ViewModels
 
             FiltrarEmisoras();
             RefrescarDashboard();
+
+            MostrarToast(
+                EmisoraSeleccionada.EsFavorita ? "★ Favorita agregada" : "☆ Favorita eliminada",
+                EmisoraSeleccionada.Nombre
+            );
         }
 
         private void CambiarFiltro(string filtro)
@@ -382,6 +534,53 @@ namespace RadioEmisoraRD.ViewModels
             return "/Assets/logos/" + archivo;
         }
 
+        private void ActualizarEstadoTarjetas()
+        {
+            foreach (Emisora emisora in TodasLasEmisoras)
+            {
+                emisora.EstaReproduciendo = false;
+                emisora.EstaPausada = false;
+            }
+
+            if (EmisoraSeleccionada != null)
+            {
+                EmisoraSeleccionada.EstaReproduciendo = reproduciendo;
+                EmisoraSeleccionada.EstaPausada = pausado;
+            }
+        }
+
+        private void MostrarToast(string titulo, string mensaje)
+        {
+            ToastTitulo = titulo;
+            ToastMensaje = mensaje;
+            ToastVisibility = Visibility.Visible;
+
+            toastTimer.Stop();
+            toastTimer.Start();
+        }
+
+        private void AnimarEcualizador()
+        {
+            Bar1 = random.Next(14, 42);
+            Bar2 = random.Next(18, 58);
+            Bar3 = random.Next(22, 70);
+            Bar4 = random.Next(28, 78);
+            Bar5 = random.Next(22, 70);
+            Bar6 = random.Next(18, 58);
+            Bar7 = random.Next(14, 42);
+        }
+
+        private void ResetearEcualizador()
+        {
+            Bar1 = 18;
+            Bar2 = 28;
+            Bar3 = 42;
+            Bar4 = 58;
+            Bar5 = 42;
+            Bar6 = 28;
+            Bar7 = 18;
+        }
+
         private void RefrescarVistaActual()
         {
             OnPropertyChanged(nameof(NombreActual));
@@ -400,33 +599,14 @@ namespace RadioEmisoraRD.ViewModels
             OnPropertyChanged(nameof(TotalFM));
             OnPropertyChanged(nameof(TotalAM));
             OnPropertyChanged(nameof(TotalOnline));
-            OnPropertyChanged(nameof(UltimaEmisoraTexto));
-            OnPropertyChanged(nameof(HistorialTexto));
-            OnPropertyChanged(nameof(HistorialDashboard));
             OnPropertyChanged(nameof(FmAmTexto));
+            OnPropertyChanged(nameof(UltimaEmisoraTexto));
+            OnPropertyChanged(nameof(HistorialDashboard));
         }
 
         private void OnPropertyChanged([CallerMemberName] string? propertyName = null)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-        }
-
-
-        public int TotalFM => TodasLasEmisoras.Count(e => e.Frecuencia.Contains("FM"));
-        public int TotalAM => TodasLasEmisoras.Count(e => e.Frecuencia.Contains("AM"));
-        public int TotalOnline => TodasLasEmisoras.Count(e => e.Frecuencia.Contains("Online"));
-
-        public ObservableCollection<string> HistorialDashboard
-        {
-            get
-            {
-                if (config.Historial == null || config.Historial.Count == 0)
-                    return new ObservableCollection<string> { "Sin historial por ahora." };
-
-                return new ObservableCollection<string>(
-                    config.Historial.Take(5).Select(x => "📻 " + x)
-                );
-            }
         }
     }
 }

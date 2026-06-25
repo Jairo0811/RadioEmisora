@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Web;
+﻿using System.Collections.Generic;
 
 namespace RadioEmisoraRD.Models
 {
@@ -9,5 +6,6 @@ namespace RadioEmisoraRD.Models
     {
         public string UltimaEmisora { get; set; } = "";
         public List<string> Historial { get; set; } = new List<string>();
+        public double Volumen { get; set; } = 0.80;
     }
 }

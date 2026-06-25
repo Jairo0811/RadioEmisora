@@ -1,9 +1,13 @@
 {
   "Version": 1,
-  "WorkspaceRootPath": "C:\\Users\\jairo\\OneDrive\\Escritorio\\PROYECTOS DE PROGRAMACION\\RadioEmisora\\RadioEmisoraRD\\",
+  "WorkspaceRootPath": "C:\\Users\\fmatias\\OneDrive - Ministerio de Deportes\\Escritorio\\PROYECTOS\\RadioEmisora\\RadioEmisoraRD\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{58CF1F6D-E051-D82A-7C12-47DA5283664A}|RadioEmisoraRD\\RadioEmisoraRD.csproj|c:\\users\\jairo\\onedrive\\escritorio\\proyectos de programacion\\radioemisora\\radioemisorard\\radioemisorard\\viewmodels\\mainviewmodel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "AbsoluteMoniker": "D:0:0:{58CF1F6D-E051-D82A-7C12-47DA5283664A}|RadioEmisoraRD\\RadioEmisoraRD.csproj|c:\\users\\fmatias\\onedrive - ministerio de deportes\\escritorio\\proyectos\\radioemisora\\radioemisorard\\radioemisorard\\services\\radioservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{58CF1F6D-E051-D82A-7C12-47DA5283664A}|RadioEmisoraRD\\RadioEmisoraRD.csproj|solutionrelative:radioemisorard\\services\\radioservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{58CF1F6D-E051-D82A-7C12-47DA5283664A}|RadioEmisoraRD\\RadioEmisoraRD.csproj|c:\\users\\fmatias\\onedrive - ministerio de deportes\\escritorio\\proyectos\\radioemisora\\radioemisorard\\radioemisorard\\viewmodels\\mainviewmodel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{58CF1F6D-E051-D82A-7C12-47DA5283664A}|RadioEmisoraRD\\RadioEmisoraRD.csproj|solutionrelative:radioemisorard\\viewmodels\\mainviewmodel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     }
   ],
@@ -19,15 +23,27 @@
             {
               "$type": "Document",
               "DocumentIndex": 0,
-              "Title": "MainViewModel.cs",
-              "DocumentMoniker": "C:\\Users\\jairo\\OneDrive\\Escritorio\\PROYECTOS DE PROGRAMACION\\RadioEmisora\\RadioEmisoraRD\\RadioEmisoraRD\\ViewModels\\MainViewModel.cs",
-              "RelativeDocumentMoniker": "RadioEmisoraRD\\ViewModels\\MainViewModel.cs",
-              "ToolTip": "C:\\Users\\jairo\\OneDrive\\Escritorio\\PROYECTOS DE PROGRAMACION\\RadioEmisora\\RadioEmisoraRD\\RadioEmisoraRD\\ViewModels\\MainViewModel.cs",
-              "RelativeToolTip": "RadioEmisoraRD\\ViewModels\\MainViewModel.cs",
-              "ViewState": "AgIAAHoBAAAAAAAAAAAWwJUBAAAxAAAAAAAAAA==",
+              "Title": "RadioService.cs",
+              "DocumentMoniker": "C:\\Users\\fmatias\\OneDrive - Ministerio de Deportes\\Escritorio\\PROYECTOS\\RadioEmisora\\RadioEmisoraRD\\RadioEmisoraRD\\Services\\RadioService.cs",
+              "RelativeDocumentMoniker": "RadioEmisoraRD\\Services\\RadioService.cs",
+              "ToolTip": "C:\\Users\\fmatias\\OneDrive - Ministerio de Deportes\\Escritorio\\PROYECTOS\\RadioEmisora\\RadioEmisoraRD\\RadioEmisoraRD\\Services\\RadioService.cs",
+              "RelativeToolTip": "RadioEmisoraRD\\Services\\RadioService.cs",
+              "ViewState": "AgIAAAIAAAAAAAAAAAAcwBkAAAAOAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-06-25T09:19:31.714Z",
+              "WhenOpened": "2026-06-25T18:14:58.392Z",
               "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "MainViewModel.cs",
+              "DocumentMoniker": "C:\\Users\\fmatias\\OneDrive - Ministerio de Deportes\\Escritorio\\PROYECTOS\\RadioEmisora\\RadioEmisoraRD\\RadioEmisoraRD\\ViewModels\\MainViewModel.cs",
+              "RelativeDocumentMoniker": "RadioEmisoraRD\\ViewModels\\MainViewModel.cs",
+              "ToolTip": "C:\\Users\\fmatias\\OneDrive - Ministerio de Deportes\\Escritorio\\PROYECTOS\\RadioEmisora\\RadioEmisoraRD\\RadioEmisoraRD\\ViewModels\\MainViewModel.cs",
+              "RelativeToolTip": "RadioEmisoraRD\\ViewModels\\MainViewModel.cs",
+              "ViewState": "AgIAAOcBAAAAAAAAAAAIwGMCAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-06-25T17:55:35.32Z"
             }
           ]
         }

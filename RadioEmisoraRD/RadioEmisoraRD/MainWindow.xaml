@@ -5,6 +5,7 @@
         xmlns:hero="clr-namespace:RadioEmisoraRD.Controls.Hero"
         xmlns:player="clr-namespace:RadioEmisoraRD.Controls.Player"
         xmlns:dashboard="clr-namespace:RadioEmisoraRD.Controls.Dashboard"
+        xmlns:toast="clr-namespace:RadioEmisoraRD.Controls.Toast"
         Title="RadioEmisora RD"
         Width="1200"
         Height="720"
@@ -25,8 +26,8 @@
 
             <Grid Grid.Column="1" Margin="35">
                 <Grid.RowDefinitions>
-                    <RowDefinition Height="300"/>
-                    <RowDefinition Height="230"/>
+                    <RowDefinition Height="290"/>
+                    <RowDefinition Height="245"/>
                     <RowDefinition Height="*"/>
                 </Grid.RowDefinitions>
 
@@ -39,7 +40,7 @@
                         CornerRadius="24"
                         Background="#0A1023"
                         Margin="0,25,0,0"
-                        Padding="25">
+                        Padding="22">
 
                     <Grid>
                         <Grid.ColumnDefinitions>
@@ -95,6 +96,11 @@
         </Grid>
 
         <dashboard:DashboardControl Visibility="{Binding DashboardVisibility}"/>
+
+        <toast:ToastControl Visibility="{Binding ToastVisibility}"
+                            HorizontalAlignment="Right"
+                            VerticalAlignment="Bottom"
+                            Margin="0,0,35,35"/>
 
     </Grid>
 </Window>

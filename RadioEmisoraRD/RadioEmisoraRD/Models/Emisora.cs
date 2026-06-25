@@ -1,9 +1,13 @@
-﻿using System.Windows.Media;
+﻿using System.ComponentModel;
+using System.Runtime.CompilerServices;
+using System.Windows.Media;
 
 namespace RadioEmisoraRD.Models
 {
-    public class Emisora
+    public class Emisora : INotifyPropertyChanged
     {
+        private bool estaReproduciendo;
+
         public string Nombre { get; set; }
         public string Frecuencia { get; set; }
         public string Categoria { get; set; }
@@ -13,13 +17,20 @@ namespace RadioEmisoraRD.Models
         public Color ColorTema { get; set; }
         public bool EsFavorita { get; set; }
 
-        public string Estado
+        public bool EstaReproduciendo { get; set; }
+        public bool EstaPausada { get; set; }
+
+        public string EstadoCard
         {
             get
             {
-                return string.IsNullOrWhiteSpace(StreamUrl) ? "● OFFLINE" : "● EN VIVO";
+                if (EstaReproduciendo) return "▶ SONANDO";
+                if (EstaPausada) return "⏸ PAUSADA";
+                return Estado;
             }
         }
+
+        public string Estado => string.IsNullOrWhiteSpace(StreamUrl) ? "● OFFLINE" : "● EN VIVO";
 
         public Emisora(
             string nombre,
@@ -38,6 +49,14 @@ namespace RadioEmisoraRD.Models
             ColorTema = colorTema;
             StreamUrl = streamUrl;
             EsFavorita = false;
+            EstaReproduciendo = false;
+        }
+
+        public event PropertyChangedEventHandler? PropertyChanged;
+
+        private void OnPropertyChanged([CallerMemberName] string? propertyName = null)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
     }
 }

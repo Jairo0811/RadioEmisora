@@ -4,81 +4,103 @@
 
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height="110"/>
-            <RowDefinition Height="95"/>
+            <RowDefinition Height="125"/>
+            <RowDefinition Height="120"/>
         </Grid.RowDefinitions>
 
         <Border Grid.Row="0"
-                CornerRadius="28"
-                Background="#0C1223"
-                Padding="25">
+                CornerRadius="30"
+                Background="{StaticResource CardBackgroundBrush}"
+                Padding="28">
+
             <Grid>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*"/>
-                    <ColumnDefinition Width="270"/>
+                    <ColumnDefinition Width="320"/>
                 </Grid.ColumnDefinitions>
 
                 <StackPanel Orientation="Horizontal"
                             HorizontalAlignment="Center"
                             VerticalAlignment="Center">
 
-                    <Button Content="▶ Reproducir"
+                    <Button Content="{Binding TextoBotonReproducir}"
                             Width="230"
-                            Height="65"
+                            Height="68"
                             Background="{Binding ColorTemaBrush}"
                             Style="{StaticResource PrimaryButton}"
                             Command="{Binding ReproducirCommand}"/>
 
                     <Button Content="⏹ Detener"
                             Width="230"
-                            Height="65"
-                            Background="#E63355"
+                            Height="68"
+                            Background="{StaticResource DangerBrush}"
                             Style="{StaticResource PrimaryButton}"
                             Margin="30,0,0,0"
                             Command="{Binding DetenerCommand}"/>
                 </StackPanel>
 
-                <StackPanel Grid.Column="1"
-                            VerticalAlignment="Center">
-                    <TextBlock Text="{Binding VolumenTexto, StringFormat=🔊 Volumen: {0}}"
-                               Foreground="#AAB4CD"
-                               FontSize="14"
-                               FontWeight="Bold"
-                               Margin="0,0,0,8"/>
+                <Border Grid.Column="1"
+                        Background="#0A1023"
+                        CornerRadius="22"
+                        Padding="18"
+                        VerticalAlignment="Center">
 
-                    <Slider Minimum="0"
-                            Maximum="1"
-                            Value="{Binding Volumen}"
-                            TickFrequency="0.1"
-                            IsSnapToTickEnabled="False"/>
-                </StackPanel>
+                    <StackPanel>
+                        <TextBlock Text="{Binding VolumenTexto, StringFormat=🔊 Volumen: {0}}"
+                                   Foreground="{StaticResource TextSecondaryBrush}"
+                                   FontSize="14"
+                                   FontWeight="Bold"
+                                   Margin="0,0,0,10"/>
+
+                        <Slider Minimum="0"
+                                Maximum="1"
+                                Value="{Binding Volumen}"
+                                TickFrequency="0.1"
+                                IsSnapToTickEnabled="False"/>
+                    </StackPanel>
+                </Border>
             </Grid>
         </Border>
 
         <Border Grid.Row="1"
-                CornerRadius="24"
-                Background="#0C1223"
-                Margin="0,25,0,0"
+                CornerRadius="26"
+                Background="{StaticResource CardBackgroundBrush}"
+                Margin="0,18,0,0"
                 Padding="25">
+
             <Grid>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*"/>
-                    <ColumnDefinition Width="190"/>
+                    <ColumnDefinition Width="270"/>
                 </Grid.ColumnDefinitions>
 
-                <TextBlock Text="{Binding AhoraSuena}"
-                           Foreground="White"
-                           FontSize="22"
-                           FontWeight="Bold"
-                           VerticalAlignment="Center"/>
+                <StackPanel VerticalAlignment="Center">
+                    <TextBlock Text="{Binding EstadoReproductor}"
+                               Foreground="{Binding ColorTemaBrush}"
+                               FontSize="12"
+                               FontWeight="Bold"/>
 
-                <TextBlock Grid.Column="1"
-                           Text="▂▄▆█▇▅▄▂"
-                           Foreground="{Binding ColorTemaBrush}"
-                           FontSize="30"
-                           FontWeight="Bold"
-                           VerticalAlignment="Center"
-                           HorizontalAlignment="Center"/>
+                    <TextBlock Text="{Binding AhoraSuena}"
+                               Foreground="White"
+                               FontSize="22"
+                               FontWeight="Bold"
+                               Margin="0,5,0,0"
+                               TextTrimming="CharacterEllipsis"/>
+                </StackPanel>
+
+                <StackPanel Grid.Column="1"
+                            Orientation="Horizontal"
+                            HorizontalAlignment="Center"
+                            VerticalAlignment="Center">
+
+                    <Rectangle Width="12" Height="{Binding Bar1}" RadiusX="4" RadiusY="4" Fill="{Binding ColorTemaBrush}" Margin="4,0"/>
+                    <Rectangle Width="12" Height="{Binding Bar2}" RadiusX="4" RadiusY="4" Fill="{Binding ColorTemaBrush}" Margin="4,0"/>
+                    <Rectangle Width="12" Height="{Binding Bar3}" RadiusX="4" RadiusY="4" Fill="{Binding ColorTemaBrush}" Margin="4,0"/>
+                    <Rectangle Width="12" Height="{Binding Bar4}" RadiusX="4" RadiusY="4" Fill="{Binding ColorTemaBrush}" Margin="4,0"/>
+                    <Rectangle Width="12" Height="{Binding Bar5}" RadiusX="4" RadiusY="4" Fill="{Binding ColorTemaBrush}" Margin="4,0"/>
+                    <Rectangle Width="12" Height="{Binding Bar6}" RadiusX="4" RadiusY="4" Fill="{Binding ColorTemaBrush}" Margin="4,0"/>
+                    <Rectangle Width="12" Height="{Binding Bar7}" RadiusX="4" RadiusY="4" Fill="{Binding ColorTemaBrush}" Margin="4,0"/>
+                </StackPanel>
             </Grid>
         </Border>
     </Grid>
