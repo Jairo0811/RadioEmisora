@@ -1,15 +1,20 @@
 # 📻 RadioEmisora RD
 
-Aplicación de escritorio desarrollada en **C# Windows Forms** para la reproducción de emisoras de radio dominicanas.
+Aplicación de escritorio para la reproducción de emisoras de radio dominicanas, originalmente desarrollada como proyecto académico en **2018** y completamente **rediseñada y modernizada en WPF (.NET)** siguiendo una arquitectura **MVVM**.
+
+<p align="center">
 
 ![C#](https://skillicons.dev/icons?i=cs)
+![Dotnet](https://skillicons.dev/icons?i=dotnet)
 ![Visual Studio](https://skillicons.dev/icons?i=visualstudio)
 ![Git](https://skillicons.dev/icons?i=git)
 ![Github](https://skillicons.dev/icons?i=github)
 
+</p>
+
 ---
 
-## 📚 Información Académica
+# 📚 Información Académica
 
 | Información | Detalle |
 |------------|---------|
@@ -22,75 +27,120 @@ Aplicación de escritorio desarrollada en **C# Windows Forms** para la reproducc
 
 ---
 
-## 📖 Descripción
+# 📖 Descripción
 
-**RadioEmisora RD** es una aplicación de escritorio desarrollada como proyecto académico para la asignatura **Diseño Centrado en el Usuario (SOF-010)**.
+**RadioEmisora RD** nació como un proyecto académico desarrollado durante la asignatura **Diseño Centrado en el Usuario (SOF-010)** en el Instituto Tecnológico de Las Américas (ITLA).
 
-La aplicación permite seleccionar y reproducir diferentes emisoras de radio de la República Dominicana mediante una interfaz sencilla, intuitiva y fácil de utilizar.
+En **2026**, el proyecto fue retomado para realizar una modernización completa de la aplicación, migrando desde **Windows Forms** hacia **WPF**, incorporando una nueva arquitectura basada en **MVVM**, una interfaz moderna y una estructura de código preparada para futuras funcionalidades.
 
----
-
-## ✨ Características
-
-- 📻 Selección de emisoras dominicanas
-- ▶️ Reproducción de audio integrada
-- 🖥️ Interfaz amigable y sencilla
-- ⚡ Navegación rápida
-- 🎵 Uso del control Windows Media Player
-- 🇩🇴 Enfoque en estaciones radiales dominicanas
+El objetivo es conservar la esencia del proyecto original mientras se aplican buenas prácticas actuales de desarrollo de software para aplicaciones de escritorio.
 
 ---
 
-## 🛠️ Tecnologías Utilizadas
+# ✨ Características
+
+### 🎵 Reproductor
+
+- 📻 Reproducción de emisoras dominicanas
+- ▶️ Controles modernos de reproducción
+- 🔊 Control de volumen
+- 📈 Visualizador tipo ecualizador
+- ⭐ Sistema de favoritos
+- 🕘 Historial de reproducción
+- 💾 Persistencia automática de configuración
+
+---
+
+### 🎨 Interfaz
+
+- 🖥️ Interfaz completamente rediseñada
+- ✨ Dashboard de bienvenida
+- 📂 Arquitectura modular mediante UserControls
+- 📻 Hero dinámico para la emisora seleccionada
+- 📑 Tarjetas de emisoras con logotipos
+- 🔎 Búsqueda en tiempo real
+- 🏷️ Filtros por categoría
+- 🌙 Tema oscuro moderno
+
+---
+
+### ⚙️ Arquitectura
+
+- 🧩 Patrón MVVM
+- 🔄 Data Binding
+- 🎯 RelayCommand
+- 📦 Persistencia en JSON
+- 🖼️ Gestión de recursos WPF
+- ♻️ Componentes reutilizables
+
+---
+
+# 🛠️ Tecnologías Utilizadas
 
 <div align="center">
 
-<img src="https://skillicons.dev/icons?i=cs,visualstudio,git,github" />
+<img src="https://skillicons.dev/icons?i=cs,dotnet,visualstudio,git,github" />
 
 </div>
 
 ### Tecnologías principales
 
 - 💜 C#
-- 🖥️ Windows Forms
-- ⚙️ .NET Framework 4.6.1
-- 🎵 Windows Media Player Control
-- 🧰 Visual Studio
+- 🖥️ WPF (.NET)
+- 🧩 MVVM
+- 📦 JSON
+- 🎵 Windows Media Player
+- 🧰 Visual Studio 2022
 
 ---
 
-## 📂 Estructura del Proyecto
+# 📂 Arquitectura
 
 ```text
-ProyectoFinalDCU/
+RadioEmisoraRD
 │
-├── Form1.cs
-├── Form1.Designer.cs
-├── Form1.resx
-├── Program.cs
-├── App.config
-└── Properties/
+├── Assets/
+│
+├── Controls/
+│   ├── Dashboard/
+│   ├── Hero/
+│   ├── Sidebar/
+│   ├── StationCard/
+│   ├── Player/
+│   └── Toast/
+│
+├── Helpers/
+│
+├── Models/
+│
+├── Services/
+│
+├── ViewModels/
+│
+├── MainWindow.xaml
+├── AboutWindow.xaml
+└── App.xaml
 ```
 
 ---
 
-## 🚀 Instalación
+# 🚀 Instalación
 
-### 1️⃣ Clonar el repositorio
+## 1️⃣ Clonar el repositorio
 
 ```bash
 git clone https://github.com/Jairo0811/RadioEmisora.git
 ```
 
-### 2️⃣ Abrir el proyecto
+## 2️⃣ Abrir la solución
 
-Abrir la solución en **Visual Studio**.
+Abrir **RadioEmisoraRD.sln** utilizando **Visual Studio 2022**.
 
-### 3️⃣ Restaurar dependencias
+## 3️⃣ Restaurar dependencias
 
-Permitir que Visual Studio restaure automáticamente los paquetes necesarios.
+Visual Studio restaurará automáticamente las dependencias necesarias.
 
-### 4️⃣ Ejecutar
+## 4️⃣ Ejecutar
 
 Presionar:
 
@@ -98,7 +148,7 @@ Presionar:
 F5
 ```
 
-o seleccionar:
+o
 
 ```text
 Debug → Start Debugging
@@ -106,26 +156,41 @@ Debug → Start Debugging
 
 ---
 
-## 🎯 Objetivo del Proyecto
+# 🎯 Objetivos del proyecto
 
-Este proyecto fue desarrollado con el propósito de aplicar los principios de:
+Este proyecto busca aplicar principios modernos de ingeniería de software manteniendo el valor académico del desarrollo original.
+
+Entre los principales objetivos se encuentran:
 
 - 👥 Diseño Centrado en el Usuario (DCU)
-- 🎨 Diseño de interfaces gráficas
-- 🧩 Experiencia de usuario (UX)
-- 🖱️ Interacción humano-computador
-- 📻 Integración multimedia en aplicaciones de escritorio
+- 🎨 Diseño moderno de interfaces
+- 🧩 Arquitectura MVVM
+- ⚡ Componentización de la interfaz
+- 📦 Persistencia de datos
+- 💻 Buenas prácticas en aplicaciones WPF
+- 📻 Reproducción multimedia
 
 ---
 
+# 📅 Evolución del proyecto
 
-## 👨‍💻 Autor
-
-### Francis Jairo Matías Rosario
-
+| Año | Versión | Tecnología |
+|------|----------|------------|
+| 2018 | Proyecto Final DCU | Windows Forms |
+| 2026 | RadioEmisora RD 3.0 | WPF + MVVM |
 
 ---
 
-## 📜 Licencia
+# 👨‍💻 Autor
 
-Proyecto desarrollado con fines académicos y educativos.
+## Francis Jairo Matías Rosario
+
+Tecnólogo en Desarrollo de Software
+
+Instituto Tecnológico de Las Américas (ITLA)
+
+---
+
+# 📜 Licencia
+
+Proyecto desarrollado originalmente con fines académicos y posteriormente modernizado como iniciativa personal para la actualización de conocimientos en desarrollo de aplicaciones de escritorio con WPF y arquitectura MVVM.
