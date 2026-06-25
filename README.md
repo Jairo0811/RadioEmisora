@@ -17,7 +17,7 @@ Aplicación de escritorio desarrollada en **C# Windows Forms** para la reproducc
 | 🆔 Matrícula | 2015-2984 |
 | 📖 Asignatura | Diseño Centrado en el Usuario (SOF-010) |
 | 👨‍🏫 Profesor | Juan Martínez López |
-| 📅 Período Académico | Por confirmar |
+| 📅 Período Académico | 2018-C1 |
 | 🏫 Institución | Instituto Tecnológico de Las Américas (ITLA) |
 
 ---
