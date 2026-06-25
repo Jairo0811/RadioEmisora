@@ -1,0 +1,86 @@
+﻿<Window x:Class="RadioEmisoraRD.AboutWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Acerca de"
+        Width="420"
+        Height="560"
+        WindowStartupLocation="CenterOwner"
+        ResizeMode="NoResize"
+        Background="#0C1223">
+
+    <Border Background="#0C1223"
+            CornerRadius="18"
+            Padding="28">
+
+        <StackPanel HorizontalAlignment="Center"
+                    VerticalAlignment="Center">
+
+            <Image Source="/Assets/itla.png"
+                   Width="175"
+                   Height="100"
+                   Stretch="Uniform"
+                   Margin="0,0,0,18"/>
+
+            <TextBlock Text="RadioEmisora RD"
+                       Foreground="White"
+                       FontSize="28"
+                       FontWeight="Bold"
+                       TextAlignment="Center"
+                       Margin="0,0,0,4"/>
+
+            <TextBlock Text="Versión 3.0 (WPF)"
+                       Foreground="#AAB4CD"
+                       FontSize="14"
+                       FontStyle="Italic"
+                       TextAlignment="Center"
+                       Margin="0,0,0,22"/>
+
+            <TextBlock Text="Francis Jairo Matías Rosario"
+                       Foreground="White"
+                       FontSize="14"
+                       TextAlignment="Center"
+                       Margin="0,0,0,6"/>
+
+            <TextBlock Text="Matrícula: 2015-2984"
+                       Foreground="White"
+                       FontSize="14"
+                       TextAlignment="Center"
+                       Margin="0,0,0,24"/>
+
+            <TextBlock Text="Diseño Centrado en el Usuario"
+                       Foreground="White"
+                       FontSize="14"
+                       TextAlignment="Center"
+                       Margin="0,0,0,6"/>
+
+            <TextBlock Text="(SOF-010)"
+                       Foreground="White"
+                       FontSize="14"
+                       TextAlignment="Center"
+                       Margin="0,0,0,24"/>
+
+            <TextBlock Text="Profesor:"
+                       Foreground="White"
+                       FontSize="14"
+                       TextAlignment="Center"
+                       Margin="0,0,0,6"/>
+
+            <TextBlock Text="Juan Martínez López"
+                       Foreground="White"
+                       FontSize="14"
+                       TextAlignment="Center"
+                       Margin="0,0,0,30"/>
+
+            <Button Content="Aceptar"
+                    Width="170"
+                    Height="45"
+                    Foreground="White"
+                    Background="#6A35FF"
+                    FontSize="15"
+                    FontWeight="Bold"
+                    BorderThickness="0"
+                    Cursor="Hand"
+                    Click="btnAceptar_Click"/>
+        </StackPanel>
+    </Border>
+</Window>

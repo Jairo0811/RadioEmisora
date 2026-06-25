@@ -1,0 +1,39 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net10.0-windows</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <UseWPF>true</UseWPF>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="Assets\itla.png" />
+    <None Remove="Assets\logos\cima.png" />
+    <None Remove="Assets\logos\disco.png" />
+    <None Remove="Assets\logos\disney.png" />
+    <None Remove="Assets\logos\escandalo.png" />
+    <None Remove="Assets\logos\fuego.png" />
+    <None Remove="Assets\logos\independencia.png" />
+    <None Remove="Assets\logos\mortal.png" />
+    <None Remove="Assets\logos\popular.png" />
+    <None Remove="Assets\logos\primera.png" />
+    <None Remove="Assets\logos\z101.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="Assets\itla.png" />
+    <Resource Include="Assets\logos\cima.png" />
+    <Resource Include="Assets\logos\disco.png" />
+    <Resource Include="Assets\logos\disney.png" />
+    <Resource Include="Assets\logos\escandalo.png" />
+    <Resource Include="Assets\logos\fuego.png" />
+    <Resource Include="Assets\logos\independencia.png" />
+    <Resource Include="Assets\logos\mortal.png" />
+    <Resource Include="Assets\logos\popular.png" />
+    <Resource Include="Assets\logos\primera.png" />
+    <Resource Include="Assets\logos\z101.png" />
+  </ItemGroup>
+
+</Project>
