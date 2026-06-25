@@ -171,7 +171,7 @@ Este proyecto permitió aplicar conocimientos relacionados con:
 
 **Francis Jairo Matías Rosario**
 
-Tecnólogo en Desarrollo de Software
+Egresado del Tecnólogo en Desarrollo de Software
 
 Instituto Tecnológico de Las Américas (ITLA)
 
