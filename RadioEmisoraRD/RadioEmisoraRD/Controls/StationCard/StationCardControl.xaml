@@ -10,6 +10,18 @@
             BorderThickness="1"
             RenderTransformOrigin="0.5,0.5">
 
+        <Border.ToolTip>
+            <ToolTip>
+                <StackPanel>
+                    <TextBlock Text="{Binding Nombre}" FontWeight="Bold"/>
+                    <TextBlock Text="{Binding Grupo}"/>
+                    <TextBlock Text="{Binding Frecuencia}"/>
+                    <TextBlock Text="{Binding Categoria}"/>
+                    <TextBlock Text="{Binding Provincia}"/>
+                </StackPanel>
+            </ToolTip>
+        </Border.ToolTip>
+
         <Border.Style>
             <Style TargetType="Border">
                 <Setter Property="Background" Value="{StaticResource CardBackgroundBrush}"/>
@@ -32,6 +44,16 @@
                         <Setter Property="Effect">
                             <Setter.Value>
                                 <DropShadowEffect Color="#6A35FF" BlurRadius="22" ShadowDepth="0" Opacity="0.45"/>
+                            </Setter.Value>
+                        </Setter>
+                    </DataTrigger>
+
+                    <DataTrigger Binding="{Binding EstaPausada}" Value="True">
+                        <Setter Property="BorderBrush" Value="{StaticResource GoldBrush}"/>
+                        <Setter Property="BorderThickness" Value="2"/>
+                        <Setter Property="Effect">
+                            <Setter.Value>
+                                <DropShadowEffect Color="#FFD86B" BlurRadius="18" ShadowDepth="0" Opacity="0.35"/>
                             </Setter.Value>
                         </Setter>
                     </DataTrigger>
@@ -61,7 +83,7 @@
                         Margin="10,0,0,0"
                         VerticalAlignment="Center">
 
-                <TextBlock Text="{Binding Estado}"
+                <TextBlock Text="{Binding EstadoCard}"
                            Foreground="#FF5F5F"
                            FontSize="9"
                            FontWeight="Bold"

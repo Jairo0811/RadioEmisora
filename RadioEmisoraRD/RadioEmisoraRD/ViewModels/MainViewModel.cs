@@ -174,6 +174,15 @@ namespace RadioEmisoraRD.ViewModels
 
         public string ProvinciaActual => EmisoraSeleccionada?.Provincia ?? "República Dominicana";
 
+        public string GrupoActual => EmisoraSeleccionada?.Grupo ?? "Grupo no especificado";
+
+        public string StreamEstadoActual =>
+            EmisoraSeleccionada == null
+                ? "Sin stream seleccionado"
+                : string.IsNullOrWhiteSpace(EmisoraSeleccionada.StreamUrl)
+                    ? "Stream no disponible"
+                    : "Streaming online";
+
         public string EstadoActual
         {
             get
@@ -267,7 +276,15 @@ namespace RadioEmisoraRD.ViewModels
                     return new ObservableCollection<string> { "Sin historial por ahora." };
 
                 return new ObservableCollection<string>(
-                    config.Historial.Take(5).Select(x => "📻 " + x)
+                    config.Historial.Take(5).Select(nombre =>
+                    {
+                        Emisora? emisora = TodasLasEmisoras.FirstOrDefault(e => e.Nombre == nombre);
+
+                        if (emisora == null)
+                            return "📻 " + nombre;
+
+                        return $"📻 {emisora.Nombre}  •  {emisora.Frecuencia}  •  {emisora.Grupo}";
+                    })
                 );
             }
         }
@@ -509,7 +526,8 @@ namespace RadioEmisoraRD.ViewModels
                 e.Nombre.ToLower().Contains(filtroTexto) ||
                 e.Categoria.ToLower().Contains(filtroTexto) ||
                 e.Frecuencia.ToLower().Contains(filtroTexto) ||
-                e.Provincia.ToLower().Contains(filtroTexto));
+                e.Provincia.ToLower().Contains(filtroTexto) ||
+                e.Grupo.ToLower().Contains(filtroTexto));
 
             if (FiltroActual == "Favoritas")
                 resultado = resultado.Where(e => e.EsFavorita);
@@ -586,6 +604,8 @@ namespace RadioEmisoraRD.ViewModels
             OnPropertyChanged(nameof(NombreActual));
             OnPropertyChanged(nameof(CategoriaActual));
             OnPropertyChanged(nameof(ProvinciaActual));
+            OnPropertyChanged(nameof(GrupoActual));
+            OnPropertyChanged(nameof(StreamEstadoActual));
             OnPropertyChanged(nameof(EstadoActual));
             OnPropertyChanged(nameof(ColorTemaBrush));
             OnPropertyChanged(nameof(LogoActual));

@@ -52,7 +52,7 @@ namespace RadioEmisoraRD {
                 return;
             }
             _contentLoaded = true;
-            System.Uri resourceLocater = new System.Uri("/RadioEmisoraRD;V1.0.0.0;component/aboutwindow.xaml", System.UriKind.Relative);
+            System.Uri resourceLocater = new System.Uri("/RadioEmisoraRD;component/aboutwindow.xaml", System.UriKind.Relative);
             
             #line 1 "..\..\..\AboutWindow.xaml"
             System.Windows.Application.LoadComponent(this, resourceLocater);

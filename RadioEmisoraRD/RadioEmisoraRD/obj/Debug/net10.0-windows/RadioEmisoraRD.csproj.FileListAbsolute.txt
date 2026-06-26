@@ -75,3 +75,6 @@ C:\Users\fmatias\OneDrive - Ministerio de Deportes\Escritorio\PROYECTOS\RadioEmi
 C:\Users\fmatias\OneDrive - Ministerio de Deportes\Escritorio\PROYECTOS\RadioEmisora\RadioEmisoraRD\RadioEmisoraRD\obj\Debug\net10.0-windows\Themes\Buttons.baml
 C:\Users\fmatias\OneDrive - Ministerio de Deportes\Escritorio\PROYECTOS\RadioEmisora\RadioEmisoraRD\RadioEmisoraRD\obj\Debug\net10.0-windows\Themes\Cards.baml
 C:\Users\fmatias\OneDrive - Ministerio de Deportes\Escritorio\PROYECTOS\RadioEmisora\RadioEmisoraRD\RadioEmisoraRD\obj\Debug\net10.0-windows\Themes\Colors.baml
+C:\Users\jairo\OneDrive\Escritorio\PROYECTOS DE PROGRAMACION\RadioEmisora\RadioEmisoraRD\RadioEmisoraRD\obj\Debug\net10.0-windows\Themes\Buttons.baml
+C:\Users\jairo\OneDrive\Escritorio\PROYECTOS DE PROGRAMACION\RadioEmisora\RadioEmisoraRD\RadioEmisoraRD\obj\Debug\net10.0-windows\Themes\Cards.baml
+C:\Users\jairo\OneDrive\Escritorio\PROYECTOS DE PROGRAMACION\RadioEmisora\RadioEmisoraRD\RadioEmisoraRD\obj\Debug\net10.0-windows\Themes\Colors.baml

@@ -138,8 +138,9 @@
                                         Margin="0,0,0,10">
                                     <TextBlock Text="{Binding}"
                                                Foreground="#DDE5FF"
-                                               FontSize="16"
-                                               FontWeight="SemiBold"/>
+                                               FontSize="15"
+                                               FontWeight="SemiBold"
+                                               TextWrapping="Wrap"/>
                                 </Border>
                             </DataTemplate>
                         </ItemsControl.ItemTemplate>

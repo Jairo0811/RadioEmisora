@@ -52,7 +52,7 @@ namespace RadioEmisoraRD.Controls.Player {
                 return;
             }
             _contentLoaded = true;
-            System.Uri resourceLocater = new System.Uri("/RadioEmisoraRD;V1.0.0.0;component/controls/player/playercontrol.xaml", System.UriKind.Relative);
+            System.Uri resourceLocater = new System.Uri("/RadioEmisoraRD;component/controls/player/playercontrol.xaml", System.UriKind.Relative);
             
             #line 1 "..\..\..\..\..\Controls\Player\PlayerControl.xaml"
             System.Windows.Application.LoadComponent(this, resourceLocater);

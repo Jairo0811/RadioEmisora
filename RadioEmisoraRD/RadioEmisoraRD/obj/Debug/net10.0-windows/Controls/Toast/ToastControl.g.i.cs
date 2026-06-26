@@ -52,7 +52,7 @@ namespace RadioEmisoraRD.Controls.Toast {
                 return;
             }
             _contentLoaded = true;
-            System.Uri resourceLocater = new System.Uri("/RadioEmisoraRD;V1.0.0.0;component/controls/toast/toastcontrol.xaml", System.UriKind.Relative);
+            System.Uri resourceLocater = new System.Uri("/RadioEmisoraRD;component/controls/toast/toastcontrol.xaml", System.UriKind.Relative);
             
             #line 1 "..\..\..\..\..\Controls\Toast\ToastControl.xaml"
             System.Windows.Application.LoadComponent(this, resourceLocater);
