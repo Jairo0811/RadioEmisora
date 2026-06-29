@@ -14,7 +14,7 @@ namespace RadioEmisoraRD.Services
 
                 new Emisora("Cima 100", "100.5 FM", "Pop - Baladas", "Santo Domingo", "Cima 100", "cima.png", Color.FromRgb(40, 130, 255), "https://sonicpanel.streaming10.net:8146/stream"),
 
-                new Emisora("Fuego 90", "90.1 FM", "Urbano - Reggaetón", "Santo Domingo", "Grupo López", "fuego.png", Color.FromRgb(255, 95, 30), "https://radiordomi.com/8390/stream"),
+                new Emisora("Fuego 90", "90.1 FM", "Salsa - Merengue", "Santo Domingo", "Grupo López", "fuego.png", Color.FromRgb(255, 95, 30), "https://radiordomi.com/8390/stream"),
 
                 new Emisora("Escándalo 102", "102.5 FM", "Variada", "Santo Domingo", "RCC Media", "escandalo.png", Color.FromRgb(190, 60, 255), "https://stream-284.surfernetwork.com/iwqlyzpyry1uv?zt=eyJhbGciOiJIUzI1NiJ9.eyJzdHJlYW0iOiJpd3FseXpweXJ5MXV2IiwiaG9zdCI6InN0cmVhbS0yODQuc3VyZmVybmV0d29yay5jb20iLCJydHRsIjo1LCJqdGkiOiJnV3FDWkFDOFJ6ZVBERjBib3ZMNE1nIiwiaWF0IjoxNzgyNDM0Mjc1LCJleHAiOjE3ODI0MzQzMzV9.JDTMGyC__RtjtfpKp8hkKWTNztdlxP5S9R9z1F7Ct58"),
 

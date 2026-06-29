@@ -60,12 +60,13 @@
                         </TextBlock.Style>
                     </TextBlock>
 
-                    <TextBox Text="{Binding TextoBusqueda, UpdateSourceTrigger=PropertyChanged}"
-                             Background="Transparent"
-                             BorderThickness="0"
-                             Foreground="#DDE5FF"
-                             FontSize="15"
-                             Padding="12,8"/>
+                    <TextBox x:Name="txtBuscar"
+         Text="{Binding TextoBusqueda, UpdateSourceTrigger=PropertyChanged}"
+         Background="Transparent"
+         BorderThickness="0"
+         Foreground="#DDE5FF"
+         FontSize="15"
+         Padding="12,8"/>
                 </Grid>
             </Border>
 
@@ -105,9 +106,10 @@
                        VerticalAlignment="Center"/>
 
             <ListBox Grid.Row="4"
-                     ItemsSource="{Binding EmisorasFiltradas}"
-                     SelectedItem="{Binding EmisoraSeleccionada}"
-                     Style="{StaticResource StationListBox}">
+         ItemsSource="{Binding EmisorasFiltradas}"
+         SelectedItem="{Binding EmisoraSeleccionada}"
+         Style="{StaticResource StationListBox}"
+         KeyDown="ListBoxEmisoras_KeyDown">
                 <ListBox.ItemTemplate>
                     <DataTemplate>
                         <station:StationCardControl/>

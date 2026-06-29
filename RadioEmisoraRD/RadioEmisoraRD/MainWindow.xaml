@@ -22,7 +22,7 @@
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
 
-            <sidebar:SidebarControl Grid.Column="0"/>
+            <sidebar:SidebarControl x:Name="Sidebar" Grid.Column="0"/>
 
             <ScrollViewer Grid.Column="1"
                           Margin="35"
