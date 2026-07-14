@@ -7,6 +7,7 @@
         xmlns:dashboard="clr-namespace:RadioEmisoraRD.Controls.Dashboard"
         xmlns:toast="clr-namespace:RadioEmisoraRD.Controls.Toast"
         Title="RadioEmisora RD"
+        Icon="Assets/RadioEmisoraRD.ico"
         Width="1200"
         Height="720"
         MinWidth="900"

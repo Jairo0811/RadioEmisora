@@ -1,135 +1,122 @@
 # 📻 RadioEmisora RD
+> ⭐ Proyecto de modernización de software legado (Legacy Modernization Project)
 
-> Proyecto Final de la asignatura **Diseño Centrado en el Usuario (SOF-010)** desarrollado originalmente en **2018** para el Instituto Tecnológico de Las Américas (ITLA) y completamente modernizado en **2026** utilizando **WPF**, **MVVM** y una arquitectura modular.
+> Modernización completa del proyecto final de la asignatura **Diseño Centrado en el Usuario (SOF-010)** desarrollado originalmente en **2018** para el **Instituto Tecnológico de Las Américas (ITLA)** y rediseñado en **2026** utilizando **WPF**, **MVVM** y una arquitectura modular.
 
-<p align="center">
+<div align="center">
 
-![C#](https://skillicons.dev/icons?i=cs)
-![Dotnet](https://skillicons.dev/icons?i=dotnet)
-![Visual Studio](https://skillicons.dev/icons?i=visualstudio)
-![Git](https://skillicons.dev/icons?i=git)
-![Github](https://skillicons.dev/icons?i=github)
+# 📻 RadioEmisora RD
 
-</p>
+### Tu música, tu compañía
 
----
+<img src="https://skillicons.dev/icons?i=cs,dotnet,visualstudio,git,github"/>
 
-# 🎓 Proyecto Académico
+![Status](https://img.shields.io/badge/Version-3.0-success)
+![Platform](https://img.shields.io/badge/Platform-Windows-blue)
+![Architecture](https://img.shields.io/badge/Architecture-MVVM-purple)
+![License](https://img.shields.io/badge/License-Academic-lightgrey)
 
-Este proyecto corresponde al **Proyecto Final** de la asignatura:
-
-| Información | Detalle |
-|------------|---------|
-| 👨‍🎓 Estudiante | Francis Jairo Matías Rosario |
-| 🆔 Matrícula | 2015-2984 |
-| 📖 Asignatura | Diseño Centrado en el Usuario (SOF-010) |
-| 👨‍🏫 Profesor | Juan Martínez López |
-| 🏫 Institución | Instituto Tecnológico de Las Américas (ITLA) |
-| 📅 Período Académico | 2018-C1 |
-| 🎯 Tipo de Proyecto | Proyecto Final |
+</div>
 
 ---
 
 # 📖 Descripción
 
-**RadioEmisora RD** fue desarrollado originalmente como **Proyecto Final** de la asignatura **Diseño Centrado en el Usuario (SOF-010)** durante el primer cuatrimestre de 2018.
+**RadioEmisora RD** es una aplicación de escritorio para Windows que permite reproducir emisoras de radio dominicanas mediante streaming en línea.
 
-Su objetivo inicial fue diseñar e implementar una aplicación de escritorio que permitiera la reproducción de emisoras de radio dominicanas, aplicando los principios de usabilidad, experiencia de usuario (UX) y diseño de interfaces estudiados durante la asignatura.
+El proyecto fue desarrollado originalmente en **2018** como Proyecto Final de la asignatura **Diseño Centrado en el Usuario (SOF-010)** utilizando **Windows Forms**.
 
-En **2026**, el proyecto fue retomado como iniciativa personal para modernizar completamente su arquitectura y actualizarlo utilizando tecnologías actuales de desarrollo de aplicaciones de escritorio, conservando la idea original pero incorporando una nueva interfaz, una arquitectura basada en MVVM y una mejor organización del código.
+En **2026** fue completamente reconstruido desde cero conservando la idea original, pero implementando una arquitectura moderna basada en **WPF**, **MVVM** y componentes reutilizables.
 
 ---
 
-# 🚀 Evolución del proyecto
+# 🚀 Evolución del Proyecto
 
-## 📌 Versión Original (2018)
+## 📅 2018
 
-Proyecto Final desarrollado con:
+Proyecto original desarrollado con:
 
 - Windows Forms
 - .NET Framework
 - Windows Media Player
-- Diseño clásico de escritorio
+- Interfaz clásica
 
 ---
 
-## 📌 Modernización (2026)
+## 📅 2026
 
-La nueva versión incorpora:
+Nueva versión completamente rediseñada:
 
-- ✅ WPF (.NET)
+- ✅ WPF
 - ✅ Arquitectura MVVM
-- ✅ UserControls reutilizables
-- ✅ Dashboard de bienvenida
-- ✅ Persistencia mediante JSON
-- ✅ Sistema de favoritos
-- ✅ Historial de reproducción
+- ✅ UserControls
+- ✅ Dashboard moderno
+- ✅ Sidebar interactivo
 - ✅ Hero dinámico
-- ✅ Player moderno
-- ✅ Componentes reutilizables
-- ✅ Preparado para futuras animaciones y temas
+- ✅ Reproductor moderno
+- ✅ Persistencia mediante JSON
+- ✅ Favoritos
+- ✅ Historial
+- ✅ Última emisora reproducida
+- ✅ Streams reales
+- ✅ Responsive básico
+- ✅ Atajos de teclado
 
 ---
 
-# ✨ Funcionalidades
+# ✨ Características
 
-## 📻 Reproductor
+## 📻 Reproducción
 
-- Reproducción de emisoras dominicanas
-- Control de reproducción
-- Control de volumen
-- Historial
-- Favoritos
-- Última emisora reproducida
-
-### 🔎 Organización
-
-- Búsqueda en tiempo real
-- Filtros por FM
-- Filtros por AM
-- Filtros Online
-- Filtros por Favoritas
-
-### 🎨 Interfaz
-
-- Dashboard inicial
-- Hero dinámico
-- Sidebar moderno
-- Tarjetas de emisoras
-- Ventana "Acerca de"
-- Tema oscuro
+- Reproducción de emisoras en vivo.
+- Cambiar de emisora automáticamente.
+- Pausar.
+- Continuar.
+- Detener.
+- Control de volumen.
 
 ---
 
-# 🛠 Tecnologías
+## 🔎 Organización
 
-<div align="center">
-
-<img src="https://skillicons.dev/icons?i=cs,dotnet,visualstudio,git,github"/>
-
-</div>
-
-- C#
-- WPF
-- MVVM
-- JSON
-- Windows Media Player
-- Visual Studio 2022
+- Buscar emisoras.
+- Favoritos.
+- Historial.
+- Última emisora reproducida.
+- Filtros:
+  - Todas
+  - Favoritas
+  - FM
+  - AM
+  - Online
 
 ---
 
-# 📂 Arquitectura
+## 🎨 Interfaz
 
-```text
+- Dashboard inicial.
+- Hero dinámico.
+- Sidebar moderna.
+- Tarjetas de emisoras.
+- Tema oscuro.
+- Toasts.
+- Ventana Acerca de.
+
+---
+
+# 🏗 Arquitectura
+
+```
 RadioEmisoraRD
 │
 ├── Assets
+│
 ├── Controls
 │   ├── Dashboard
 │   ├── Hero
+│   ├── Player
 │   ├── Sidebar
 │   ├── StationCard
-│   ├── Player
 │   └── Toast
 │
 ├── Helpers
@@ -144,26 +131,62 @@ RadioEmisoraRD
 
 ---
 
-# 📈 Evolución
+# 🛠 Tecnologías
 
-| Año | Versión | Tecnología |
-|------|----------|------------|
-| 2018 | Proyecto Final DCU | Windows Forms |
-| 2026 | RadioEmisora RD 3.0 | WPF + MVVM |
+- C#
+- WPF
+- MVVM
+- JSON
+- Windows Media Player
+- Visual Studio 2022
+- Git
+- GitHub
 
 ---
 
-# 🎯 Objetivos de aprendizaje
+# 📊 Comparativa
 
-Este proyecto permitió aplicar conocimientos relacionados con:
+| Característica | Proyecto 2018 | RadioEmisora RD 3.0 |
+|----------------|---------------|----------------------|
+| Windows Forms | ✅ | ❌ |
+| WPF | ❌ | ✅ |
+| MVVM | ❌ | ✅ |
+| Streams reales | ⚠️ | ✅ |
+| Dashboard | ❌ | ✅ |
+| Favoritos | ❌ | ✅ |
+| Historial | ❌ | ✅ |
+| Persistencia JSON | ❌ | ✅ |
+| Responsive | ❌ | ✅ |
+| Arquitectura modular | ❌ | ✅ |
 
-- Diseño Centrado en el Usuario (DCU)
-- Diseño de Interfaces Gráficas
-- Experiencia de Usuario (UX)
-- Interacción Humano–Computador
-- Arquitectura MVVM
-- Desarrollo de aplicaciones de escritorio con WPF
-- Organización modular de proyectos
+---
+
+# 🎓 Proyecto Académico
+
+| Información | Detalle |
+|------------|---------|
+| 👨‍🎓 Estudiante | Francis Jairo Matías Rosario |
+| 📖 Asignatura | Diseño Centrado en el Usuario (SOF-010) |
+| 🏫 Institución | Instituto Tecnológico de Las Américas (ITLA) |
+| 📅 Proyecto original | 2018 |
+| 🚀 Modernización | 2026 |
+
+---
+
+# 📂 Estructura del repositorio
+
+```
+RadioEmisora
+│
+├── ProyectoFinalDCU.Legacy
+│
+├── RadioEmisora2.0 (Prototipo)
+│
+├── RadioEmisoraRD
+│
+├── README.md
+└── .gitignore
+```
 
 ---
 
@@ -171,12 +194,12 @@ Este proyecto permitió aplicar conocimientos relacionados con:
 
 **Francis Jairo Matías Rosario**
 
-Egresado del Tecnólogo en Desarrollo de Software
+🎓 Tecnólogo en Desarrollo de Software — ITLA
 
-Instituto Tecnológico de Las Américas (ITLA)
+🎓 Estudiante de Ingeniería de Software — UNAPEC
 
 ---
 
 # 📜 Licencia
 
-Proyecto desarrollado originalmente con fines académicos como **Proyecto Final** de la asignatura **Diseño Centrado en el Usuario (SOF-010)** y posteriormente modernizado como proyecto personal para la actualización de conocimientos en WPF, MVVM y desarrollo moderno de aplicaciones de escritorio.
+Proyecto desarrollado originalmente con fines académicos y posteriormente modernizado como proyecto personal para demostrar conocimientos en **WPF**, **MVVM**, arquitectura de aplicaciones de escritorio y modernización de software legado.
