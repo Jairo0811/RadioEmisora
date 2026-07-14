@@ -9,11 +9,11 @@
 </p>
 
 <p align="center">
+    <img src="https://img.shields.io/badge/ITLA-2018--C1-0057B8?style=for-the-badge"/>
   <img src="https://img.shields.io/badge/Versión-3.0.0-success?style=for-the-badge"/>
   <img src="https://img.shields.io/badge/Plataforma-Windows-0078D4?style=for-the-badge&logo=windows&logoColor=white"/>
   <img src="https://img.shields.io/badge/Arquitectura-MVVM-6A35FF?style=for-the-badge"/>
   <img src="https://img.shields.io/badge/.NET-10.0-512BD4?style=for-the-badge&logo=dotnet&logoColor=white"/>
-  <img src="https://img.shields.io/badge/ITLA-2018--C1-0057B8?style=for-the-badge"/>
 </p>
 
 <p align="center">
