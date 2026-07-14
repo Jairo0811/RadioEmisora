@@ -167,7 +167,9 @@ RadioEmisoraRD
 |------------|---------|
 | 👨‍🎓 Estudiante | Francis Jairo Matías Rosario |
 | 📖 Asignatura | Diseño Centrado en el Usuario (SOF-010) |
+| 👨‍🏫 Profesor | Juan Martínez López |
 | 🏫 Institución | Instituto Tecnológico de Las Américas (ITLA) |
+| 📅 Período Académico | 2018-C1 |
 | 📅 Proyecto original | 2018 |
 | 🚀 Modernización | 2026 |
 
