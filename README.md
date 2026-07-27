@@ -156,21 +156,51 @@ En **2026**, el proyecto fue recuperado y reconstruido desde cero conservando su
 
 ---
 
-## 🧰 Tecnologías utilizadas
+## 🧰 Stack tecnológico
 
-<p align="center">
-  <img src="https://skillicons.dev/icons?i=cs,dotnet,visualstudio,git,github" />
+### 🖥️ Interfaz de escritorio
+
+<p>
+  <img src="https://skillicons.dev/icons?i=cs,dotnet" alt="C# y .NET" />
 </p>
 
-- C#.
-- .NET 10.
-- WPF.
-- MVVM.
-- `System.Windows.Media.MediaPlayer`.
-- JSON.
+- WPF sobre .NET 10.
+- XAML para composición visual.
+- UserControls reutilizables.
+- Temas y estilos compartidos.
+- Diseño adaptable para Windows.
+
+### ⚙️ Lógica de aplicación y arquitectura
+
+- C# como lenguaje principal.
+- Arquitectura MVVM.
+- Separación mediante Models, ViewModels, Services, Controls y Helpers.
+- Comandos reutilizables mediante `RelayCommand`.
+- Enlace de datos y actualización de estado desde ViewModels.
+
+### 📻 Reproducción y servicios
+
+- `System.Windows.Media.MediaPlayer` para reproducción de streams.
+- Servicios de emisoras, favoritos, historial y reproducción.
+- Consumo de transmisiones en vivo mediante conexión a Internet.
+- Gestión centralizada del estado del reproductor.
+
+### 🗄️ Persistencia local
+
+- JSON para configuración y datos locales.
+- Persistencia de volumen, favoritos, historial y última emisora seleccionada.
+- Lectura y escritura local sin dependencia de una base de datos externa.
+
+### 🧰 Herramientas de desarrollo
+
+<p>
+  <img src="https://skillicons.dev/icons?i=visualstudio,git,github" alt="Visual Studio, Git y GitHub" />
+</p>
+
 - Visual Studio 2022.
-- Git.
-- GitHub.
+- SDK de .NET 10.
+- Git para control de versiones.
+- GitHub para alojamiento y documentación del repositorio.
 
 ---
 
