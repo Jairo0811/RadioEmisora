@@ -5,6 +5,10 @@
 </p>
 
 <p align="center">
+  <img src="https://img.shields.io/badge/ITLA-2018--C1-0057B8?style=for-the-badge" alt="ITLA 2018-C1">
+</p>
+
+<p align="center">
   <strong>Aplicación de escritorio para escuchar emisoras de radio mediante streaming en vivo</strong>
 </p>
 
