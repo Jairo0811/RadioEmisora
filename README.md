@@ -170,6 +170,12 @@ La aplicación conserva automáticamente:
   <img src="https://skillicons.dev/icons?i=cs,dotnet" alt="C# y .NET">
 </p>
 
+<p>
+  <img src="https://img.shields.io/badge/WPF-512BD4?style=flat-square&logo=dotnet&logoColor=white" alt="WPF">
+  <img src="https://img.shields.io/badge/XAML-0C54C2?style=flat-square&logo=xml&logoColor=white" alt="XAML">
+  <img src="https://img.shields.io/badge/MVVM-Arquitectura-6C2DC7?style=flat-square" alt="Arquitectura MVVM">
+</p>
+
 - **C#** como lenguaje principal.
 - **WPF** sobre .NET 10.
 - **XAML** para la composición visual.
