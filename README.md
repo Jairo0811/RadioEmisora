@@ -1,7 +1,7 @@
 # 📻 RadioEmisora RD
 
 <p align="center">
-  <img src="RadioEmisoraRD/RadioEmisoraRD/Assets/RadioEmisoraRD.ico" width="180" alt="Logo de RadioEmisora RD">
+  <img src="RadioEmisoraRD/RadioEmisoraRD/Assets/RadioEmisoraRD.ico" width="420" alt="Logo de RadioEmisora RD">
 </p>
 
 <p align="center">
