@@ -1,4 +1,4 @@
-# 📻 RadioEmisora RD
+
 
 <p align="center">
   <img src="RadioEmisoraRD/RadioEmisoraRD/Assets/RadioEmisoraRD.ico" width="420" alt="Logo de RadioEmisora RD">
