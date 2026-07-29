@@ -1,5 +1,3 @@
-
-
 <p align="center">
   <img src="RadioEmisoraRD/RadioEmisoraRD/Assets/RadioEmisoraRD.ico" width="420" alt="Logo de RadioEmisora RD">
 </p>
@@ -52,6 +50,19 @@ El repositorio conserva las distintas etapas del proyecto para documentar su evo
 | 📅 Período académico | 2018-C1 |
 | 🎯 Tipo de proyecto | Proyecto final |
 | 🛠️ Modernización | 2026 |
+
+---
+
+## 🧭 Continuidad académica
+
+Diseño Centrado en el Usuario fue la primera asignatura cursada con el profesor **Juan Martínez López**, como parte de una evolución progresiva en experiencia de usuario y gestión de proyectos de software:
+
+| Orden | Asignatura | Proyecto | Período |
+|---:|---|---|---|
+| 1 | Diseño Centrado en el Usuario (SOF-010) | **RadioEmisora RD** | 2018-C1 |
+| 2 | Administración de Proyectos de Software (SOF-013) | [AdminGest](https://github.com/Jairo0811/AdminGest) | 2018-C3 |
+
+Estos proyectos representan una secuencia académica enfocada en diseño centrado en el usuario, planificación y gestión de proyectos de software. Actualmente están siendo preservados y modernizados como parte del portafolio profesional.
 
 ---
 
@@ -341,18 +352,4 @@ dotnet run --project RadioEmisoraRD/RadioEmisoraRD/RadioEmisoraRD.csproj
 
 Este proyecto fue desarrollado originalmente con fines **académicos** para el ITLA.
 
-La modernización realizada en **2026** tiene como objetivo preservar el proyecto, documentar su evolución y demostrar conocimientos en **WPF**, **MVVM**, arquitectura modular y modernización de software legado.
-
-Los nombres, marcas, logotipos y transmisiones de las emisoras pertenecen a sus respectivos propietarios.
-
----
-
-## 🙌 Agradecimientos
-
-- 🏫 Instituto Tecnológico de Las Américas (ITLA).
-- 👨‍🏫 Prof. Juan Martínez López.
-- 📻 Emisoras y proveedores de streaming incluidos en el proyecto.
-
----
-
-> **Proyecto original de 2018 reconstruido en 2026 para conservar su valor histórico y demostrar la evolución técnica desde Windows Forms hasta una aplicación moderna en WPF con arquitectura MVVM.**
+La modernización realizada en 2026 conserva su propósito educativo y documenta la evolución técnica del proyecto.
