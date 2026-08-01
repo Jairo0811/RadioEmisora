@@ -673,7 +673,7 @@ public sealed class MainViewModel : INotifyPropertyChanged, IDisposable
             var image = new BitmapImage();
             image.BeginInit();
             image.CacheOption = BitmapCacheOption.OnLoad;
-            string source = path.StartsWith("/", StringComparison.Ordinal)
+            string source = path.StartsWith('/')
                 ? $"pack://application:,,,{path}"
                 : path;
             image.UriSource = new Uri(source, UriKind.RelativeOrAbsolute);
