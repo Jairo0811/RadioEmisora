@@ -7,7 +7,7 @@ namespace RadioEmisoraRD.Tests;
 public sealed class PlayerTests
 {
     [TestMethod]
-    public void PlayerStateMachine_TracksEveryRequiredStateWithoutDuplicateEvents()
+    public void PlayerStateMachineTracksEveryRequiredStateWithoutDuplicateEvents()
     {
         var machine = new PlayerStateMachine();
         var observed = new List<PlayerState>();
@@ -37,7 +37,7 @@ public sealed class PlayerTests
     }
 
     [TestMethod]
-    public async Task MediaPlayerService_Play_TransitionsFromConnectingToPlaying()
+    public async Task MediaPlayerServicePlayTransitionsFromConnectingToPlaying()
     {
         var engine = new FakePlaybackEngine();
         var probe = new FakeStreamProbe();
@@ -62,7 +62,7 @@ public sealed class PlayerTests
     }
 
     [TestMethod]
-    public async Task MediaPlayerService_Play_RetriesAnUnavailableStream()
+    public async Task MediaPlayerServicePlayRetriesAnUnavailableStream()
     {
         var engine = new FakePlaybackEngine();
         var probe = new FakeStreamProbe { FailuresBeforeSuccess = 1 };
@@ -80,7 +80,7 @@ public sealed class PlayerTests
     }
 
     [TestMethod]
-    public async Task MediaPlayerService_Play_ReportsErrorWithoutThrowingAfterRetries()
+    public async Task MediaPlayerServicePlayReportsErrorWithoutThrowingAfterRetries()
     {
         var engine = new FakePlaybackEngine();
         var probe = new FakeStreamProbe { FailuresBeforeSuccess = int.MaxValue };
@@ -98,7 +98,7 @@ public sealed class PlayerTests
     }
 
     [TestMethod]
-    public async Task MediaPlayerService_PauseResumeAndStop_KeepSingleEngineSession()
+    public async Task MediaPlayerServicePauseResumeAndStopKeepsSingleEngineSession()
     {
         var engine = new FakePlaybackEngine();
         using var service = new MediaPlayerService(engine, new FakeStreamProbe(), new TestLogger());

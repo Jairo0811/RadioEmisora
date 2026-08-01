@@ -6,8 +6,12 @@ namespace RadioEmisoraRD.Tests;
 [TestClass]
 public sealed class PersistenceTests
 {
+    private static readonly string[] NormalizedHistory = ["Z 101"];
+    private static readonly string[] ExpectedFavorites = ["mortal-1049", "z101-1013"];
+    private static readonly string[] ExpectedHistory = ["Cima 100", "z 101", "Mortal"];
+
     [TestMethod]
-    public void ConfigService_Load_CreatesSafeDefaults()
+    public void ConfigServiceLoadCreatesSafeDefaults()
     {
         using var directory = new TemporaryDirectory();
         var service = new ConfigService(directory.Path, new TestLogger());
@@ -21,7 +25,7 @@ public sealed class PersistenceTests
     }
 
     [TestMethod]
-    public void ConfigService_Save_NormalizesInvalidValues()
+    public void ConfigServiceSaveNormalizesInvalidValues()
     {
         using var directory = new TemporaryDirectory();
         var service = new ConfigService(directory.Path, new TestLogger());
@@ -44,11 +48,11 @@ public sealed class PersistenceTests
         Assert.AreEqual(10, restored.MaxReconnectAttempts);
         Assert.AreEqual(1, restored.ReconnectDelaySeconds);
         Assert.AreEqual(AppConfig.DefaultCatalogUrl, restored.CatalogUrl);
-        CollectionAssert.AreEqual(new[] { "Z 101" }, restored.Historial);
+        CollectionAssert.AreEqual(NormalizedHistory, restored.Historial);
     }
 
     [TestMethod]
-    public void ConfigService_Load_RecoversFromCorruptedJson()
+    public void ConfigServiceLoadRecoversFromCorruptedJson()
     {
         using var directory = new TemporaryDirectory();
         File.WriteAllText(directory.GetPath("config.json"), "{not-json");
@@ -61,7 +65,7 @@ public sealed class PersistenceTests
     }
 
     [TestMethod]
-    public void FavoriteService_Save_DeduplicatesAndPersistsFavorites()
+    public void FavoriteServiceSaveDeduplicatesAndPersistsFavorites()
     {
         using var directory = new TemporaryDirectory();
         var service = new FavoriteService(directory.Path, new TestLogger());
@@ -73,12 +77,12 @@ public sealed class PersistenceTests
 
         Assert.IsTrue(saved, error);
         CollectionAssert.AreEqual(
-            new[] { "mortal-1049", "z101-1013" },
+            ExpectedFavorites,
             restored.ToArray());
     }
 
     [TestMethod]
-    public void FavoriteService_Load_PreservesCorruptedFileAndContinues()
+    public void FavoriteServiceLoadPreservesCorruptedFileAndContinues()
     {
         using var directory = new TemporaryDirectory();
         File.WriteAllText(directory.GetPath("favoritos.json"), "invalid");
@@ -91,7 +95,7 @@ public sealed class PersistenceTests
     }
 
     [TestMethod]
-    public void HistoryService_Register_MovesDuplicatesToFrontAndLimitsCapacity()
+    public void HistoryServiceRegisterMovesDuplicatesToFrontAndLimitsCapacity()
     {
         var config = new AppConfig
         {
@@ -102,7 +106,7 @@ public sealed class PersistenceTests
         HistoryService.Register(config, "Cima 100", 3);
 
         CollectionAssert.AreEqual(
-            new[] { "Cima 100", "z 101", "Mortal" },
+            ExpectedHistory,
             config.Historial);
         Assert.AreEqual("Cima 100", config.UltimaEmisora);
     }

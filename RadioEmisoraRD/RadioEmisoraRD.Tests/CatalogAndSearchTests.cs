@@ -10,7 +10,7 @@ namespace RadioEmisoraRD.Tests;
 public sealed class CatalogAndSearchTests
 {
     [TestMethod]
-    public void RadioService_Filter_SearchesIgnoringCaseAndAccents()
+    public void RadioServiceFilterSearchesIgnoringCaseAndAccents()
     {
         List<Emisora> stations = CreateStations();
 
@@ -21,7 +21,7 @@ public sealed class CatalogAndSearchTests
     }
 
     [TestMethod]
-    public void RadioService_Filter_AppliesFavoriteAndBandFilters()
+    public void RadioServiceFilterAppliesFavoriteAndBandFilters()
     {
         List<Emisora> stations = CreateStations();
         stations[0].EsFavorita = true;
@@ -32,7 +32,7 @@ public sealed class CatalogAndSearchTests
     }
 
     [TestMethod]
-    public void StationCatalogValidator_RejectsDuplicateAndInsecureStations()
+    public void StationCatalogValidatorRejectsDuplicateAndInsecureStations()
     {
         StationCatalog catalog = CreateCatalog(2);
         catalog.Stations.Add(new StationCatalogItem
@@ -56,7 +56,7 @@ public sealed class CatalogAndSearchTests
     }
 
     [TestMethod]
-    public async Task RadioCatalogService_TryUpdate_StoresNewerValidCatalog()
+    public async Task RadioCatalogServiceTryUpdateStoresNewerValidCatalog()
     {
         using var directory = new TemporaryDirectory();
         string localPath = directory.GetPath("local.json");
@@ -80,7 +80,7 @@ public sealed class CatalogAndSearchTests
     }
 
     [TestMethod]
-    public async Task RadioCatalogService_TryUpdate_UsesLocalCatalogWhenNetworkFails()
+    public async Task RadioCatalogServiceTryUpdateUsesLocalCatalogWhenNetworkFails()
     {
         using var directory = new TemporaryDirectory();
         string localPath = directory.GetPath("local.json");
