@@ -32,7 +32,10 @@ jobs:
           cache-dependency-path: RadioEmisoraRD/RadioEmisoraRD.Tests/RadioEmisoraRD.Tests.csproj
 
       - name: Restore
-        run: dotnet restore RadioEmisoraRD/RadioEmisoraRD.slnx
+        shell: pwsh
+        run: |
+          dotnet restore RadioEmisoraRD/RadioEmisoraRD.slnx
+          dotnet restore RadioEmisoraRD/RadioEmisoraRD/RadioEmisoraRD.csproj --runtime win-x64
 
       - name: Build Release
         run: dotnet build RadioEmisoraRD/RadioEmisoraRD.slnx --configuration Release --no-restore --warnaserror
@@ -42,6 +45,9 @@ jobs:
 
       - name: Publish portable build
         run: dotnet publish RadioEmisoraRD/RadioEmisoraRD/RadioEmisoraRD.csproj --configuration Release --no-restore --property:PublishProfile=Portable --output artifacts/portable
+
+      - name: Publish self-contained build
+        run: dotnet publish RadioEmisoraRD/RadioEmisoraRD/RadioEmisoraRD.csproj --configuration Release --no-restore --property:PublishProfile=SelfContained --output artifacts/self-contained
 
       - name: Generate real portfolio media
         run: dotnet run --project RadioEmisoraRD/RadioEmisoraRD/RadioEmisoraRD.csproj --configuration Release --no-build -- --capture-docs "$PWD/artifacts/portfolio-media"
