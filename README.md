@@ -2,10 +2,9 @@
   <img src="docs/logo.jpeg" width="420" alt="Logo de RadioEmisora RD">
 </p>
 
-<h1 align="center">📻 RadioEmisora RD</h1>
+
 
 <p align="center">
-  <strong>Tu radio, tu país.</strong><br>
   Aplicación de escritorio para escuchar emisoras dominicanas mediante streaming en vivo.
 </p>
 
