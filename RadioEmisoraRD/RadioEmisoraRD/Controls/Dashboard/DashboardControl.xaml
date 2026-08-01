@@ -23,8 +23,8 @@
         </Grid>
 
         <Border CornerRadius="34"
-                Margin="55"
-                Padding="48"
+                Margin="40,32"
+                Padding="40,32"
                 BorderBrush="#6A35FF"
                 BorderThickness="1.5">
 
@@ -38,7 +38,7 @@
             <Grid>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="150"/>
+                    <RowDefinition Height="130"/>
                     <RowDefinition Height="Auto"/>
                     <RowDefinition Height="*"/>
                     <RowDefinition Height="Auto"/>
@@ -47,7 +47,7 @@
                 <StackPanel Grid.Row="0">
                     <TextBlock Text="📻 RadioEmisora RD"
                                Foreground="White"
-                               FontSize="46"
+                               FontSize="42"
                                FontWeight="Bold"
                                TextAlignment="Center"/>
 
@@ -55,12 +55,12 @@
                                Foreground="#AAB4CD"
                                FontSize="18"
                                TextAlignment="Center"
-                               Margin="0,8,0,32"/>
+                               Margin="0,6,0,20"/>
                 </StackPanel>
 
                 <UniformGrid Grid.Row="1"
                              Columns="4"
-                             Margin="0,0,0,28">
+                             Margin="0,0,0,20">
 
                     <Border Background="#121A30" CornerRadius="22" Margin="8" Padding="22">
                         <StackPanel>
@@ -94,7 +94,7 @@
                     </Border>
                 </UniformGrid>
 
-                <Grid Grid.Row="2" Margin="8,0,8,18">
+                <Grid Grid.Row="2" Margin="8,0,8,12">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*"/>
                         <ColumnDefinition Width="320"/>
@@ -123,22 +123,23 @@
                     </Border>
                 </Grid>
 
-                <Border Grid.Row="3"
+                <Border x:Name="HistoryPanel"
+                        Grid.Row="3"
                         Background="#0C1223"
                         CornerRadius="24"
-                        Padding="25"
-                        Margin="8,0,8,28">
+                        Padding="12"
+                        Margin="8,0,8,18">
 
                     <ItemsControl ItemsSource="{Binding HistorialDashboard}">
                         <ItemsControl.ItemTemplate>
                             <DataTemplate>
                                 <Border Background="#121A30"
                                         CornerRadius="14"
-                                        Padding="14"
-                                        Margin="0,0,0,10">
+                                        Padding="8"
+                                        Margin="0,0,0,6">
                                     <TextBlock Text="{Binding}"
                                                Foreground="#DDE5FF"
-                                               FontSize="15"
+                                               FontSize="14"
                                                FontWeight="SemiBold"
                                                TextWrapping="Wrap"/>
                                 </Border>
@@ -149,8 +150,8 @@
 
                 <Button Grid.Row="4"
                         Content="▶ Entrar al reproductor"
-                        Width="320"
-                        Height="70"
+                        Width="300"
+                        Height="60"
                         Background="#6A35FF"
                         Foreground="White"
                         FontSize="19"
@@ -158,6 +159,7 @@
                         BorderThickness="0"
                         Cursor="Hand"
                         Command="{Binding EntrarReproductorCommand}"
+                        AutomationProperties.Name="Entrar al reproductor"
                         HorizontalAlignment="Center"
                         Style="{StaticResource PrimaryButton}"/>
             </Grid>

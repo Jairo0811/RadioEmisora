@@ -1,56 +1,58 @@
-﻿using System;
-using System.IO;
-using System.Text.Json;
 using RadioEmisoraRD.Models;
 
-namespace RadioEmisoraRD.Services
+namespace RadioEmisoraRD.Services;
+
+public interface IConfigService
 {
-    public static class ConfigService
+    AppConfig Load();
+
+    bool TrySave(AppConfig config, out string? errorMessage);
+}
+
+public sealed class ConfigService : IConfigService
+{
+    private readonly JsonFileStore<AppConfig> store;
+
+    public ConfigService(string? dataDirectory = null, IAppLogger? logger = null)
     {
-        private static readonly string CarpetaDatos =
-            Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "RadioEmisoraRD");
+        string directory = dataDirectory ?? AppPaths.DataDirectory;
+        store = new JsonFileStore<AppConfig>(
+            Path.Combine(directory, "config.json"),
+            logger ?? AppLogger.Current);
+    }
 
-        private static readonly string ArchivoConfig =
-            Path.Combine(CarpetaDatos, "config.json");
+    public AppConfig Load() => store.LoadOrCreate(static () => new AppConfig(), Normalize);
 
-        public static AppConfig Cargar()
+    public bool TrySave(AppConfig config, out string? errorMessage)
+    {
+        ArgumentNullException.ThrowIfNull(config);
+        Normalize(config);
+        return store.TrySave(config, out errorMessage);
+    }
+
+    internal static void Normalize(AppConfig config)
+    {
+        config.SchemaVersion = 2;
+        config.UltimaEmisora = config.UltimaEmisora?.Trim() ?? string.Empty;
+        config.Historial = (config.Historial ?? [])
+            .Where(static item => !string.IsNullOrWhiteSpace(item))
+            .Select(static item => item.Trim())
+            .Distinct(StringComparer.OrdinalIgnoreCase)
+            .Take(10)
+            .ToList();
+        config.Volumen = double.IsFinite(config.Volumen)
+            ? Math.Clamp(config.Volumen, 0, 1)
+            : 0.80;
+        config.StreamTimeoutSeconds = Math.Clamp(config.StreamTimeoutSeconds, 3, 60);
+        config.MaxReconnectAttempts = Math.Clamp(config.MaxReconnectAttempts, 0, 10);
+        config.ReconnectDelaySeconds = Math.Clamp(config.ReconnectDelaySeconds, 1, 30);
+
+        if (!Uri.TryCreate(config.CatalogUrl, UriKind.Absolute, out Uri? catalogUri) ||
+            catalogUri.Scheme != Uri.UriSchemeHttps)
         {
-            try
-            {
-                if (!Directory.Exists(CarpetaDatos))
-                    Directory.CreateDirectory(CarpetaDatos);
-
-                if (!File.Exists(ArchivoConfig))
-                {
-                    AppConfig configNueva = new AppConfig();
-                    Guardar(configNueva);
-                    return configNueva;
-                }
-
-                string json = File.ReadAllText(ArchivoConfig);
-
-                AppConfig? config = JsonSerializer.Deserialize<AppConfig>(json);
-
-                return config ?? new AppConfig();
-            }
-            catch
-            {
-                return new AppConfig();
-            }
+            config.CatalogUrl = AppConfig.DefaultCatalogUrl;
         }
 
-        public static void Guardar(AppConfig config)
-        {
-            if (!Directory.Exists(CarpetaDatos))
-                Directory.CreateDirectory(CarpetaDatos);
-
-            JsonSerializerOptions opciones = new JsonSerializerOptions
-            {
-                WriteIndented = true
-            };
-
-            string json = JsonSerializer.Serialize(config, opciones);
-            File.WriteAllText(ArchivoConfig, json);
-        }
+        config.CatalogVersion = Math.Max(1, config.CatalogVersion);
     }
 }

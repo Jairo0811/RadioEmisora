@@ -1,55 +1,45 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Text.Json;
+namespace RadioEmisoraRD.Services;
 
-namespace RadioEmisoraRD.Services
+public interface IFavoriteService
 {
-    public static class FavoriteService
+    IReadOnlyList<string> Load();
+
+    bool TrySave(IEnumerable<string> favorites, out string? errorMessage);
+}
+
+public sealed class FavoriteService : IFavoriteService
+{
+    private readonly JsonFileStore<List<string>> store;
+
+    public FavoriteService(string? dataDirectory = null, IAppLogger? logger = null)
     {
-        private static readonly string CarpetaDatos =
-            Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "RadioEmisoraRD");
+        string directory = dataDirectory ?? AppPaths.DataDirectory;
+        store = new JsonFileStore<List<string>>(
+            Path.Combine(directory, "favoritos.json"),
+            logger ?? AppLogger.Current);
+    }
 
-        private static readonly string ArchivoFavoritos =
-            Path.Combine(CarpetaDatos, "favoritos.json");
+    public IReadOnlyList<string> Load() =>
+        store.LoadOrCreate(static () => [], Normalize);
 
-        public static List<string> Cargar()
-        {
-            try
-            {
-                if (!Directory.Exists(CarpetaDatos))
-                    Directory.CreateDirectory(CarpetaDatos);
+    public bool TrySave(IEnumerable<string> favorites, out string? errorMessage)
+    {
+        ArgumentNullException.ThrowIfNull(favorites);
+        List<string> normalized = favorites.ToList();
+        Normalize(normalized);
+        return store.TrySave(normalized, out errorMessage);
+    }
 
-                if (!File.Exists(ArchivoFavoritos))
-                {
-                    Guardar(new List<string>());
-                    return new List<string>();
-                }
+    private static void Normalize(List<string> favorites)
+    {
+        List<string> normalized = favorites
+            .Where(static item => !string.IsNullOrWhiteSpace(item))
+            .Select(static item => item.Trim())
+            .Distinct(StringComparer.OrdinalIgnoreCase)
+            .OrderBy(static item => item, StringComparer.CurrentCultureIgnoreCase)
+            .ToList();
 
-                string json = File.ReadAllText(ArchivoFavoritos);
-
-                List<string>? favoritos = JsonSerializer.Deserialize<List<string>>(json);
-
-                return favoritos ?? new List<string>();
-            }
-            catch
-            {
-                return new List<string>();
-            }
-        }
-
-        public static void Guardar(List<string> favoritos)
-        {
-            if (!Directory.Exists(CarpetaDatos))
-                Directory.CreateDirectory(CarpetaDatos);
-
-            JsonSerializerOptions opciones = new JsonSerializerOptions
-            {
-                WriteIndented = true
-            };
-
-            string json = JsonSerializer.Serialize(favoritos, opciones);
-            File.WriteAllText(ArchivoFavoritos, json);
-        }
+        favorites.Clear();
+        favorites.AddRange(normalized);
     }
 }

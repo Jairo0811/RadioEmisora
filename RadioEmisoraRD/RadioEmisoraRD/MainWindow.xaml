@@ -13,20 +13,24 @@
         MinWidth="900"
         MinHeight="600"
         WindowStartupLocation="CenterScreen"
-        Background="#080C19">
+        Background="#080C19"
+        UseLayoutRounding="True"
+        SnapsToDevicePixels="True"
+        KeyboardNavigation.TabNavigation="Cycle"
+        AutomationProperties.Name="RadioEmisora RD">
 
     <Grid>
 
         <Grid Visibility="{Binding MainLayoutVisibility}">
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="330"/>
+                <ColumnDefinition Width="300"/>
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
 
             <sidebar:SidebarControl x:Name="Sidebar" Grid.Column="0"/>
 
             <ScrollViewer Grid.Column="1"
-                          Margin="35"
+                          Margin="24"
                           VerticalScrollBarVisibility="Auto"
                           HorizontalScrollBarVisibility="Disabled">
 
@@ -44,54 +48,59 @@
                             MinHeight="120">
 
                         <Grid>
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="*"/>
-                                <ColumnDefinition Width="150"/>
-                                <ColumnDefinition Width="150"/>
-                                <ColumnDefinition Width="150"/>
-                                <ColumnDefinition Width="150"/>
-                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                            </Grid.RowDefinitions>
 
                             <TextBlock Text="RadioEmisoraRD • WPF • MVVM • Inspirado en el proyecto original"
                                        Foreground="#7F8AAD"
                                        FontSize="14"
-                                       VerticalAlignment="Center"
+                                       TextAlignment="Center"
                                        TextWrapping="Wrap"/>
 
-                            <Button Grid.Column="1"
-                                    Content="↻ Actualizar"
-                                    Height="48"
-                                    Background="#0072E5"
-                                    Style="{StaticResource PrimaryButton}"
-                                    FontSize="14"
-                                    Command="{Binding ActualizarCommand}"/>
+                            <UniformGrid Grid.Row="1"
+                                         Columns="4"
+                                         Margin="0,18,0,0">
+                                <Button Content="↻ Actualizar"
+                                        Height="48"
+                                        Background="#0072E5"
+                                        Style="{StaticResource PrimaryButton}"
+                                        FontSize="14"
+                                        Margin="5,0"
+                                        ToolTip="Buscar una versión nueva del catálogo (Ctrl+R)"
+                                        AutomationProperties.Name="Actualizar catálogo"
+                                        Command="{Binding ActualizarCommand}"/>
 
-                            <Button Grid.Column="2"
-                                    Content="{Binding TextoFavorito}"
-                                    Height="48"
-                                    Background="#6A35FF"
-                                    Style="{StaticResource PrimaryButton}"
-                                    FontSize="14"
-                                    Margin="12,0,0,0"
-                                    Command="{Binding FavoritoCommand}"/>
+                                <Button Content="{Binding TextoFavorito}"
+                                        Height="48"
+                                        Background="#6A35FF"
+                                        Style="{StaticResource PrimaryButton}"
+                                        FontSize="14"
+                                        Margin="5,0"
+                                        ToolTip="Agregar o quitar la emisora seleccionada de favoritos"
+                                        AutomationProperties.Name="Alternar favorito"
+                                        Command="{Binding FavoritoCommand}"/>
 
-                            <Button Grid.Column="3"
-                                    Content="ⓘ Acerca de"
-                                    Height="48"
-                                    Background="#008899"
-                                    Style="{StaticResource PrimaryButton}"
-                                    FontSize="14"
-                                    Margin="12,0,0,0"
-                                    Command="{Binding AcercaDeCommand}"/>
+                                <Button Content="ⓘ Acerca de"
+                                        Height="48"
+                                        Background="#008899"
+                                        Style="{StaticResource PrimaryButton}"
+                                        FontSize="14"
+                                        Margin="5,0"
+                                        AutomationProperties.Name="Abrir Acerca de"
+                                        Command="{Binding AcercaDeCommand}"/>
 
-                            <Button Grid.Column="4"
-                                    Content="Salir"
-                                    Height="48"
-                                    Background="#C41535"
-                                    Style="{StaticResource PrimaryButton}"
-                                    FontSize="14"
-                                    Margin="12,0,0,0"
-                                    Command="{Binding SalirCommand}"/>
+                                <Button Content="Salir"
+                                        Height="48"
+                                        Background="#C41535"
+                                        Style="{StaticResource PrimaryButton}"
+                                        FontSize="14"
+                                        Margin="5,0"
+                                        ToolTip="Cerrar la aplicación (Ctrl+Q)"
+                                        AutomationProperties.Name="Salir"
+                                        Command="{Binding SalirCommand}"/>
+                            </UniformGrid>
                         </Grid>
                     </Border>
 
@@ -99,7 +108,8 @@
             </ScrollViewer>
         </Grid>
 
-        <dashboard:DashboardControl Visibility="{Binding DashboardVisibility}"/>
+        <dashboard:DashboardControl x:Name="Dashboard"
+                                    Visibility="{Binding DashboardVisibility}"/>
 
         <toast:ToastControl Visibility="{Binding ToastVisibility}"
                             HorizontalAlignment="Right"

@@ -1,0 +1,138 @@
+{
+  "version": 2,
+  "updatedAtUtc": "2026-08-01T17:00:00Z",
+  "stations": [
+    {
+      "id": "mortal-1049",
+      "nombre": "Mortal",
+      "frecuencia": "104.9 FM",
+      "categoria": "Urbano - Hip Hop",
+      "provincia": "Santo Domingo",
+      "grupo": "Grupo Telemicro",
+      "logo": "mortal.png",
+      "colorTema": "#DC283C",
+      "streamUrl": "https://n07.radiojar.com/x84tcy2wm2zuv"
+    },
+    {
+      "id": "cima-1005",
+      "nombre": "Cima 100",
+      "frecuencia": "100.5 FM",
+      "categoria": "Pop - Baladas",
+      "provincia": "Santo Domingo",
+      "grupo": "Cima 100",
+      "logo": "cima.png",
+      "colorTema": "#2882FF",
+      "streamUrl": "https://sonicpanel.streaming10.net:8146/stream"
+    },
+    {
+      "id": "fuego-901",
+      "nombre": "Fuego 90",
+      "frecuencia": "90.1 FM",
+      "categoria": "Salsa - Merengue",
+      "provincia": "Santo Domingo",
+      "grupo": "Grupo López",
+      "logo": "fuego.png",
+      "colorTema": "#FF5F1E",
+      "streamUrl": "https://radiordomi.com/8390/stream"
+    },
+    {
+      "id": "escandalo-1025",
+      "nombre": "Escándalo 102",
+      "frecuencia": "102.5 FM",
+      "categoria": "Tropical - Variada",
+      "provincia": "Santo Domingo",
+      "grupo": "RCC Media",
+      "logo": "escandalo.png",
+      "colorTema": "#BE3CFF",
+      "streamUrl": "https://stream-284.surfernetwork.com/iwqlyzpyry1uv"
+    },
+    {
+      "id": "disco-1061",
+      "nombre": "Disco 106",
+      "frecuencia": "106.1 FM",
+      "categoria": "Pop - Disco",
+      "provincia": "Santo Domingo",
+      "grupo": "Grupo López",
+      "logo": "disco.png",
+      "colorTema": "#FFBE28",
+      "streamUrl": "https://radiordomi.com/8118/stream"
+    },
+    {
+      "id": "radio-disney-973",
+      "nombre": "Radio Disney",
+      "frecuencia": "97.3 FM",
+      "categoria": "Pop - Juvenil",
+      "provincia": "Santo Domingo",
+      "grupo": "Radio Disney Latinoamérica",
+      "logo": "disney.png",
+      "colorTema": "#E6283C",
+      "streamUrl": "https://stream-284.surfernetwork.com/zky9fvlfkootv"
+    },
+    {
+      "id": "radio-popular-950",
+      "nombre": "Radio Popular",
+      "frecuencia": "950 AM",
+      "categoria": "Noticias - Informativa",
+      "provincia": "Santo Domingo",
+      "grupo": "RCC Media",
+      "logo": "popular.png",
+      "colorTema": "#286EFF",
+      "streamUrl": "https://stream-175.surfernetwork.com/v5y1wkvoilivv"
+    },
+    {
+      "id": "z101-1013",
+      "nombre": "Z 101",
+      "frecuencia": "101.3 FM",
+      "categoria": "Noticias - Opinión",
+      "provincia": "Santo Domingo",
+      "grupo": "Z101 Digital",
+      "logo": "z101.png",
+      "colorTema": "#7846FF",
+      "streamUrl": "https://streaming.z101digital.com/z101"
+    },
+    {
+      "id": "primera-881",
+      "nombre": "Primera FM",
+      "frecuencia": "88.1 FM",
+      "categoria": "Variada",
+      "provincia": "Santo Domingo",
+      "grupo": "Grupo Telemicro",
+      "logo": "primera.png",
+      "colorTema": "#00AABE",
+      "streamUrl": "https://n0f.radiojar.com/5705c71sn2zuv"
+    },
+    {
+      "id": "alofoke-993",
+      "nombre": "Alofoke FM",
+      "frecuencia": "99.3 FM",
+      "categoria": "Urbano - Entretenimiento",
+      "provincia": "Santo Domingo",
+      "grupo": "Alofoke Media Group",
+      "logo": "alofoke.png",
+      "colorTema": "#FF4646",
+      "streamUrl": "https://radiordomi.com:8566/stream"
+    },
+    {
+      "id": "independencia-933",
+      "nombre": "Independencia FM",
+      "frecuencia": "93.3 FM",
+      "categoria": "Variada",
+      "provincia": "Santo Domingo",
+      "grupo": "Grupo Telemicro",
+      "logo": "independencia.png",
+      "colorTema": "#00B478",
+      "streamUrl": "https://n06.radiojar.com/nc893hafc8zuv"
+    },
+    {
+      "id": "la-mega-979",
+      "nombre": "La Mega",
+      "frecuencia": "97.9 FM",
+      "categoria": "Urbano - Tropical",
+      "provincia": "New York",
+      "grupo": "Spanish Broadcasting System",
+      "logo": "lamega.png",
+      "colorTema": "#FF781E",
+      "streamUrl": "https://liveaudio.lamusica.com/NY_WSKQ_icy"
+    }
+  ]
+}

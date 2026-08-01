@@ -28,7 +28,6 @@ artifacts/
 
 # Publicación local
 publish/
-*.pubxml
 *.publish.xml
 
 # Sistema operativo
