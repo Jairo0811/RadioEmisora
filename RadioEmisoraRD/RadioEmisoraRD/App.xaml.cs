@@ -6,7 +6,7 @@ namespace RadioEmisoraRD;
 
 public partial class App : Application
 {
-    private readonly IAppLogger logger = AppLogger.Current;
+    private readonly AppLogger logger = AppLogger.Current;
 
     protected override void OnStartup(StartupEventArgs e)
     {
@@ -32,7 +32,7 @@ public partial class App : Application
         }
         catch (Exception exception)
         {
-            logger.Error("No se pudo iniciar la aplicación.", exception);
+            logger.LogError("No se pudo iniciar la aplicación.", exception);
             MessageBox.Show(
                 "RadioEmisora RD no pudo iniciar. Revisa el archivo de registro para obtener detalles.",
                 "Error de inicio",
@@ -55,7 +55,7 @@ public partial class App : Application
         object sender,
         DispatcherUnhandledExceptionEventArgs e)
     {
-        logger.Error("Excepción no controlada en la interfaz.", e.Exception);
+        logger.LogError("Excepción no controlada en la interfaz.", e.Exception);
         e.Handled = true;
         MessageBox.Show(
             "Ocurrió un problema inesperado, pero la aplicación se recuperó. " +
@@ -68,12 +68,12 @@ public partial class App : Application
     private void OnDomainUnhandledException(object? sender, UnhandledExceptionEventArgs e)
     {
         if (e.ExceptionObject is Exception exception)
-            logger.Error("Excepción no controlada del proceso.", exception);
+            logger.LogError("Excepción no controlada del proceso.", exception);
     }
 
     private void OnUnobservedTaskException(object? sender, UnobservedTaskExceptionEventArgs e)
     {
-        logger.Error("Excepción no observada en una tarea asíncrona.", e.Exception);
+        logger.LogError("Excepción no observada en una tarea asíncrona.", e.Exception);
         e.SetObserved();
     }
 
@@ -87,7 +87,7 @@ public partial class App : Application
         }
         catch (Exception exception)
         {
-            logger.Error("No se pudieron generar las capturas de portafolio.", exception);
+            logger.LogError("No se pudieron generar las capturas de portafolio.", exception);
             Shutdown(2);
         }
     }

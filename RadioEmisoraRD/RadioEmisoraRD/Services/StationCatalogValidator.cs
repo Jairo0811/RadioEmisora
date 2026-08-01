@@ -84,7 +84,7 @@ public static class StationCatalogValidator
         string? value,
         string fieldName,
         string prefix,
-        ICollection<string> errors)
+        List<string> errors)
     {
         if (string.IsNullOrWhiteSpace(value))
             errors.Add($"{prefix}: {fieldName} requerida.");

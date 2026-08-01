@@ -10,7 +10,7 @@ public interface IAppLogger
 
     void Warning(string message, Exception? exception = null);
 
-    void Error(string message, Exception exception);
+    void LogError(string message, Exception exception);
 }
 
 public sealed class AppLogger : IAppLogger
@@ -34,7 +34,7 @@ public sealed class AppLogger : IAppLogger
     public void Warning(string message, Exception? exception = null) =>
         Write("WARN", message, exception);
 
-    public void Error(string message, Exception exception) => Write("ERROR", message, exception);
+    public void LogError(string message, Exception exception) => Write("ERROR", message, exception);
 
     private void Write(string level, string message, Exception? exception)
     {

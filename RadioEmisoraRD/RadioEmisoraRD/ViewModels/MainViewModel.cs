@@ -473,7 +473,7 @@ public sealed class MainViewModel : INotifyPropertyChanged, IDisposable
 
         if (sameStation && playerState == PlayerState.Pausado)
         {
-            playerService.Resume();
+            playerService.ResumePlayback();
             ShowToast("▶ Continuando", selectedStation.Nombre);
             return;
         }
@@ -850,7 +850,7 @@ public sealed class MainViewModel : INotifyPropertyChanged, IDisposable
 
     private void HandleCommandError(Exception exception)
     {
-        logger.Error("Falló una acción de la interfaz.", exception);
+        logger.LogError("Falló una acción de la interfaz.", exception);
         RunOnUiThread(() => ShowToast(
             "No se pudo completar la acción",
             "La aplicación se recuperó. Consulta el registro si el problema continúa."));

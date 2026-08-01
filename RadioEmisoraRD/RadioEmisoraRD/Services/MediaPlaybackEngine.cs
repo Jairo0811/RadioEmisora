@@ -31,7 +31,7 @@ public interface IMediaPlaybackEngine : IDisposable
 
     void Pause();
 
-    void Stop();
+    void StopPlayback();
 
     void Close();
 }
@@ -81,7 +81,7 @@ public sealed class WpfMediaPlaybackEngine : IMediaPlaybackEngine
         mediaPlayer.Pause();
     }
 
-    public void Stop()
+    public void StopPlayback()
     {
         if (!disposed)
             mediaPlayer.Stop();

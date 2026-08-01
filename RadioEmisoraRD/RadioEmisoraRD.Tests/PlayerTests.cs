@@ -107,7 +107,7 @@ public sealed class PlayerTests
 
         service.Pause();
         Assert.AreEqual(PlayerState.Pausado, service.State);
-        service.Resume();
+        service.ResumePlayback();
         Assert.AreEqual(PlayerState.Reproduciendo, service.State);
         await service.StopAsync();
 
@@ -166,7 +166,7 @@ public sealed class PlayerTests
 
         public void Pause() => PauseCalls++;
 
-        public void Stop()
+        public void StopPlayback()
         {
         }
 

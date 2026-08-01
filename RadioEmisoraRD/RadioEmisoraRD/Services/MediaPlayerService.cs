@@ -33,7 +33,7 @@ public interface IMediaPlayerService : IDisposable
 
     void Pause();
 
-    void Resume();
+    void ResumePlayback();
 
     Task StopAsync(CancellationToken cancellationToken = default);
 }
@@ -133,7 +133,7 @@ public sealed class MediaPlayerService : IMediaPlayerService
         stateMachine.TransitionTo(PlayerState.Pausado);
     }
 
-    public void Resume()
+    public void ResumePlayback()
     {
         ThrowIfDisposed();
 
@@ -347,7 +347,7 @@ public sealed class MediaPlayerService : IMediaPlayerService
     private void ReportFinalError(string friendlyMessage, Exception exception)
     {
         stateMachine.TransitionTo(PlayerState.Error, friendlyMessage);
-        logger.Error(friendlyMessage, exception);
+        logger.LogError(friendlyMessage, exception);
         PlaybackError?.Invoke(this, new PlaybackErrorEventArgs(friendlyMessage, exception));
     }
 
@@ -361,7 +361,7 @@ public sealed class MediaPlayerService : IMediaPlayerService
     {
         try
         {
-            engine.Stop();
+            engine.StopPlayback();
             engine.Close();
         }
         catch (Exception exception) when (exception is InvalidOperationException or ObjectDisposedException)

@@ -95,7 +95,7 @@ internal static class PortfolioCaptureService
             DispatcherPriority.Render);
     }
 
-    private static BitmapSource Render(FrameworkElement element)
+    private static RenderTargetBitmap Render(FrameworkElement element)
     {
         element.UpdateLayout();
         int width = Math.Max(1, (int)Math.Ceiling(element.ActualWidth));
@@ -164,7 +164,7 @@ internal static class PortfolioCaptureService
 
         public void Pause() => TransitionTo(PlayerState.Pausado);
 
-        public void Resume() => TransitionTo(PlayerState.Reproduciendo);
+        public void ResumePlayback() => TransitionTo(PlayerState.Reproduciendo);
 
         public Task StopAsync(CancellationToken cancellationToken = default)
         {

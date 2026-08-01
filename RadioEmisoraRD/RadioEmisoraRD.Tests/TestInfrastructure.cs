@@ -50,7 +50,7 @@ internal sealed class TestLogger : IAppLogger
     {
     }
 
-    public void Error(string message, Exception exception)
+    public void LogError(string message, Exception exception)
     {
     }
 }

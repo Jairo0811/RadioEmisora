@@ -129,7 +129,7 @@ internal sealed class JsonFileStore<T>
         catch (Exception exception) when (
             exception is IOException or UnauthorizedAccessException or JsonException)
         {
-            logger.Error($"No se pudo guardar '{filePath}'.", exception);
+            logger.LogError($"No se pudo guardar '{filePath}'.", exception);
             errorMessage = "No se pudieron guardar los cambios en el disco.";
 
             try
