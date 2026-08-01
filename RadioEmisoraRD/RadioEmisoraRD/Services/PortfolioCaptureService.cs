@@ -40,13 +40,15 @@ internal static class PortfolioCaptureService
         await WaitForRenderAsync();
 
         var animationFrames = new List<BitmapSource>();
-        BitmapSource dashboard = Render(window);
+        RenderTargetBitmap dashboard = Render(window);
         SavePng(dashboard, Path.Combine(outputDirectory, "dashboard.png"));
         animationFrames.Add(dashboard);
 
-        SavePng(
-            Render(window.GetHistoryCaptureTarget()),
-            Path.Combine(outputDirectory, "historial.png"));
+        CroppedBitmap history = Crop(
+            dashboard,
+            window.GetHistoryCaptureTarget(),
+            window);
+        SavePng(history, Path.Combine(outputDirectory, "historial.png"));
 
         viewModel.EntrarReproductorCommand.Execute(null);
         viewModel.EmisoraSeleccionada = viewModel.TodasLasEmisoras.First();
@@ -109,6 +111,29 @@ internal static class PortfolioCaptureService
         bitmap.Render(element);
         bitmap.Freeze();
         return bitmap;
+    }
+
+    private static CroppedBitmap Crop(
+        RenderTargetBitmap source,
+        FrameworkElement target,
+        MainWindow relativeTo)
+    {
+        Point origin = target.TranslatePoint(new Point(), relativeTo);
+        double scaleX = source.PixelWidth / relativeTo.ActualWidth;
+        double scaleY = source.PixelHeight / relativeTo.ActualHeight;
+        int x = Math.Clamp((int)Math.Round(origin.X * scaleX), 0, source.PixelWidth - 1);
+        int y = Math.Clamp((int)Math.Round(origin.Y * scaleY), 0, source.PixelHeight - 1);
+        int width = Math.Clamp(
+            (int)Math.Round(target.ActualWidth * scaleX),
+            1,
+            source.PixelWidth - x);
+        int height = Math.Clamp(
+            (int)Math.Round(target.ActualHeight * scaleY),
+            1,
+            source.PixelHeight - y);
+        var cropped = new CroppedBitmap(source, new Int32Rect(x, y, width, height));
+        cropped.Freeze();
+        return cropped;
     }
 
     private static void SavePng(BitmapSource bitmap, string path)
