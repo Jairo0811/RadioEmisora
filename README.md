@@ -2,11 +2,15 @@
   <img src="docs/logo.jpeg" width="420" alt="Logo de RadioEmisora RD">
 </p>
 
-<h1 align="center">RadioEmisora RD</h1>
+<h1 align="center">📻 RadioEmisora RD</h1>
 
 <p align="center">
   <strong>Tu radio, tu país.</strong><br>
   Aplicación de escritorio para escuchar emisoras dominicanas mediante streaming en vivo.
+</p>
+
+<p align="center">
+  <img src="https://img.shields.io/badge/ITLA-2018--C1-0057B8?style=for-the-badge" alt="ITLA 2018-C1">
 </p>
 
 <p align="center">
@@ -18,37 +22,41 @@
   <img src="https://img.shields.io/badge/arquitectura-MVVM-6A35FF" alt="MVVM">
 </p>
 
-> Modernización profesional del proyecto final de Diseño Centrado en el Usuario (SOF-010), desarrollado originalmente en el ITLA durante el período 2018-C1.
+<p align="center">
+  <strong>WPF · C# · .NET 10 · XAML · MVVM · Streaming en vivo · JSON · MSTest · GitHub Actions</strong>
+</p>
 
-## Demostración
+> ⭐ Modernización profesional del proyecto final de **Diseño Centrado en el Usuario (SOF-010)**, desarrollado originalmente en el ITLA durante el período **2018-C1**.
+
+## 🎬 Demostración
 
 <p align="center">
   <img src="docs/media/demo.gif" width="900" alt="Demostración animada de RadioEmisora RD">
 </p>
 
-| Dashboard | Reproductor |
+| 🏠 Dashboard | ▶️ Reproductor |
 |---|---|
 | ![Dashboard](docs/media/dashboard.png) | ![Reproductor](docs/media/reproductor.png) |
 
-| Favoritos | Búsqueda |
+| ⭐ Favoritos | 🔎 Búsqueda |
 |---|---|
 | ![Favoritos](docs/media/favoritos.png) | ![Búsqueda](docs/media/busqueda.png) |
 
-| Historial | Acerca de |
+| 🕘 Historial | ℹ️ Acerca de |
 |---|---|
 | ![Historial](docs/media/historial.png) | ![Acerca de](docs/media/acerca-de.png) |
 
 Las imágenes se generan desde la aplicación WPF real mediante el flujo de integración continua; no son mockups.
 
-## Descripción
+## 📖 Descripción
 
 RadioEmisora RD permite explorar, buscar y escuchar un catálogo de emisoras mediante transmisión en línea. La versión 3.1 conserva el concepto, la navegación y la identidad visual de la reconstrucción WPF 3.0, y añade la capa final de estabilidad necesaria para presentarla en un portafolio profesional.
 
 La aplicación funciona sin cuentas, base de datos ni servicios en la nube. Favoritos, historial, volumen, última emisora y configuración se almacenan localmente en JSON.
 
-## Funcionalidades
+## ✨ Funcionalidades
 
-### Reproducción robusta
+### 📻 Reproducción robusta
 
 - Reproducir, pausar, continuar y detener.
 - Cambio rápido de emisora sin reproducciones simultáneas.
@@ -59,21 +67,21 @@ La aplicación funciona sin cuentas, base de datos ni servicios en la nube. Favo
 - Liberación explícita de eventos, streams, clientes HTTP, timers y `MediaPlayer`.
 - Mensaje amigable y opción de reintentar cuando una emisora no está disponible.
 
-### Estados visibles
+### 🚦 Estados visibles
 
 El reproductor refleja siete estados consistentes en el hero, el panel de reproducción y las tarjetas:
 
 | Estado | Significado |
 |---|---|
-| Detenido | No hay reproducción activa |
-| Conectando | Se está comprobando el endpoint |
-| Buffering | El motor prepara el audio |
-| Reproduciendo | El stream está sonando |
-| Pausado | La reproducción está suspendida |
-| Reconectando | Se intenta recuperar una conexión perdida |
-| Error | El stream falló y puede reintentarse |
+| ⏹️ Detenido | No hay reproducción activa |
+| 🔄 Conectando | Se está comprobando el endpoint |
+| ⏳ Buffering | El motor prepara el audio |
+| ▶️ Reproduciendo | El stream está sonando |
+| ⏸️ Pausado | La reproducción está suspendida |
+| ♻️ Reconectando | Se intenta recuperar una conexión perdida |
+| ❌ Error | El stream falló y puede reintentarse |
 
-### Organización y persistencia
+### 🗂️ Organización y persistencia
 
 - Búsqueda en tiempo real sin distinción de mayúsculas ni acentos.
 - Filtros: Todas, Favoritas, FM, AM y Online.
@@ -83,7 +91,7 @@ El reproductor refleja siete estados consistentes en el hero, el panel de reprod
 - Volumen persistente con escritura diferida para evitar acceso excesivo al disco.
 - Guardado atómico, copia de respaldo y recuperación automática de JSON corrupto.
 
-### Catálogo actualizable
+### 🌐 Catálogo actualizable
 
 El catálogo base vive en [`catalog/emisoras.json`](catalog/emisoras.json). Al iniciar, la aplicación:
 
@@ -96,7 +104,7 @@ El catálogo base vive en [`catalog/emisoras.json`](catalog/emisoras.json). Al i
 
 La disponibilidad de un stream depende de su emisora o proveedor. Un fallo individual nunca bloquea el resto de la aplicación.
 
-## Emisoras incluidas
+## 📻 Emisoras incluidas
 
 | Emisora | Frecuencia | Categoría |
 |---|---:|---|
@@ -113,7 +121,60 @@ La disponibilidad de un stream depende de su emisora o proveedor. Un fallo indiv
 | Independencia FM | 93.3 FM | Variada |
 | La Mega | 97.9 FM | Urbano / Tropical |
 
-## Arquitectura
+## 🧰 Stack tecnológico
+
+### 🖥️ Aplicación de escritorio
+
+<p>
+  <img src="https://skillicons.dev/icons?i=cs,dotnet,visualstudio" alt="C#, .NET y Visual Studio" />
+</p>
+
+- C#
+- .NET 10
+- WPF
+- XAML
+- Visual Studio 2022
+
+### 🏗️ Arquitectura y experiencia de usuario
+
+<p>
+  <img src="https://img.shields.io/badge/MVVM-Arquitectura-6A35FF?style=flat-square" alt="MVVM">
+  <img src="https://img.shields.io/badge/WPF-Desktop-512BD4?style=flat-square&logo=dotnet&logoColor=white" alt="WPF">
+  <img src="https://img.shields.io/badge/XAML-UI-0C54C2?style=flat-square" alt="XAML">
+</p>
+
+- Arquitectura MVVM.
+- Data binding y comandos reutilizables.
+- UserControls modulares.
+- Temas y estilos compartidos.
+- Navegación por teclado y diseño adaptable.
+
+### 📡 Streaming y persistencia
+
+<p>
+  <img src="https://img.shields.io/badge/Streaming-HTTP%2FHTTPS-1E88E5?style=flat-square" alt="Streaming HTTP/HTTPS">
+  <img src="https://img.shields.io/badge/JSON-Persistencia-000000?style=flat-square&logo=json&logoColor=white" alt="JSON">
+</p>
+
+- `System.Windows.Media.MediaPlayer`.
+- Validación asíncrona de streams.
+- Reconexión automática.
+- Catálogo local y remoto.
+- Persistencia JSON con respaldo y recuperación.
+
+### 🧪 Calidad y automatización
+
+<p>
+  <img src="https://skillicons.dev/icons?i=git,github,githubactions" alt="Git, GitHub y GitHub Actions" />
+</p>
+
+- MSTest.
+- GitHub Actions.
+- Compilación con advertencias tratadas como errores.
+- Publicación portable y autocontenida.
+- Generación automatizada de capturas y artefactos.
+
+## 🏗️ Arquitectura
 
 La solución mantiene MVVM y separa la vista, el estado de presentación y la infraestructura:
 
@@ -128,7 +189,7 @@ flowchart TD
     J --> D["JSON atómico + respaldo"]
 ```
 
-### Responsabilidades
+### 📦 Responsabilidades
 
 | Capa | Responsabilidad |
 |---|---|
@@ -139,7 +200,7 @@ flowchart TD
 | Helpers | Comandos síncronos y asíncronos reutilizables |
 | Themes | Colores, tarjetas, botones y foco de teclado |
 
-### Estructura actual
+### 📁 Estructura actual
 
 ```text
 RadioEmisora/
@@ -166,16 +227,16 @@ RadioEmisora/
 
 Las versiones Windows Forms de 2018 y el prototipo intermedio permanecen documentados en el historial de Git, pero no forman parte del árbol activo de la versión 3.1.
 
-## Requisitos
+## 📋 Requisitos
 
-### Para ejecutar
+### ▶️ Para ejecutar
 
 - Windows 10 versión 1809 o superior; Windows 11 recomendado.
 - Conexión a Internet para escuchar emisoras.
 - Build autocontenido: no requiere instalar .NET.
 - Build portable dependiente del framework: Desktop Runtime de .NET 10.
 
-### Para desarrollar
+### 🛠️ Para desarrollar
 
 - Visual Studio 2022 actualizado con la carga de trabajo **Desarrollo de escritorio de .NET**.
 - SDK de .NET 10.
@@ -183,9 +244,9 @@ Las versiones Windows Forms de 2018 y el prototipo intermedio permanecen documen
 
 No existen paquetes de producción externos; la aplicación utiliza las bibliotecas de .NET y WPF. Las pruebas usan MSTest 4.3.3.
 
-## Instalación
+## 🚀 Instalación
 
-### Descarga recomendada
+### 📥 Descarga recomendada
 
 1. Abre [Releases](https://github.com/Jairo0811/RadioEmisora/releases).
 2. Descarga `RadioEmisoraRD-win-x64.zip`.
@@ -195,7 +256,7 @@ No existen paquetes de producción externos; la aplicación utiliza las bibliote
 
 Windows puede mostrar SmartScreen porque el ejecutable no está firmado digitalmente. Verifica que la descarga proceda de este repositorio y comprueba su SHA-256.
 
-### Desde el código fuente
+### 💻 Desde el código fuente
 
 ```powershell
 git clone https://github.com/Jairo0811/RadioEmisora.git
@@ -204,7 +265,7 @@ dotnet restore .\RadioEmisoraRD\RadioEmisoraRD.slnx
 dotnet run --project .\RadioEmisoraRD\RadioEmisoraRD\RadioEmisoraRD.csproj
 ```
 
-## Compilación, pruebas y publicación
+## 🧪 Compilación, pruebas y publicación
 
 ```powershell
 # Compilar sin advertencias
@@ -224,7 +285,7 @@ dotnet publish .\RadioEmisoraRD\RadioEmisoraRD\RadioEmisoraRD.csproj `
 
 La solución no publica MSIX porque un paquete instalable profesional requiere identidad de publicador y certificado de firma. El flujo de release genera ZIP portable y autocontenido con hashes SHA-256.
 
-## Pruebas
+## ✅ Pruebas
 
 La suite cubre:
 
@@ -240,7 +301,7 @@ La suite cubre:
 
 GitHub Actions compila en `windows-latest`, trata advertencias como errores, ejecuta la suite, publica un build portable y genera las capturas reales del README.
 
-## Datos locales y privacidad
+## 🔐 Datos locales y privacidad
 
 Modo normal:
 
@@ -258,7 +319,7 @@ Para modo portable, coloca `portable.flag` junto al ejecutable o define `RADIOEM
 
 RadioEmisora RD no crea cuentas, no recopila telemetría y no envía favoritos ni historial a servidores externos. Solo consulta el catálogo configurado y los endpoints de audio elegidos por el usuario.
 
-## Atajos de teclado
+## ⌨️ Atajos de teclado
 
 | Atajo | Acción |
 |---|---|
@@ -270,7 +331,7 @@ RadioEmisora RD no crea cuentas, no recopila telemetría y no envía favoritos n
 | `Ctrl + R` | Consultar el catálogo remoto |
 | `Ctrl + Q` | Cerrar la aplicación |
 
-## Solución de problemas
+## 🧰 Solución de problemas
 
 | Problema | Acción recomendada |
 |---|---|
@@ -284,7 +345,7 @@ RadioEmisora RD no crea cuentas, no recopila telemetría y no envía favoritos n
 
 Consulta la [guía completa de troubleshooting](docs/TROUBLESHOOTING.md) para diagnóstico avanzado.
 
-## Evolución
+## 📈 Evolución
 
 | Versión | Tecnología | Alcance |
 |---|---|---|
@@ -295,26 +356,41 @@ Consulta la [guía completa de troubleshooting](docs/TROUBLESHOOTING.md) para di
 
 Consulta el [changelog](CHANGELOG.md) y las [notas de la versión 3.1.0](RELEASE_NOTES.md).
 
-## Información académica
+## 🎓 Información académica
 
 | Información | Detalle |
 |---|---|
-| Estudiante | Francis Jairo Matías Rosario |
-| Matrícula | 2015-2984 |
-| Asignatura | Diseño Centrado en el Usuario (SOF-010) |
-| Profesor | Juan Martínez López |
-| Institución | Instituto Tecnológico de Las Américas (ITLA) |
-| Período | 2018-C1 |
-| Tipo | Proyecto final |
-| Modernización | 2026 |
+| 👨‍🎓 Estudiante | Francis Jairo Matías Rosario |
+| 🆔 Matrícula | 2015-2984 |
+| 📖 Asignatura | Diseño Centrado en el Usuario (SOF-010) |
+| 👨‍🏫 Profesor | Juan Martínez López |
+| 🏫 Institución | Instituto Tecnológico de Las Américas (ITLA) |
+| 📅 Período | 2018-C1 |
+| 📁 Tipo | Proyecto final |
+| 🛠️ Modernización | 2026 |
 
-## Autor
+## 🔄 Continuidad académica
+
+**RadioEmisora RD** forma parte de una continuidad académica desarrollada con el profesor **Juan Martínez López** en el Instituto Tecnológico de Las Américas (ITLA).
+
+El primer proyecto fue **RadioEmisora**, realizado como proyecto final de la asignatura **Diseño Centrado en el Usuario (SOF-010)** durante el período **2018-C1**.
+
+Posteriormente se desarrolló **GestorAdministrativo**, proyecto académico original que hoy evoluciona como [**AdminGest**](https://github.com/Jairo0811/AdminGest), para la asignatura **Administración de Proyectos de Software (SOF-013)** durante el período **2018-C3**.
+
+| Orden | Proyecto | Asignatura | Profesor | Período |
+|---:|---|---|---|---|
+| 1 | **RadioEmisora RD** | Diseño Centrado en el Usuario (SOF-010) | Juan Martínez López | 2018-C1 |
+| 2 | [**AdminGest**](https://github.com/Jairo0811/AdminGest) | Administración de Proyectos de Software (SOF-013) | Juan Martínez López | 2018-C3 |
+
+Ambos proyectos reflejan una evolución desde el diseño centrado en el usuario hacia la planificación y gestión integral de proyectos de software, preservando su contexto académico y modernizándolo para portafolio profesional.
+
+## 👨‍💻 Autor
 
 **Francis Jairo Matías Rosario — Jairo Matías**
 
-- Tecnólogo en Desarrollo de Software — ITLA.
-- Estudiante de Ingeniería de Software — UNAPEC.
+- 🎓 Tecnólogo en Desarrollo de Software — ITLA.
+- 🎓 Estudiante de Ingeniería de Software — UNAPEC.
 
-## Aviso sobre streams
+## 📡 Aviso sobre streams
 
 Los nombres, logos y transmisiones pertenecen a sus respectivas emisoras y proveedores. Este repositorio no aloja audio ni garantiza la disponibilidad permanente de endpoints externos. El catálogo puede actualizarse sin distribuir una nueva versión de la aplicación.
