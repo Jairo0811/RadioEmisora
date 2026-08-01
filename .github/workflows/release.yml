@@ -31,6 +31,7 @@ jobs:
         shell: pwsh
         run: |
           dotnet restore RadioEmisoraRD/RadioEmisoraRD.slnx
+          dotnet restore RadioEmisoraRD/RadioEmisoraRD/RadioEmisoraRD.csproj --runtime win-x64
           dotnet build RadioEmisoraRD/RadioEmisoraRD.slnx --configuration Release --no-restore --warnaserror
           dotnet test RadioEmisoraRD/RadioEmisoraRD.slnx --configuration Release --no-build
 
