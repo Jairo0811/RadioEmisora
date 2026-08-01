@@ -123,7 +123,8 @@
                     </Border>
                 </Grid>
 
-                <Border Grid.Row="3"
+                <Border x:Name="HistoryPanel"
+                        Grid.Row="3"
                         Background="#0C1223"
                         CornerRadius="24"
                         Padding="25"
@@ -158,6 +159,7 @@
                         BorderThickness="0"
                         Cursor="Hand"
                         Command="{Binding EntrarReproductorCommand}"
+                        AutomationProperties.Name="Entrar al reproductor"
                         HorizontalAlignment="Center"
                         Style="{StaticResource PrimaryButton}"/>
             </Grid>

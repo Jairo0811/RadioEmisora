@@ -6,7 +6,10 @@
         Height="560"
         WindowStartupLocation="CenterOwner"
         ResizeMode="NoResize"
-        Background="#0C1223">
+        Background="#0C1223"
+        Icon="Assets/RadioEmisoraRD.ico"
+        ShowInTaskbar="False"
+        AutomationProperties.Name="Acerca de RadioEmisora RD">
 
     <Border Background="#0C1223"
             CornerRadius="18"
@@ -28,7 +31,8 @@
                        TextAlignment="Center"
                        Margin="0,0,0,4"/>
 
-            <TextBlock Text="Versión 3.0 (WPF)"
+            <TextBlock x:Name="VersionText"
+                       Text="Versión 3.1.0 (WPF)"
                        Foreground="#AAB4CD"
                        FontSize="14"
                        FontStyle="Italic"
@@ -80,6 +84,9 @@
                     FontWeight="Bold"
                     BorderThickness="0"
                     Cursor="Hand"
+                    IsDefault="True"
+                    IsCancel="True"
+                    AutomationProperties.Name="Cerrar Acerca de"
                     Click="btnAceptar_Click"/>
         </StackPanel>
     </Border>

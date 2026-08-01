@@ -1,0 +1,72 @@
+name: CI
+
+on:
+  push:
+    branches: [master, "agent/**"]
+  pull_request:
+    branches: [master]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+env:
+  DOTNET_CLI_TELEMETRY_OPTOUT: "1"
+  DOTNET_NOLOGO: "1"
+
+jobs:
+  validate:
+    name: Build, test and package
+    runs-on: windows-latest
+    timeout-minutes: 20
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup .NET 10
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 10.0.x
+          cache: true
+          cache-dependency-path: RadioEmisoraRD/RadioEmisoraRD.Tests/RadioEmisoraRD.Tests.csproj
+
+      - name: Restore
+        run: dotnet restore RadioEmisoraRD/RadioEmisoraRD.slnx
+
+      - name: Build Release
+        run: dotnet build RadioEmisoraRD/RadioEmisoraRD.slnx --configuration Release --no-restore --warnaserror
+
+      - name: Run tests
+        run: dotnet test RadioEmisoraRD/RadioEmisoraRD.slnx --configuration Release --no-build --logger "trx;LogFileName=tests.trx"
+
+      - name: Publish portable build
+        run: dotnet publish RadioEmisoraRD/RadioEmisoraRD/RadioEmisoraRD.csproj --configuration Release --no-restore --property:PublishProfile=Portable --output artifacts/portable
+
+      - name: Generate real portfolio media
+        run: dotnet run --project RadioEmisoraRD/RadioEmisoraRD/RadioEmisoraRD.csproj --configuration Release --no-build -- --capture-docs "$PWD/artifacts/portfolio-media"
+
+      - name: Upload test results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-results
+          path: "**/TestResults/*.trx"
+          if-no-files-found: warn
+          retention-days: 14
+
+      - name: Upload portable build
+        uses: actions/upload-artifact@v4
+        with:
+          name: RadioEmisoraRD-portable
+          path: artifacts/portable
+          if-no-files-found: error
+          retention-days: 14
+
+      - name: Upload portfolio media
+        uses: actions/upload-artifact@v4
+        with:
+          name: portfolio-media
+          path: artifacts/portfolio-media
+          if-no-files-found: error
+          retention-days: 14

@@ -28,6 +28,8 @@
                             Height="68"
                             Background="{Binding ColorTemaBrush}"
                             Style="{StaticResource PrimaryButton}"
+                            ToolTip="Reproducir, pausar o continuar (Espacio)"
+                            AutomationProperties.Name="Control principal de reproducción"
                             Command="{Binding ReproducirCommand}"/>
 
                     <Button Content="⏹ Detener"
@@ -36,6 +38,8 @@
                             Background="{StaticResource DangerBrush}"
                             Style="{StaticResource PrimaryButton}"
                             Margin="30,0,0,0"
+                            ToolTip="Detener la reproducción (Escape)"
+                            AutomationProperties.Name="Detener reproducción"
                             Command="{Binding DetenerCommand}"/>
                 </StackPanel>
 
@@ -56,7 +60,9 @@
                                 Maximum="1"
                                 Value="{Binding Volumen}"
                                 TickFrequency="0.1"
-                                IsSnapToTickEnabled="False"/>
+                                IsSnapToTickEnabled="False"
+                                AutomationProperties.Name="Volumen"
+                                AutomationProperties.HelpText="Usa las flechas para ajustar el volumen"/>
                     </StackPanel>
                 </Border>
             </Grid>

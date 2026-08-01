@@ -1,69 +1,90 @@
-﻿using System.Windows;
+using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Controls.Primitives;
 using System.Windows.Input;
 using RadioEmisoraRD.ViewModels;
 
-namespace RadioEmisoraRD
+namespace RadioEmisoraRD;
+
+public partial class MainWindow : Window
 {
-    public partial class MainWindow : Window
+    private readonly MainViewModel viewModel;
+
+    public MainWindow()
+        : this(new MainViewModel())
     {
-        private readonly MainViewModel viewModel;
+    }
 
-        public MainWindow()
+    internal MainWindow(MainViewModel viewModel)
+    {
+        InitializeComponent();
+
+        this.viewModel = viewModel ?? throw new ArgumentNullException(nameof(viewModel));
+        this.viewModel.RequestAbout += OpenAbout;
+        this.viewModel.RequestExit += OnExitRequested;
+        DataContext = this.viewModel;
+        KeyDown += OnMainWindowKeyDown;
+        Closed += OnWindowClosed;
+    }
+
+    private void OpenAbout()
+    {
+        var window = new AboutWindow
         {
-            InitializeComponent();
+            Owner = this
+        };
+        window.ShowDialog();
+    }
 
-            viewModel = new MainViewModel();
+    private void OnExitRequested() => Close();
 
-            viewModel.RequestAbout += AbrirAcerca;
-            viewModel.RequestExit += Close;
+    internal FrameworkElement GetHistoryCaptureTarget() =>
+        Dashboard.FindName("HistoryPanel") as FrameworkElement ?? Dashboard;
 
-            DataContext = viewModel;
-
-            KeyDown += MainWindow_KeyDown;
+    private void OnMainWindowKeyDown(object sender, KeyEventArgs e)
+    {
+        if (Keyboard.Modifiers == ModifierKeys.Control && e.Key == Key.F)
+        {
+            Sidebar.EnfocarBuscador();
+            e.Handled = true;
+            return;
         }
 
-        private void AbrirAcerca()
+        if (Keyboard.Modifiers == ModifierKeys.Control && e.Key == Key.R)
         {
-            AboutWindow ventana = new AboutWindow();
-            ventana.Owner = this;
-            ventana.ShowDialog();
+            viewModel.ActualizarCommand.Execute(null);
+            e.Handled = true;
+            return;
         }
 
-        private void MainWindow_KeyDown(object sender, KeyEventArgs e)
+        if (Keyboard.Modifiers == ModifierKeys.Control && e.Key == Key.Q)
         {
-            if (Keyboard.Modifiers == ModifierKeys.Control && e.Key == Key.F)
-            {
-                Sidebar.EnfocarBuscador();
-                e.Handled = true;
-                return;
-            }
-
-            if (Keyboard.Modifiers == ModifierKeys.Control && e.Key == Key.R)
-            {
-                viewModel.ActualizarCommand.Execute(null);
-                e.Handled = true;
-                return;
-            }
-
-            if (Keyboard.Modifiers == ModifierKeys.Control && e.Key == Key.Q)
-            {
-                viewModel.SalirCommand.Execute(null);
-                e.Handled = true;
-                return;
-            }
-
-            if (e.Key == Key.Space)
-            {
-                viewModel.ReproducirCommand.Execute(null);
-                e.Handled = true;
-                return;
-            }
-
-            if (e.Key == Key.Escape)
-            {
-                viewModel.DetenerCommand.Execute(null);
-                e.Handled = true;
-            }
+            viewModel.SalirCommand.Execute(null);
+            e.Handled = true;
+            return;
         }
+
+        if (e.Key == Key.Space &&
+            Keyboard.FocusedElement is not TextBoxBase and not ButtonBase and not Slider)
+        {
+            viewModel.ReproducirCommand.Execute(null);
+            e.Handled = true;
+            return;
+        }
+
+        if (e.Key == Key.Escape)
+        {
+            viewModel.DetenerCommand.Execute(null);
+            e.Handled = true;
+        }
+    }
+
+    private void OnWindowClosed(object? sender, EventArgs e)
+    {
+        Closed -= OnWindowClosed;
+        KeyDown -= OnMainWindowKeyDown;
+        viewModel.RequestAbout -= OpenAbout;
+        viewModel.RequestExit -= OnExitRequested;
+        viewModel.Dispose();
     }
 }

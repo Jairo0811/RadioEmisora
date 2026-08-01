@@ -6,31 +6,39 @@
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
     <UseWPF>true</UseWPF>
+    <LangVersion>latest</LangVersion>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <AnalysisLevel>latest-recommended</AnalysisLevel>
+    <EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
+    <Deterministic>true</Deterministic>
+    <NeutralLanguage>es-DO</NeutralLanguage>
+    <SupportedOSPlatformVersion>10.0.17763.0</SupportedOSPlatformVersion>
+    <ApplicationManifest>app.manifest</ApplicationManifest>
 
     <ApplicationIcon>Assets\RadioEmisoraRD.ico</ApplicationIcon>
     <AssemblyName>RadioEmisoraRD</AssemblyName>
     <Product>RadioEmisora RD</Product>
-    <Version>3.0.0</Version>
-    <AssemblyVersion>3.0.0.0</AssemblyVersion>
-    <FileVersion>3.0.0.0</FileVersion>
+    <Description>Reproductor de emisoras dominicanas para Windows construido con WPF y MVVM.</Description>
+    <Authors>Francis Jairo Matías Rosario</Authors>
+    <Company>Jairo Matías</Company>
+    <Copyright>Copyright © 2018-2026 Francis Jairo Matías Rosario</Copyright>
+    <RepositoryUrl>https://github.com/Jairo0811/RadioEmisora</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+    <Version>3.1.0</Version>
+    <AssemblyVersion>3.1.0.0</AssemblyVersion>
+    <FileVersion>3.1.0.0</FileVersion>
+    <InformationalVersion>3.1.0</InformationalVersion>
   </PropertyGroup>
 
   <ItemGroup>
     <Resource Include="Assets\RadioEmisoraRD.ico" />
     <Resource Include="Assets\itla.png" />
 
-    <Resource Include="Assets\logos\alofoke.png" />
-    <Resource Include="Assets\logos\cima.png" />
-    <Resource Include="Assets\logos\disco.png" />
-    <Resource Include="Assets\logos\disney.png" />
-    <Resource Include="Assets\logos\escandalo.png" />
-    <Resource Include="Assets\logos\fuego.png" />
-    <Resource Include="Assets\logos\independencia.png" />
-    <Resource Include="Assets\logos\lamega.png" />
-    <Resource Include="Assets\logos\mortal.png" />
-    <Resource Include="Assets\logos\popular.png" />
-    <Resource Include="Assets\logos\primera.png" />
-    <Resource Include="Assets\logos\z101.png" />
+    <Resource Include="Assets\logos\*.png" />
+    <Content Include="..\..\catalog\emisoras.json"
+             Link="Assets\Data\emisoras.json"
+             CopyToOutputDirectory="PreserveNewest"
+             CopyToPublishDirectory="PreserveNewest" />
   </ItemGroup>
 
 </Project>

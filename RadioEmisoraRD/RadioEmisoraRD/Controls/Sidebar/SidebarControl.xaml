@@ -61,12 +61,15 @@
                     </TextBlock>
 
                     <TextBox x:Name="txtBuscar"
-         Text="{Binding TextoBusqueda, UpdateSourceTrigger=PropertyChanged}"
-         Background="Transparent"
-         BorderThickness="0"
-         Foreground="#DDE5FF"
-         FontSize="15"
-         Padding="12,8"/>
+                             Text="{Binding TextoBusqueda, UpdateSourceTrigger=PropertyChanged}"
+                             Background="Transparent"
+                             BorderThickness="0"
+                             Foreground="#DDE5FF"
+                             FontSize="15"
+                             Padding="12,8"
+                             ToolTip="Buscar por nombre, frecuencia, categoría, provincia o grupo"
+                             AutomationProperties.Name="Buscar emisora"
+                             AutomationProperties.HelpText="Atajo Control más F"/>
                 </Grid>
             </Border>
 
@@ -106,10 +109,13 @@
                        VerticalAlignment="Center"/>
 
             <ListBox Grid.Row="4"
-         ItemsSource="{Binding EmisorasFiltradas}"
-         SelectedItem="{Binding EmisoraSeleccionada}"
-         Style="{StaticResource StationListBox}"
-         KeyDown="ListBoxEmisoras_KeyDown">
+                     ItemsSource="{Binding EmisorasFiltradas}"
+                     SelectedItem="{Binding EmisoraSeleccionada}"
+                     Style="{StaticResource StationListBox}"
+                     KeyDown="ListBoxEmisoras_KeyDown"
+                     MouseDoubleClick="ListBoxEmisoras_MouseDoubleClick"
+                     AutomationProperties.Name="Catálogo de emisoras"
+                     AutomationProperties.HelpText="Usa las flechas y Enter para reproducir">
                 <ListBox.ItemTemplate>
                     <DataTemplate>
                         <station:StationCardControl/>
