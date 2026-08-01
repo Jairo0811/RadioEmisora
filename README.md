@@ -49,7 +49,9 @@ Las imágenes se generan desde la aplicación WPF real mediante el flujo de inte
 
 ## 📖 Descripción
 
-RadioEmisora RD permite explorar, buscar y escuchar un catálogo de emisoras mediante transmisión en línea. La versión 3.1 conserva el concepto, la navegación y la identidad visual de la reconstrucción WPF 3.0, y añade la capa final de estabilidad necesaria para presentarla en un portafolio profesional.
+RadioEmisora RD permite explorar, buscar y escuchar un catálogo de emisoras mediante transmisión en línea. 
+
+La versión 3.1 conserva el concepto, la navegación y la identidad visual de la reconstrucción WPF 3.0, y añade la capa final de estabilidad necesaria para presentarla en un portafolio profesional.
 
 La aplicación funciona sin cuentas, base de datos ni servicios en la nube. Favoritos, historial, volumen, última emisora y configuración se almacenan localmente en JSON.
 
