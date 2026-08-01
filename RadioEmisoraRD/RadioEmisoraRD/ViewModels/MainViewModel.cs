@@ -374,7 +374,7 @@ public sealed class MainViewModel : INotifyPropertyChanged, IDisposable
                 return ["Sin historial por ahora."];
 
             return new ObservableCollection<string>(
-                config.Historial.Take(5).Select(name =>
+                config.Historial.Take(3).Select(name =>
                 {
                     Emisora? station = FindStation(name);
                     return station is null
@@ -673,7 +673,10 @@ public sealed class MainViewModel : INotifyPropertyChanged, IDisposable
             var image = new BitmapImage();
             image.BeginInit();
             image.CacheOption = BitmapCacheOption.OnLoad;
-            image.UriSource = new Uri(path, UriKind.RelativeOrAbsolute);
+            string source = path.StartsWith("/", StringComparison.Ordinal)
+                ? $"pack://application:,,,{path}"
+                : path;
+            image.UriSource = new Uri(source, UriKind.RelativeOrAbsolute);
             image.EndInit();
             image.Freeze();
             logoCache[path] = image;

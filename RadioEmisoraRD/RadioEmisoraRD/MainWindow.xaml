@@ -23,14 +23,14 @@
 
         <Grid Visibility="{Binding MainLayoutVisibility}">
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="330"/>
+                <ColumnDefinition Width="300"/>
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
 
             <sidebar:SidebarControl x:Name="Sidebar" Grid.Column="0"/>
 
             <ScrollViewer Grid.Column="1"
-                          Margin="35"
+                          Margin="24"
                           VerticalScrollBarVisibility="Auto"
                           HorizontalScrollBarVisibility="Disabled">
 

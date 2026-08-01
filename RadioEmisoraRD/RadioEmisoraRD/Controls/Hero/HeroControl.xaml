@@ -22,18 +22,18 @@
                        RadiusX="34"
                        RadiusY="34"/>
 
-            <Ellipse Width="360"
-                     Height="360"
+            <Ellipse Width="300"
+                     Height="300"
                      Fill="{Binding ColorTemaBrush}"
                      Opacity="0.12"
                      HorizontalAlignment="Right"
                      VerticalAlignment="Center"
                      Margin="0,0,-90,0"/>
 
-            <Grid Margin="38">
+            <Grid Margin="28">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*"/>
-                    <ColumnDefinition Width="310"/>
+                    <ColumnDefinition Width="210"/>
                 </Grid.ColumnDefinitions>
 
                 <StackPanel VerticalAlignment="Center">
@@ -44,30 +44,30 @@
 
                     <TextBlock Text="{Binding NombreActual}"
                                Foreground="White"
-                               FontSize="50"
+                               FontSize="42"
                                FontWeight="Bold"
                                Margin="0,16,0,8"
                                TextWrapping="Wrap"/>
 
                     <TextBlock Text="{Binding CategoriaActual}"
                                Foreground="{Binding ColorTemaBrush}"
-                               FontSize="23"
-                               FontWeight="SemiBold"/>
+                               FontSize="20"
+                               FontWeight="SemiBold"
+                               TextWrapping="Wrap"/>
 
                     <StackPanel Margin="0,22,0,0">
 
-                        <StackPanel Orientation="Horizontal">
+                        <WrapPanel>
                             <TextBlock Text="{Binding ProvinciaActual, StringFormat=📍 {0}}"
                                        Foreground="#AAB4CD"
                                        FontSize="16"/>
 
-                            <TextBlock Text="   "/>
-
                             <TextBlock Text="{Binding TextoFavorito}"
                                        Foreground="#FFD86B"
                                        FontSize="16"
-                                       FontWeight="Bold"/>
-                        </StackPanel>
+                                       FontWeight="Bold"
+                                       Margin="16,0,0,0"/>
+                        </WrapPanel>
 
                         <TextBlock Text="{Binding GrupoActual, StringFormat=🏢 {0}}"
                                    Foreground="#AAB4CD"
@@ -83,8 +83,8 @@
                 </StackPanel>
 
                 <Border Grid.Column="1"
-                        Width="250"
-                        Height="250"
+                        Width="190"
+                        Height="190"
                         CornerRadius="42"
                         Background="#121A30"
                         HorizontalAlignment="Center"
@@ -98,8 +98,8 @@
                     </Border.Effect>
 
                     <Image Source="{Binding LogoActual}"
-                           Width="210"
-                           Height="210"
+                           Width="155"
+                           Height="155"
                            Stretch="Uniform"/>
                 </Border>
             </Grid>

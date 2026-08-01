@@ -11,12 +11,12 @@
         <Border Grid.Row="0"
                 CornerRadius="30"
                 Background="{StaticResource CardBackgroundBrush}"
-                Padding="28">
+                Padding="20">
 
             <Grid>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*"/>
-                    <ColumnDefinition Width="320"/>
+                    <ColumnDefinition Width="220"/>
                 </Grid.ColumnDefinitions>
 
                 <StackPanel Orientation="Horizontal"
@@ -24,7 +24,7 @@
                             VerticalAlignment="Center">
 
                     <Button Content="{Binding TextoBotonReproducir}"
-                            Width="230"
+                            Width="160"
                             Height="68"
                             Background="{Binding ColorTemaBrush}"
                             Style="{StaticResource PrimaryButton}"
@@ -33,11 +33,11 @@
                             Command="{Binding ReproducirCommand}"/>
 
                     <Button Content="⏹ Detener"
-                            Width="230"
+                            Width="160"
                             Height="68"
                             Background="{StaticResource DangerBrush}"
                             Style="{StaticResource PrimaryButton}"
-                            Margin="30,0,0,0"
+                            Margin="16,0,0,0"
                             ToolTip="Detener la reproducción (Escape)"
                             AutomationProperties.Name="Detener reproducción"
                             Command="{Binding DetenerCommand}"/>
@@ -77,7 +77,7 @@
             <Grid>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*"/>
-                    <ColumnDefinition Width="270"/>
+                    <ColumnDefinition Width="190"/>
                 </Grid.ColumnDefinitions>
 
                 <StackPanel VerticalAlignment="Center">
