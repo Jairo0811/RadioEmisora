@@ -2,8 +2,6 @@
   <img src="docs/RadioEmisoraRD.png" width="420" alt="Logo de RadioEmisora RD">
 </p>
 
-
-
 <p align="center">
   Aplicación de escritorio para escuchar emisoras dominicanas mediante streaming en vivo.
 </p>
@@ -119,7 +117,7 @@ La disponibilidad de un stream depende de su emisora o proveedor. Un fallo indiv
 | Z 101 | 101.3 FM | Noticias / Opinión |
 | Primera FM | 88.1 FM | Variada |
 | Alofoke FM | 99.3 FM | Urbano / Entretenimiento |
-| Independencia FM | 93.3 FM | Variada |
+| Independencia FM | 93.3 FM | Urbano / Tropical |
 | La Mega | 97.9 FM | Urbano / Tropical |
 
 ## 🧰 Stack tecnológico
@@ -163,7 +161,7 @@ La disponibilidad de un stream depende de su emisora o proveedor. Un fallo indiv
 - Catálogo local y remoto.
 - Persistencia JSON con respaldo y recuperación.
 
-### 🧪 Calidad y automatización
+### 🧪 Calidad e infraestructura
 
 <p>
   <img src="https://skillicons.dev/icons?i=git,github,githubactions" alt="Git, GitHub y GitHub Actions" />
@@ -372,18 +370,18 @@ Consulta el [changelog](CHANGELOG.md) y las [notas de la versión 3.1.0](RELEASE
 
 ## 🔄 Continuidad académica
 
-**RadioEmisora RD** forma parte de una continuidad académica desarrollada con el profesor **Juan Martínez López** en el Instituto Tecnológico de Las Américas (ITLA).
+**RadioEmisora RD** representa el primer capítulo de una continuidad académica desarrollada con el profesor **Juan Martínez López** en el Instituto Tecnológico de Las Américas (ITLA). La relación entre los proyectos es académica y formativa: no comparten dominio funcional ni código, sino que documentan la evolución entre dos asignaturas impartidas por el mismo docente y sus respectivos proyectos finales.
 
-El primer proyecto fue **RadioEmisora**, realizado como proyecto final de la asignatura **Diseño Centrado en el Usuario (SOF-010)** durante el período **2018-C1**.
+La secuencia comenzó en **2018-C1** con **RadioEmisora**, proyecto final de **Diseño Centrado en el Usuario (SOF-010)**. Su enfoque principal estuvo en la experiencia de usuario, la interacción y el diseño de una aplicación de escritorio orientada al consumo de radio por Internet. La reconstrucción moderna **RadioEmisora RD** conserva ese origen y lo lleva a una implementación WPF contemporánea.
 
-Posteriormente se desarrolló **GestorAdministrativo**, proyecto académico original que hoy evoluciona como [**AdminGest**](https://github.com/Jairo0811/AdminGest), para la asignatura **Administración de Proyectos de Software (SOF-013)** durante el período **2018-C3**.
+Dos cuatrimestres después, en **2018-C3**, la continuidad avanzó con **GestorAdministrativo**, proyecto final de **Administración de Proyectos de Software (SOF-013)**. El nuevo trabajo amplió la perspectiva desde el diseño de interacción hacia la planificación, organización y gestión integral de procesos de software. Ese proyecto académico fue posteriormente reconstruido y modernizado como [**AdminGest**](https://github.com/Jairo0811/AdminGest).
 
-| Orden | Proyecto | Asignatura | Profesor | Período |
-|---:|---|---|---|---|
-| 1 | **RadioEmisora RD** | Diseño Centrado en el Usuario (SOF-010) | Juan Martínez López | 2018-C1 |
-| 2 | [**AdminGest**](https://github.com/Jairo0811/AdminGest) | Administración de Proyectos de Software (SOF-013) | Juan Martínez López | 2018-C3 |
+| Orden | Proyecto actual | Proyecto académico original | Asignatura | Profesor | Período |
+|---:|---|---|---|---|---|
+| 1 | **RadioEmisora RD** | RadioEmisora | Diseño Centrado en el Usuario (SOF-010) | Juan Martínez López | 2018-C1 |
+| 2 | [**AdminGest**](https://github.com/Jairo0811/AdminGest) | GestorAdministrativo | Administración de Proyectos de Software (SOF-013) | Juan Martínez López | 2018-C3 |
 
-Ambos proyectos reflejan una evolución desde el diseño centrado en el usuario hacia la planificación y gestión integral de proyectos de software, preservando su contexto académico y modernizándolo para portafolio profesional.
+Vista como trayectoria académica, esta secuencia muestra una progresión desde el **diseño centrado en las personas y la experiencia de usuario** hacia la **gestión de proyectos y procesos de software**. Las modernizaciones de 2026 preservan esa historia y, al mismo tiempo, incorporan arquitectura, pruebas, seguridad y prácticas de ingeniería actuales para convertir ambos trabajos en proyectos profesionales de portafolio.
 
 ## 👨‍💻 Autor
 
