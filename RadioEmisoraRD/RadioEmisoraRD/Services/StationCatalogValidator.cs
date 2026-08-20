@@ -6,6 +6,10 @@ namespace RadioEmisoraRD.Services;
 public static class StationCatalogValidator
 {
     private const int MaxStations = 200;
+    private const int MaxIdLength = 64;
+    private const int MaxNameLength = 100;
+    private const int MaxShortTextLength = 100;
+    private const int MaxLogoLength = 100;
     private static readonly Regex StationIdPattern = new(
         "^[a-z0-9]+(?:-[a-z0-9]+)*$",
         RegexOptions.Compiled | RegexOptions.CultureInvariant);
@@ -41,25 +45,33 @@ public static class StationCatalogValidator
 
         for (int index = 0; index < catalog.Stations.Count; index++)
         {
-            StationCatalogItem station = catalog.Stations[index];
             string prefix = $"Emisora #{index + 1}";
+            StationCatalogItem? station = catalog.Stations[index];
+            if (station is null)
+            {
+                validationErrors.Add($"{prefix}: entrada vacía.");
+                continue;
+            }
 
-            if (string.IsNullOrWhiteSpace(station.Id) || !StationIdPattern.IsMatch(station.Id))
+            if (string.IsNullOrWhiteSpace(station.Id) || station.Id.Length > MaxIdLength ||
+                !StationIdPattern.IsMatch(station.Id))
                 validationErrors.Add($"{prefix}: identificador inválido.");
             else if (!ids.Add(station.Id))
-                validationErrors.Add($"{prefix}: identificador duplicado '{station.Id}'.");
+                validationErrors.Add($"{prefix}: identificador duplicado.");
 
-            if (string.IsNullOrWhiteSpace(station.Nombre))
-                validationErrors.Add($"{prefix}: nombre requerido.");
-            else if (!names.Add(station.Nombre))
-                validationErrors.Add($"{prefix}: nombre duplicado '{station.Nombre}'.");
+            if (ValidateRequired(
+                    station.Nombre, "nombre", prefix, MaxNameLength, validationErrors) &&
+                !names.Add(station.Nombre))
+                validationErrors.Add($"{prefix}: nombre duplicado.");
 
-            ValidateRequired(station.Frecuencia, "frecuencia", prefix, validationErrors);
-            ValidateRequired(station.Categoria, "categoría", prefix, validationErrors);
-            ValidateRequired(station.Provincia, "provincia", prefix, validationErrors);
-            ValidateRequired(station.Grupo, "grupo", prefix, validationErrors);
+            ValidateRequired(station.Frecuencia, "frecuencia", prefix, 32, validationErrors);
+            ValidateRequired(station.Categoria, "categoría", prefix, 64, validationErrors);
+            ValidateRequired(station.Provincia, "provincia", prefix, 64, validationErrors);
+            ValidateRequired(station.Grupo, "grupo", prefix, MaxShortTextLength, validationErrors);
 
             if (string.IsNullOrWhiteSpace(station.Logo) ||
+                station.Logo.Length > MaxLogoLength ||
+                station.Logo.Any(char.IsControl) ||
                 !string.Equals(Path.GetFileName(station.Logo), station.Logo, StringComparison.Ordinal) ||
                 !station.Logo.EndsWith(".png", StringComparison.OrdinalIgnoreCase))
             {
@@ -69,10 +81,9 @@ public static class StationCatalogValidator
             if (!ThemeColorPattern.IsMatch(station.ColorTema ?? string.Empty))
                 validationErrors.Add($"{prefix}: color de tema inválido.");
 
-            if (!Uri.TryCreate(station.StreamUrl, UriKind.Absolute, out Uri? streamUri) ||
-                streamUri.Scheme != Uri.UriSchemeHttps)
+            if (!NetworkUriPolicy.TryCreatePublicHttpsUri(station.StreamUrl, out _))
             {
-                validationErrors.Add($"{prefix}: el stream debe usar una URL HTTPS absoluta.");
+                validationErrors.Add($"{prefix}: el stream debe usar una URL HTTPS pública.");
             }
         }
 
@@ -80,14 +91,26 @@ public static class StationCatalogValidator
         return validationErrors.Count == 0;
     }
 
-    private static void ValidateRequired(
+    private static bool ValidateRequired(
         string? value,
         string fieldName,
         string prefix,
+        int maximumLength,
         List<string> errors)
     {
         if (string.IsNullOrWhiteSpace(value))
+        {
             errors.Add($"{prefix}: {fieldName} requerida.");
+            return false;
+        }
+
+        if (value.Length > maximumLength || value.Any(char.IsControl))
+        {
+            errors.Add($"{prefix}: {fieldName} inválida.");
+            return false;
+        }
+
+        return true;
     }
 
 }

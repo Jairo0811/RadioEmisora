@@ -97,8 +97,15 @@ public partial class App : Application
         if (arguments.Length >= 2 &&
             string.Equals(arguments[0], "--capture-docs", StringComparison.OrdinalIgnoreCase))
         {
-            directory = Path.GetFullPath(arguments[1]);
-            return true;
+            string candidate = Path.GetFullPath(arguments[1]);
+            string workingDirectory = Path.GetFullPath(Environment.CurrentDirectory)
+                .TrimEnd(Path.DirectorySeparatorChar) + Path.DirectorySeparatorChar;
+
+            if (candidate.StartsWith(workingDirectory, StringComparison.OrdinalIgnoreCase))
+            {
+                directory = candidate;
+                return true;
+            }
         }
 
         directory = string.Empty;

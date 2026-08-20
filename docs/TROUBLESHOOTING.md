@@ -42,7 +42,7 @@ La aplicación nunca depende del servidor remoto para iniciar. Si la consulta fa
 
 - Usa `Ctrl + R` para reintentar.
 - Comprueba acceso a `raw.githubusercontent.com`.
-- Revisa `CatalogUrl` en `config.json`; debe ser una URL HTTPS.
+- Revisa `CatalogUrl` en `config.json`; debe ser una URL HTTPS pública. Direcciones locales, privadas, link-local y redirecciones se rechazan.
 - Si la configuración contiene una URL inválida, RadioEmisora RD restaura automáticamente la URL oficial.
 
 ## Configuración o favoritos dañados

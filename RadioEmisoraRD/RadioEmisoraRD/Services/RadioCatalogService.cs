@@ -21,7 +21,8 @@ public sealed class RadioCatalogService : IRadioCatalogService, IDisposable
 
     private static readonly JsonSerializerOptions SerializerOptions = new()
     {
-        PropertyNameCaseInsensitive = true
+        PropertyNameCaseInsensitive = true,
+        MaxDepth = 16
     };
 
     private readonly HttpClient httpClient;
@@ -73,8 +74,7 @@ public sealed class RadioCatalogService : IRadioCatalogService, IDisposable
     {
         ThrowIfDisposed();
 
-        if (!Uri.TryCreate(remoteUrl, UriKind.Absolute, out Uri? remoteUri) ||
-            remoteUri.Scheme != Uri.UriSchemeHttps)
+        if (!NetworkUriPolicy.TryCreatePublicHttpsUri(remoteUrl, out Uri? remoteUri))
         {
             return CurrentWithWarning("La dirección remota del catálogo no es válida.");
         }
@@ -99,12 +99,18 @@ public sealed class RadioCatalogService : IRadioCatalogService, IDisposable
 
             response.EnsureSuccessStatusCode();
 
+            Uri finalUri = response.RequestMessage?.RequestUri ?? remoteUri!;
+            if (!NetworkUriPolicy.TryCreatePublicHttpsUri(finalUri.AbsoluteUri, out _))
+                throw new InvalidDataException("El catálogo fue redirigido a un destino no permitido.");
+
             if (response.Content.Headers.ContentLength > MaxCatalogSizeBytes)
                 throw new InvalidDataException("El catálogo remoto supera el tamaño permitido.");
 
             await using Stream stream = await response.Content.ReadAsStreamAsync(linkedCancellation.Token);
+            await using MemoryStream boundedContent = await ReadBoundedAsync(
+                stream, linkedCancellation.Token);
             StationCatalog? remoteCatalog = await JsonSerializer.DeserializeAsync<StationCatalog>(
-                stream,
+                boundedContent,
                 SerializerOptions,
                 linkedCancellation.Token);
 
@@ -169,6 +175,12 @@ public sealed class RadioCatalogService : IRadioCatalogService, IDisposable
 
         try
         {
+            if (new FileInfo(path).Length > MaxCatalogSizeBytes)
+            {
+                logger.Warning($"El catálogo '{path}' supera el tamaño permitido.");
+                return null;
+            }
+
             using FileStream stream = File.OpenRead(path);
             StationCatalog? catalog = JsonSerializer.Deserialize<StationCatalog>(stream, SerializerOptions);
 
@@ -188,13 +200,7 @@ public sealed class RadioCatalogService : IRadioCatalogService, IDisposable
 
     private static HttpClient CreateHttpClient()
     {
-        var handler = new SocketsHttpHandler
-        {
-            AllowAutoRedirect = true,
-            AutomaticDecompression = System.Net.DecompressionMethods.All,
-            ConnectTimeout = TimeSpan.FromSeconds(8),
-            PooledConnectionLifetime = TimeSpan.FromMinutes(5)
-        };
+        var handler = NetworkUriPolicy.CreatePublicNetworkHandler();
 
         var client = new HttpClient(handler)
         {
@@ -205,4 +211,32 @@ public sealed class RadioCatalogService : IRadioCatalogService, IDisposable
     }
 
     private void ThrowIfDisposed() => ObjectDisposedException.ThrowIf(disposed, this);
+
+    private static async Task<MemoryStream> ReadBoundedAsync(
+        Stream source,
+        CancellationToken cancellationToken)
+    {
+        var destination = new MemoryStream();
+        var buffer = new byte[16 * 1024];
+        try
+        {
+            while (true)
+            {
+                int read = await source.ReadAsync(buffer, cancellationToken);
+                if (read == 0) break;
+                if (destination.Length + read > MaxCatalogSizeBytes)
+                    throw new InvalidDataException("El catálogo remoto supera el tamaño permitido.");
+
+                await destination.WriteAsync(buffer.AsMemory(0, read), cancellationToken);
+            }
+
+            destination.Position = 0;
+            return destination;
+        }
+        catch
+        {
+            destination.Dispose();
+            throw;
+        }
+    }
 }

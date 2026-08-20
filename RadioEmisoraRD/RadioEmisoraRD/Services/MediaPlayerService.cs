@@ -91,9 +91,7 @@ public sealed class MediaPlayerService : IMediaPlayerService
         ThrowIfDisposed();
         ArgumentNullException.ThrowIfNull(options);
 
-        if (!Uri.TryCreate(url, UriKind.Absolute, out Uri? streamUri) ||
-            (streamUri.Scheme != Uri.UriSchemeHttps && streamUri.Scheme != Uri.UriSchemeHttp) ||
-            !string.IsNullOrEmpty(streamUri.UserInfo))
+        if (!NetworkUriPolicy.TryCreatePublicHttpsUri(url, out Uri? streamUri))
         {
             var exception = new ArgumentException("La URL del stream no es válida.", nameof(url));
             ReportFinalError("La dirección de esta emisora no es válida.", exception);
@@ -220,10 +218,16 @@ public sealed class MediaPlayerService : IMediaPlayerService
                     options.Timeout,
                     cancellationToken);
                 EnsureCurrentGeneration(generation, cancellationToken);
+                if (!NetworkUriPolicy.TryCreatePublicHttpsUri(
+                    probeResult.FinalUri.AbsoluteUri, out Uri? safeFinalUri))
+                {
+                    throw new InvalidDataException(
+                        "El stream fue redirigido a un destino no permitido.");
+                }
 
                 CloseEngine();
                 stateMachine.TransitionTo(PlayerState.Buffering);
-                engine.Open(probeResult.FinalUri);
+                engine.Open(safeFinalUri);
                 engine.Play();
                 return;
             }
