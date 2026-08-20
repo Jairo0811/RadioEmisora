@@ -137,7 +137,7 @@ public sealed class RadioCatalogService : IRadioCatalogService, IDisposable
             return CurrentWithWarning("No se pudo consultar el catálogo remoto a tiempo.");
         }
         catch (Exception exception) when (
-            exception is HttpRequestException or IOException or JsonException)
+            exception is HttpRequestException or IOException or InvalidDataException or JsonException)
         {
             logger.Warning("No se pudo actualizar el catálogo remoto.", exception);
             return CurrentWithWarning("Sin conexión al catálogo remoto; se mantiene la copia local.");
