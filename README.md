@@ -294,6 +294,8 @@ La suite cubre:
 - Orden y capacidad del historial.
 - Búsqueda y filtros.
 - Validación y fallback del catálogo.
+- Rechazo de destinos locales/privados y URLs inseguras.
+- Límite real del catálogo, incluso con respuestas comprimidas o sin `Content-Length`.
 - Actualización remota por versión.
 - Máquina de estados del reproductor.
 - Conexión, reintentos, error, pausa, continuación y cierre.
@@ -317,6 +319,10 @@ Modo normal:
 Para modo portable, coloca `portable.flag` junto al ejecutable o define `RADIOEMISORARD_PORTABLE=1`. Los datos se guardarán en `Data` dentro de la carpeta de la aplicación.
 
 RadioEmisora RD no crea cuentas, no recopila telemetría y no envía favoritos ni historial a servidores externos. Solo consulta el catálogo configurado y los endpoints de audio elegidos por el usuario.
+
+Las conexiones salientes exigen HTTPS, no siguen redirecciones y bloquean direcciones loopback, privadas, link-local y nombres locales. Los catálogos y archivos JSON tienen límites de tamaño/profundidad; los textos, identificadores y rutas de logos se validan antes de mostrarse o persistirse. Los logs rotan al alcanzar 5 MB.
+
+Como aplicación de escritorio local no expone rutas API ni un servicio multiusuario: no existe una frontera de autenticación HTTP que configurar. La autorización efectiva es la sesión de Windows y los permisos de la carpeta de datos.
 
 ## ⌨️ Atajos de teclado
 

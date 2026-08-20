@@ -6,10 +6,13 @@ namespace RadioEmisoraRD.Services;
 internal sealed class JsonFileStore<T>
     where T : class
 {
+    private const long MaxFileSizeBytes = 1024 * 1024;
+
     private static readonly JsonSerializerOptions SerializerOptions = new()
     {
         PropertyNameCaseInsensitive = true,
         WriteIndented = true,
+        MaxDepth = 16,
         Converters = { new JsonStringEnumConverter() }
     };
 
@@ -75,6 +78,12 @@ internal sealed class JsonFileStore<T>
 
         try
         {
+            if (new FileInfo(path).Length > MaxFileSizeBytes)
+            {
+                logger.Warning($"Se rechazó '{Path.GetFileName(path)}' porque supera 1 MB.");
+                return false;
+            }
+
             using FileStream stream = new(
                 path,
                 FileMode.Open,

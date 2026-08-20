@@ -35,7 +35,9 @@ public sealed class FavoriteService : IFavoriteService
         List<string> normalized = favorites
             .Where(static item => !string.IsNullOrWhiteSpace(item))
             .Select(static item => item.Trim())
+            .Where(static item => item.Length <= 64 && !item.Any(char.IsControl))
             .Distinct(StringComparer.OrdinalIgnoreCase)
+            .Take(500)
             .OrderBy(static item => item, StringComparer.CurrentCultureIgnoreCase)
             .ToList();
 

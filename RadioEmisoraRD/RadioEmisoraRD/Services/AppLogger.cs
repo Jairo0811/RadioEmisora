@@ -15,6 +15,7 @@ public interface IAppLogger
 
 public sealed class AppLogger : IAppLogger
 {
+    private const long MaxLogSizeBytes = 5 * 1024 * 1024;
     private readonly object syncRoot = new();
 
     public AppLogger(string? logsDirectory = null)
@@ -53,6 +54,9 @@ public sealed class AppLogger : IAppLogger
 
             lock (syncRoot)
             {
+                if (File.Exists(LogFilePath) && new FileInfo(LogFilePath).Length >= MaxLogSizeBytes)
+                    File.Move(LogFilePath, LogFilePath + ".1", true);
+
                 File.AppendAllText(LogFilePath, line + Environment.NewLine);
             }
         }

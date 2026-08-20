@@ -34,9 +34,13 @@ public sealed class ConfigService : IConfigService
     {
         config.SchemaVersion = 2;
         config.UltimaEmisora = config.UltimaEmisora?.Trim() ?? string.Empty;
+        if (config.UltimaEmisora.Length > 64 || config.UltimaEmisora.Any(char.IsControl))
+            config.UltimaEmisora = string.Empty;
+
         config.Historial = (config.Historial ?? [])
             .Where(static item => !string.IsNullOrWhiteSpace(item))
             .Select(static item => item.Trim())
+            .Where(static item => item.Length <= 100 && !item.Any(char.IsControl))
             .Distinct(StringComparer.OrdinalIgnoreCase)
             .Take(10)
             .ToList();
@@ -47,8 +51,7 @@ public sealed class ConfigService : IConfigService
         config.MaxReconnectAttempts = Math.Clamp(config.MaxReconnectAttempts, 0, 10);
         config.ReconnectDelaySeconds = Math.Clamp(config.ReconnectDelaySeconds, 1, 30);
 
-        if (!Uri.TryCreate(config.CatalogUrl, UriKind.Absolute, out Uri? catalogUri) ||
-            catalogUri.Scheme != Uri.UriSchemeHttps)
+        if (!NetworkUriPolicy.TryCreatePublicHttpsUri(config.CatalogUrl, out _))
         {
             config.CatalogUrl = AppConfig.DefaultCatalogUrl;
         }

@@ -39,6 +39,8 @@ public sealed class StreamProbe : IStreamProbe, IDisposable
     {
         ObjectDisposedException.ThrowIf(disposed, this);
         ArgumentNullException.ThrowIfNull(streamUri);
+        if (!NetworkUriPolicy.TryCreatePublicHttpsUri(streamUri.AbsoluteUri, out _))
+            throw new InvalidDataException("El destino del stream no es público o seguro.");
 
         using var timeoutCancellation = new CancellationTokenSource(timeout);
         using var linkedCancellation = CancellationTokenSource.CreateLinkedTokenSource(
@@ -72,6 +74,9 @@ public sealed class StreamProbe : IStreamProbe, IDisposable
                 throw new InvalidDataException("El servidor no devolvió un stream de audio válido.");
 
             Uri finalUri = response.RequestMessage?.RequestUri ?? streamUri;
+            if (!NetworkUriPolicy.TryCreatePublicHttpsUri(finalUri.AbsoluteUri, out _))
+                throw new InvalidDataException("El stream fue redirigido a un destino no permitido.");
+
             return new StreamProbeResult(finalUri, mediaType);
         }
     }
@@ -100,13 +105,7 @@ public sealed class StreamProbe : IStreamProbe, IDisposable
 
     private static HttpClient CreateHttpClient()
     {
-        var handler = new SocketsHttpHandler
-        {
-            AllowAutoRedirect = true,
-            AutomaticDecompression = System.Net.DecompressionMethods.All,
-            ConnectTimeout = TimeSpan.FromSeconds(8),
-            PooledConnectionLifetime = TimeSpan.FromMinutes(5)
-        };
+        var handler = NetworkUriPolicy.CreatePublicNetworkHandler();
 
         var client = new HttpClient(handler)
         {

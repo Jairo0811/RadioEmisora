@@ -8,6 +8,8 @@ public static class HistoryService
     {
         ArgumentNullException.ThrowIfNull(config);
         ArgumentException.ThrowIfNullOrWhiteSpace(stationName);
+        if (stationName.Length > 100 || stationName.Any(char.IsControl))
+            throw new ArgumentException("El nombre de la emisora no es válido.", nameof(stationName));
 
         capacity = Math.Max(1, capacity);
         config.Historial ??= [];
