@@ -4,6 +4,16 @@ Todos los cambios relevantes de RadioEmisora RD se documentan en este archivo.
 
 El formato sigue [Keep a Changelog](https://keepachangelog.com/es-ES/1.1.0/) y el proyecto utiliza versionado semántico.
 
+## [Unreleased]
+
+### Documentación
+
+- Se añadió la licencia MIT para el código fuente del proyecto.
+- Se documentaron por separado las marcas, logos, streams y demás contenido perteneciente a terceros.
+- Se añadió una política de seguridad con alcance de soporte para la línea 3.1.x.
+- Se declaró formalmente el proyecto como completado y en modo mantenimiento.
+- Se definieron los cambios futuros aceptados y las funcionalidades deliberadamente fuera de alcance.
+
 ## [3.1.0] - 2026-08-01
 
 ### Agregado
@@ -42,4 +52,5 @@ El formato sigue [Keep a Changelog](https://keepachangelog.com/es-ES/1.1.0/) y e
 
 - Reconstrucción de la aplicación con WPF, MVVM, dashboard, favoritos, historial, búsqueda y persistencia JSON.
 
+[Unreleased]: https://github.com/Jairo0811/RadioEmisora/compare/v3.1.0...HEAD
 [3.1.0]: https://github.com/Jairo0811/RadioEmisora/compare/v3.0.0...v3.1.0
