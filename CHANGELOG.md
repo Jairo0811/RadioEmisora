@@ -6,6 +6,15 @@ El formato sigue [Keep a Changelog](https://keepachangelog.com/es-ES/1.1.0/) y e
 
 ## [Unreleased]
 
+### Infraestructura
+
+- Se añadió un instalador profesional para Windows x64 generado con Inno Setup 6.
+- El instalador usa instalación por usuario, menú Inicio, acceso directo opcional y desinstalador registrado.
+- CI compila y valida `RadioEmisoraRD-Setup-win-x64.exe` junto con los builds existentes.
+- El flujo de release publica el instalador además de los ZIP portable y autocontenido.
+- Se añadió soporte opcional de firma Authenticode SHA-256 con timestamp y verificación mediante certificado PFX almacenado en GitHub Secrets.
+- Los hashes SHA-256 de release incluyen ahora el instalador.
+
 ### Documentación
 
 - Se añadió la licencia MIT para el código fuente del proyecto.
@@ -13,6 +22,7 @@ El formato sigue [Keep a Changelog](https://keepachangelog.com/es-ES/1.1.0/) y e
 - Se añadió una política de seguridad con alcance de soporte para la línea 3.1.x.
 - Se declaró formalmente el proyecto como completado y en modo mantenimiento.
 - Se definieron los cambios futuros aceptados y las funcionalidades deliberadamente fuera de alcance.
+- Se documentó el proceso de distribución, instalación y firma de Windows.
 
 ## [3.1.0] - 2026-08-01
 
