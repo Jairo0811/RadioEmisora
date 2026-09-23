@@ -7,7 +7,7 @@
 </p>
 
 <p align="center">
-  <img src="https://img.shields.io/badge/ITLA-2018--C1-0057B8?style=for-the-badge" alt="ITLA 2018-C1">
+  <img src="https://img.shields.io/badge/ITLA-SOF--010-0057B8?style=for-the-badge" alt="ITLA SOF-010">
 </p>
 
 <p align="center">
@@ -120,7 +120,7 @@ La disponibilidad de un stream depende de su emisora o proveedor. Un fallo indiv
 | Independencia FM | 93.3 FM | Urbano / Tropical |
 | La Mega | 97.9 FM | Urbano / Tropical |
 
-## 🧰 Stack tecnológico
+## 🧱 Stack tecnológico
 
 ### 🖥️ Aplicación de escritorio
 
@@ -368,7 +368,7 @@ Consulta el [changelog](CHANGELOG.md) y las [notas de la versión 3.1.0](RELEASE
 | 📁 Tipo | Proyecto final |
 | 🛠️ Modernización | 2026 |
 
-## 🔄 Continuidad académica
+## 🧭 Continuidad académica
 
 **RadioEmisora RD** representa el primer capítulo de una continuidad académica desarrollada con el profesor **Juan Martínez López** en el Instituto Tecnológico de Las Américas (ITLA). La relación entre los proyectos es académica y formativa: no comparten dominio funcional ni código, sino que documentan la evolución entre dos asignaturas impartidas por el mismo docente y sus respectivos proyectos finales.
 
