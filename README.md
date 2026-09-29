@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="docs/RadioEmisoraRD.png" width="420" alt="Logo de RadioEmisora RD">
+  <img src="docs/RadioEmisoraRD.png" width="720" alt="Logo de RadioEmisora RD">
 </p>
 
 <p align="center">
