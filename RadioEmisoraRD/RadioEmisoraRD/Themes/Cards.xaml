@@ -8,18 +8,49 @@
         <Setter Property="ScrollViewer.HorizontalScrollBarVisibility" Value="Disabled"/>
     </Style>
 
+    <!-- Foco de teclado visible y redondeado, dentro de los límites de la tarjeta. -->
+    <Style x:Key="StationCardFocusVisual">
+        <Setter Property="Control.Template">
+            <Setter.Value>
+                <ControlTemplate>
+                    <Rectangle Margin="4,4,4,16"
+                               RadiusX="16"
+                               RadiusY="16"
+                               Stroke="White"
+                               StrokeThickness="1.5"
+                               StrokeDashArray="2 2"
+                               SnapsToDevicePixels="True"/>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
     <Style TargetType="ListBoxItem">
         <Setter Property="Padding" Value="0"/>
         <Setter Property="Margin" Value="0"/>
         <Setter Property="Background" Value="Transparent"/>
         <Setter Property="BorderThickness" Value="0"/>
         <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+        <Setter Property="FocusVisualStyle" Value="{StaticResource StationCardFocusVisual}"/>
+        <Setter Property="AutomationProperties.Name" Value="{Binding DescripcionAccesible}"/>
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="ListBoxItem">
-                    <Border Background="Transparent">
+                    <Grid Background="Transparent">
                         <ContentPresenter/>
-                    </Border>
+                        <!-- Anillo cyan: emisora seleccionada (distinto del borde violeta de "sonando"). -->
+                        <Border x:Name="SelectionRing"
+                                Margin="0,0,0,12"
+                                CornerRadius="20"
+                                BorderThickness="2"
+                                BorderBrush="Transparent"
+                                IsHitTestVisible="False"/>
+                    </Grid>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsSelected" Value="True">
+                            <Setter TargetName="SelectionRing" Property="BorderBrush" Value="#2DB4FF"/>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
                 </ControlTemplate>
             </Setter.Value>
         </Setter>

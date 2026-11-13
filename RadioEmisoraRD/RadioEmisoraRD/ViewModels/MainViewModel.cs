@@ -1,4 +1,4 @@
-using System.Collections.ObjectModel;
+﻿using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Windows;
@@ -25,6 +25,7 @@ public sealed class MainViewModel : INotifyPropertyChanged, IDisposable
     private readonly DispatcherTimer configSaveTimer = new();
     private readonly Random random = new();
     private readonly Dictionary<string, BitmapImage> logoCache = new(StringComparer.Ordinal);
+    private static readonly Color DefaultThemeColor = Color.FromRgb(95, 45, 230);
     private readonly Dictionary<Color, SolidColorBrush> brushCache = [];
     private readonly bool ownsServices;
     private readonly AsyncRelayCommand playCommand;
@@ -240,7 +241,7 @@ public sealed class MainViewModel : INotifyPropertyChanged, IDisposable
             bool sameStation = ReferenceEquals(EmisoraSeleccionada, emisoraEnReproduccion);
 
             if (!sameStation)
-                return "▶ Reproducir";
+                return OtraEmisoraActiva is null ? "▶ Reproducir" : "▶ Cambiar";
 
             return playerState switch
             {
@@ -276,6 +277,13 @@ public sealed class MainViewModel : INotifyPropertyChanged, IDisposable
             if (ReferenceEquals(EmisoraSeleccionada, emisoraEnReproduccion))
                 return playerStateDetail ?? playerState.ToDisplayText();
 
+            if (OtraEmisoraActiva is { } activa)
+            {
+                return playerState == PlayerState.Pausado
+                    ? $"En pausa: {activa.Nombre}. Pulsa «Cambiar» para escuchar esta emisora."
+                    : $"Sonando ahora: {activa.Nombre}. Pulsa «Cambiar» para escuchar esta emisora.";
+            }
+
             return "Streaming online";
         }
     }
@@ -288,7 +296,7 @@ public sealed class MainViewModel : INotifyPropertyChanged, IDisposable
                 return EstadoReproductor;
 
             if (!ReferenceEquals(EmisoraSeleccionada, emisoraEnReproduccion))
-                return EmisoraSeleccionada.Estado;
+                return OtraEmisoraActiva is null ? EmisoraSeleccionada.Estado : "○ SELECCIONADA";
 
             return playerState switch
             {
@@ -318,20 +326,26 @@ public sealed class MainViewModel : INotifyPropertyChanged, IDisposable
         _ => "☆ Favoritos"
     };
 
-    public SolidColorBrush ColorTemaBrush
-    {
-        get
-        {
-            Color color = EmisoraSeleccionada?.ColorTema ?? Color.FromRgb(95, 45, 230);
-            if (brushCache.TryGetValue(color, out SolidColorBrush? brush))
-                return brush;
+    public SolidColorBrush ColorTemaBrush =>
+        GetBrush(EmisoraSeleccionada?.ColorTema ?? DefaultThemeColor);
 
-            brush = new SolidColorBrush(color);
-            brush.Freeze();
-            brushCache[color] = brush;
-            return brush;
-        }
-    }
+    /// <summary>
+    /// Color del panel "Ahora suena": sigue a la emisora que realmente se reproduce,
+    /// aunque el usuario haya seleccionado otra en el catálogo.
+    /// </summary>
+    public SolidColorBrush ColorReproduccionBrush =>
+        GetBrush((emisoraEnReproduccion ?? EmisoraSeleccionada)?.ColorTema ?? DefaultThemeColor);
+
+    /// <summary>
+    /// Emisora que está sonando, conectando o en pausa y que no es la seleccionada.
+    /// </summary>
+    private Emisora? OtraEmisoraActiva =>
+        emisoraEnReproduccion is not null &&
+        !ReferenceEquals(emisoraEnReproduccion, EmisoraSeleccionada) &&
+        playerState is PlayerState.Conectando or PlayerState.Buffering or PlayerState.Reproduciendo or
+            PlayerState.Reconectando or PlayerState.Pausado
+            ? emisoraEnReproduccion
+            : null;
 
     public BitmapImage? LogoActual => EmisoraSeleccionada is null
         ? null
@@ -690,6 +704,17 @@ public sealed class MainViewModel : INotifyPropertyChanged, IDisposable
         }
     }
 
+    private SolidColorBrush GetBrush(Color color)
+    {
+        if (brushCache.TryGetValue(color, out SolidColorBrush? brush))
+            return brush;
+
+        brush = new SolidColorBrush(color);
+        brush.Freeze();
+        brushCache[color] = brush;
+        return brush;
+    }
+
     private void OnPlayerStateChanged(object? sender, PlayerStateChangedEventArgs e) =>
         RunOnUiThread(() =>
         {
@@ -823,6 +848,7 @@ public sealed class MainViewModel : INotifyPropertyChanged, IDisposable
         OnPropertyChanged(nameof(EstadoReproductor));
         OnPropertyChanged(nameof(EstadoActual));
         OnPropertyChanged(nameof(StreamEstadoActual));
+        OnPropertyChanged(nameof(ColorReproduccionBrush));
     }
 
     private void RefreshCurrentView()
@@ -834,6 +860,7 @@ public sealed class MainViewModel : INotifyPropertyChanged, IDisposable
         OnPropertyChanged(nameof(StreamEstadoActual));
         OnPropertyChanged(nameof(EstadoActual));
         OnPropertyChanged(nameof(ColorTemaBrush));
+        OnPropertyChanged(nameof(ColorReproduccionBrush));
         OnPropertyChanged(nameof(LogoActual));
         OnPropertyChanged(nameof(TextoFavorito));
         OnPropertyChanged(nameof(TextoBotonReproducir));

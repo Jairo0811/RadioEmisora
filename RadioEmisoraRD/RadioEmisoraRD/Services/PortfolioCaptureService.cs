@@ -1,4 +1,4 @@
-using System.Windows;
+﻿using System.Windows;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Threading;
@@ -66,6 +66,9 @@ internal static class PortfolioCaptureService
 
         viewModel.FiltroActual = "Todas";
         viewModel.TextoBusqueda = "noticias";
+        // Mortal sigue sonando mientras se selecciona otra emisora: la captura documenta
+        // la diferencia visual entre "seleccionada" y "en reproducción".
+        viewModel.EmisoraSeleccionada = viewModel.EmisorasFiltradas.FirstOrDefault();
         await WaitForRenderAsync();
         BitmapSource search = Render(window);
         SavePng(search, Path.Combine(outputDirectory, "busqueda.png"));

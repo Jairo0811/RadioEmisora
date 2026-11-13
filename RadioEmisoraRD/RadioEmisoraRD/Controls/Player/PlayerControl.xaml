@@ -28,8 +28,9 @@
                             Height="68"
                             Background="{Binding ColorTemaBrush}"
                             Style="{StaticResource PrimaryButton}"
-                            ToolTip="Reproducir, pausar o continuar (Espacio)"
-                            AutomationProperties.Name="Control principal de reproducción"
+                            ToolTip="Reproducir, pausar, continuar o cambiar de emisora (Espacio)"
+                            AutomationProperties.Name="{Binding TextoBotonReproducir}"
+                            AutomationProperties.HelpText="Control principal de reproducción"
                             Command="{Binding ReproducirCommand}"/>
 
                     <Button Content="⏹ Detener"
@@ -60,6 +61,8 @@
                                 Maximum="1"
                                 Value="{Binding Volumen}"
                                 TickFrequency="0.1"
+                                SmallChange="0.05"
+                                LargeChange="0.1"
                                 IsSnapToTickEnabled="False"
                                 AutomationProperties.Name="Volumen"
                                 AutomationProperties.HelpText="Usa las flechas para ajustar el volumen"/>
@@ -82,7 +85,8 @@
 
                 <StackPanel VerticalAlignment="Center">
                     <TextBlock Text="{Binding EstadoReproductor}"
-                               Foreground="{Binding ColorTemaBrush}"
+                               Foreground="{Binding ColorReproduccionBrush}"
+                               AutomationProperties.LiveSetting="Polite"
                                FontSize="12"
                                FontWeight="Bold"/>
 
@@ -99,13 +103,13 @@
                             HorizontalAlignment="Center"
                             VerticalAlignment="Center">
 
-                    <Rectangle Width="12" Height="{Binding Bar1}" RadiusX="4" RadiusY="4" Fill="{Binding ColorTemaBrush}" Margin="4,0"/>
-                    <Rectangle Width="12" Height="{Binding Bar2}" RadiusX="4" RadiusY="4" Fill="{Binding ColorTemaBrush}" Margin="4,0"/>
-                    <Rectangle Width="12" Height="{Binding Bar3}" RadiusX="4" RadiusY="4" Fill="{Binding ColorTemaBrush}" Margin="4,0"/>
-                    <Rectangle Width="12" Height="{Binding Bar4}" RadiusX="4" RadiusY="4" Fill="{Binding ColorTemaBrush}" Margin="4,0"/>
-                    <Rectangle Width="12" Height="{Binding Bar5}" RadiusX="4" RadiusY="4" Fill="{Binding ColorTemaBrush}" Margin="4,0"/>
-                    <Rectangle Width="12" Height="{Binding Bar6}" RadiusX="4" RadiusY="4" Fill="{Binding ColorTemaBrush}" Margin="4,0"/>
-                    <Rectangle Width="12" Height="{Binding Bar7}" RadiusX="4" RadiusY="4" Fill="{Binding ColorTemaBrush}" Margin="4,0"/>
+                    <Rectangle Width="12" Height="{Binding Bar1}" RadiusX="4" RadiusY="4" Fill="{Binding ColorReproduccionBrush}" Margin="4,0"/>
+                    <Rectangle Width="12" Height="{Binding Bar2}" RadiusX="4" RadiusY="4" Fill="{Binding ColorReproduccionBrush}" Margin="4,0"/>
+                    <Rectangle Width="12" Height="{Binding Bar3}" RadiusX="4" RadiusY="4" Fill="{Binding ColorReproduccionBrush}" Margin="4,0"/>
+                    <Rectangle Width="12" Height="{Binding Bar4}" RadiusX="4" RadiusY="4" Fill="{Binding ColorReproduccionBrush}" Margin="4,0"/>
+                    <Rectangle Width="12" Height="{Binding Bar5}" RadiusX="4" RadiusY="4" Fill="{Binding ColorReproduccionBrush}" Margin="4,0"/>
+                    <Rectangle Width="12" Height="{Binding Bar6}" RadiusX="4" RadiusY="4" Fill="{Binding ColorReproduccionBrush}" Margin="4,0"/>
+                    <Rectangle Width="12" Height="{Binding Bar7}" RadiusX="4" RadiusY="4" Fill="{Binding ColorReproduccionBrush}" Margin="4,0"/>
                 </StackPanel>
             </Grid>
         </Border>
