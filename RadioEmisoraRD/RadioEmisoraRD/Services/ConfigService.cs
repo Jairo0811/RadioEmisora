@@ -34,11 +34,15 @@ public sealed class ConfigService : IConfigService
     {
         config.SchemaVersion = 2;
         config.UltimaEmisora = config.UltimaEmisora?.Trim() ?? string.Empty;
+        if (!IsSafeStationReference(config.UltimaEmisora))
+            config.UltimaEmisora = string.Empty;
+
         config.Historial = (config.Historial ?? [])
             .Where(static item => !string.IsNullOrWhiteSpace(item))
             .Select(static item => item.Trim())
+            .Where(IsSafeStationReference)
             .Distinct(StringComparer.OrdinalIgnoreCase)
-            .Take(10)
+            .Take(HistoryService.DefaultCapacity)
             .ToList();
         config.Volumen = double.IsFinite(config.Volumen)
             ? Math.Clamp(config.Volumen, 0, 1)
@@ -47,12 +51,19 @@ public sealed class ConfigService : IConfigService
         config.MaxReconnectAttempts = Math.Clamp(config.MaxReconnectAttempts, 0, 10);
         config.ReconnectDelaySeconds = Math.Clamp(config.ReconnectDelaySeconds, 1, 30);
 
-        if (!Uri.TryCreate(config.CatalogUrl, UriKind.Absolute, out Uri? catalogUri) ||
-            catalogUri.Scheme != Uri.UriSchemeHttps)
+        if (!NetworkUriPolicy.TryCreatePublicHttpsUri(config.CatalogUrl, out _))
         {
             config.CatalogUrl = AppConfig.DefaultCatalogUrl;
         }
 
         config.CatalogVersion = Math.Max(1, config.CatalogVersion);
     }
+
+    /// <summary>
+    /// Identificadores o nombres de emisora persistidos: longitud acotada y sin caracteres de control.
+    /// </summary>
+    internal static bool IsSafeStationReference(string? value) =>
+        !string.IsNullOrWhiteSpace(value) &&
+        value.Length <= StationCatalogValidator.MaxNameLength &&
+        !value.Any(char.IsControl);
 }

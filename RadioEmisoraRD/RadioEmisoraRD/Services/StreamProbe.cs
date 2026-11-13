@@ -40,21 +40,28 @@ public sealed class StreamProbe : IStreamProbe, IDisposable
         ObjectDisposedException.ThrowIf(disposed, this);
         ArgumentNullException.ThrowIfNull(streamUri);
 
+        if (!NetworkUriPolicy.IsPublicHttpsUri(streamUri))
+            throw new InvalidDataException("El destino del stream no es público o no usa HTTPS.");
+
         using var timeoutCancellation = new CancellationTokenSource(timeout);
         using var linkedCancellation = CancellationTokenSource.CreateLinkedTokenSource(
             cancellationToken,
             timeoutCancellation.Token);
-        using var request = new HttpRequestMessage(HttpMethod.Get, streamUri);
-        request.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue("audio/*"));
-        request.Headers.TryAddWithoutValidation("Icy-MetaData", "1");
 
         HttpResponseMessage response;
+        Uri finalUri;
 
         try
         {
-            response = await httpClient.SendAsync(
-                request,
-                HttpCompletionOption.ResponseHeadersRead,
+            (response, finalUri) = await NetworkUriPolicy.SendWithSafeRedirectsAsync(
+                httpClient,
+                streamUri,
+                static request =>
+                {
+                    request.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue("audio/*"));
+                    request.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue("*/*", 0.1));
+                    request.Headers.TryAddWithoutValidation("Icy-MetaData", "1");
+                },
                 linkedCancellation.Token);
         }
         catch (OperationCanceledException exception) when (
@@ -71,7 +78,6 @@ public sealed class StreamProbe : IStreamProbe, IDisposable
             if (!IsSupportedContentType(mediaType))
                 throw new InvalidDataException("El servidor no devolvió un stream de audio válido.");
 
-            Uri finalUri = response.RequestMessage?.RequestUri ?? streamUri;
             return new StreamProbeResult(finalUri, mediaType);
         }
     }
@@ -98,21 +104,5 @@ public sealed class StreamProbe : IStreamProbe, IDisposable
             SupportedApplicationContentTypes.Contains(mediaType, StringComparer.OrdinalIgnoreCase);
     }
 
-    private static HttpClient CreateHttpClient()
-    {
-        var handler = new SocketsHttpHandler
-        {
-            AllowAutoRedirect = true,
-            AutomaticDecompression = System.Net.DecompressionMethods.All,
-            ConnectTimeout = TimeSpan.FromSeconds(8),
-            PooledConnectionLifetime = TimeSpan.FromMinutes(5)
-        };
-
-        var client = new HttpClient(handler)
-        {
-            Timeout = Timeout.InfiniteTimeSpan
-        };
-        client.DefaultRequestHeaders.UserAgent.ParseAdd("RadioEmisoraRD/3.1");
-        return client;
-    }
+    private static HttpClient CreateHttpClient() => NetworkUriPolicy.CreatePublicHttpClient();
 }

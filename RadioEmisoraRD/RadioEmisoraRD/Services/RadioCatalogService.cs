@@ -17,11 +17,12 @@ public interface IRadioCatalogService
 
 public sealed class RadioCatalogService : IRadioCatalogService, IDisposable
 {
-    private const long MaxCatalogSizeBytes = 512 * 1024;
+    internal const long MaxCatalogSizeBytes = 512 * 1024;
 
     private static readonly JsonSerializerOptions SerializerOptions = new()
     {
-        PropertyNameCaseInsensitive = true
+        PropertyNameCaseInsensitive = true,
+        MaxDepth = 16
     };
 
     private readonly HttpClient httpClient;
@@ -73,8 +74,7 @@ public sealed class RadioCatalogService : IRadioCatalogService, IDisposable
     {
         ThrowIfDisposed();
 
-        if (!Uri.TryCreate(remoteUrl, UriKind.Absolute, out Uri? remoteUri) ||
-            remoteUri.Scheme != Uri.UriSchemeHttps)
+        if (!NetworkUriPolicy.TryCreatePublicHttpsUri(remoteUrl, out Uri? remoteUri))
         {
             return CurrentWithWarning("La dirección remota del catálogo no es válida.");
         }
@@ -89,24 +89,31 @@ public sealed class RadioCatalogService : IRadioCatalogService, IDisposable
             using var linkedCancellation = CancellationTokenSource.CreateLinkedTokenSource(
                 cancellationToken,
                 timeoutCancellation.Token);
-            using var request = new HttpRequestMessage(HttpMethod.Get, remoteUri);
-            request.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-
-            using HttpResponseMessage response = await httpClient.SendAsync(
-                request,
-                HttpCompletionOption.ResponseHeadersRead,
+            (HttpResponseMessage response, _) = await NetworkUriPolicy.SendWithSafeRedirectsAsync(
+                httpClient,
+                remoteUri,
+                static request => request.Headers.Accept.Add(
+                    new MediaTypeWithQualityHeaderValue("application/json")),
                 linkedCancellation.Token);
 
-            response.EnsureSuccessStatusCode();
+            StationCatalog? remoteCatalog;
+            using (response)
+            {
+                response.EnsureSuccessStatusCode();
 
-            if (response.Content.Headers.ContentLength > MaxCatalogSizeBytes)
-                throw new InvalidDataException("El catálogo remoto supera el tamaño permitido.");
+                if (response.Content.Headers.ContentLength > MaxCatalogSizeBytes)
+                    throw new InvalidDataException("El catálogo remoto supera el tamaño permitido.");
 
-            await using Stream stream = await response.Content.ReadAsStreamAsync(linkedCancellation.Token);
-            StationCatalog? remoteCatalog = await JsonSerializer.DeserializeAsync<StationCatalog>(
-                stream,
-                SerializerOptions,
-                linkedCancellation.Token);
+                await using Stream stream = await response.Content.ReadAsStreamAsync(linkedCancellation.Token);
+                await using MemoryStream boundedContent = await ReadBoundedAsync(
+                    stream,
+                    MaxCatalogSizeBytes,
+                    linkedCancellation.Token);
+                remoteCatalog = await JsonSerializer.DeserializeAsync<StationCatalog>(
+                    boundedContent,
+                    SerializerOptions,
+                    linkedCancellation.Token);
+            }
 
             if (!StationCatalogValidator.TryValidate(remoteCatalog, out IReadOnlyList<string> errors))
             {
@@ -130,10 +137,14 @@ public sealed class RadioCatalogService : IRadioCatalogService, IDisposable
             logger.Warning("La actualización del catálogo agotó el tiempo de espera.");
             return CurrentWithWarning("No se pudo consultar el catálogo remoto a tiempo.");
         }
-        catch (Exception exception) when (
-            exception is HttpRequestException or IOException or JsonException)
+        catch (Exception exception) when (exception is InvalidDataException or JsonException)
         {
-            logger.Warning("No se pudo actualizar el catálogo remoto.", exception);
+            logger.Warning($"El catálogo remoto fue rechazado: {AppLogger.Summarize(exception)}");
+            return CurrentWithWarning("El catálogo remoto no es válido; se mantiene la copia local.");
+        }
+        catch (Exception exception) when (exception is HttpRequestException or IOException)
+        {
+            logger.Warning($"No se pudo actualizar el catálogo remoto: {AppLogger.Summarize(exception)}");
             return CurrentWithWarning("Sin conexión al catálogo remoto; se mantiene la copia local.");
         }
         finally
@@ -169,39 +180,61 @@ public sealed class RadioCatalogService : IRadioCatalogService, IDisposable
 
         try
         {
+            if (new FileInfo(path).Length > MaxCatalogSizeBytes)
+            {
+                logger.Warning($"Se ignoró el catálogo '{Path.GetFileName(path)}' porque supera el tamaño permitido.");
+                return null;
+            }
+
             using FileStream stream = File.OpenRead(path);
             StationCatalog? catalog = JsonSerializer.Deserialize<StationCatalog>(stream, SerializerOptions);
 
             if (StationCatalogValidator.TryValidate(catalog, out IReadOnlyList<string> errors))
                 return catalog;
 
-            logger.Warning($"Catálogo inválido en '{path}': {string.Join(" ", errors.Take(3))}");
+            logger.Warning($"Catálogo inválido en '{Path.GetFileName(path)}': {string.Join(" ", errors.Take(3))}");
         }
         catch (Exception exception) when (
             exception is IOException or UnauthorizedAccessException or JsonException)
         {
-            logger.Warning($"No se pudo leer el catálogo '{path}'.", exception);
+            logger.Warning($"No se pudo leer el catálogo '{Path.GetFileName(path)}': {AppLogger.Summarize(exception)}");
         }
 
         return null;
     }
 
-    private static HttpClient CreateHttpClient()
-    {
-        var handler = new SocketsHttpHandler
-        {
-            AllowAutoRedirect = true,
-            AutomaticDecompression = System.Net.DecompressionMethods.All,
-            ConnectTimeout = TimeSpan.FromSeconds(8),
-            PooledConnectionLifetime = TimeSpan.FromMinutes(5)
-        };
+    private static HttpClient CreateHttpClient() => NetworkUriPolicy.CreatePublicHttpClient();
 
-        var client = new HttpClient(handler)
+    internal static async Task<MemoryStream> ReadBoundedAsync(
+        Stream source,
+        long maxBytes,
+        CancellationToken cancellationToken)
+    {
+        var destination = new MemoryStream();
+        byte[] buffer = new byte[16 * 1024];
+
+        try
         {
-            Timeout = Timeout.InfiniteTimeSpan
-        };
-        client.DefaultRequestHeaders.UserAgent.ParseAdd("RadioEmisoraRD/3.1");
-        return client;
+            while (true)
+            {
+                int read = await source.ReadAsync(buffer, cancellationToken);
+                if (read == 0)
+                    break;
+
+                if (destination.Length + read > maxBytes)
+                    throw new InvalidDataException("El contenido remoto supera el tamaño permitido.");
+
+                await destination.WriteAsync(buffer.AsMemory(0, read), cancellationToken);
+            }
+
+            destination.Position = 0;
+            return destination;
+        }
+        catch
+        {
+            await destination.DisposeAsync();
+            throw;
+        }
     }
 
     private void ThrowIfDisposed() => ObjectDisposedException.ThrowIf(disposed, this);

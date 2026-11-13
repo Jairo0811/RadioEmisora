@@ -9,6 +9,8 @@ public interface IFavoriteService
 
 public sealed class FavoriteService : IFavoriteService
 {
+    internal const int MaxFavorites = StationCatalogValidator.MaxStations;
+
     private readonly JsonFileStore<List<string>> store;
 
     public FavoriteService(string? dataDirectory = null, IAppLogger? logger = null)
@@ -35,7 +37,9 @@ public sealed class FavoriteService : IFavoriteService
         List<string> normalized = favorites
             .Where(static item => !string.IsNullOrWhiteSpace(item))
             .Select(static item => item.Trim())
+            .Where(ConfigService.IsSafeStationReference)
             .Distinct(StringComparer.OrdinalIgnoreCase)
+            .Take(MaxFavorites)
             .OrderBy(static item => item, StringComparer.CurrentCultureIgnoreCase)
             .ToList();
 

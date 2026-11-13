@@ -4,10 +4,14 @@ namespace RadioEmisoraRD.Services;
 
 public static class HistoryService
 {
-    public static void Register(AppConfig config, string stationName, int capacity = 10)
+    public const int DefaultCapacity = 10;
+
+    public static void Register(AppConfig config, string stationName, int capacity = DefaultCapacity)
     {
         ArgumentNullException.ThrowIfNull(config);
         ArgumentException.ThrowIfNullOrWhiteSpace(stationName);
+        if (!ConfigService.IsSafeStationReference(stationName.Trim()))
+            throw new ArgumentException("El nombre de la emisora no es válido.", nameof(stationName));
 
         capacity = Math.Max(1, capacity);
         config.Historial ??= [];

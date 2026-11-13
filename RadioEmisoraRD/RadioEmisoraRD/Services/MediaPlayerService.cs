@@ -91,9 +91,7 @@ public sealed class MediaPlayerService : IMediaPlayerService
         ThrowIfDisposed();
         ArgumentNullException.ThrowIfNull(options);
 
-        if (!Uri.TryCreate(url, UriKind.Absolute, out Uri? streamUri) ||
-            (streamUri.Scheme != Uri.UriSchemeHttps && streamUri.Scheme != Uri.UriSchemeHttp) ||
-            !string.IsNullOrEmpty(streamUri.UserInfo))
+        if (!NetworkUriPolicy.TryCreatePublicHttpsUri(url, out Uri? streamUri))
         {
             var exception = new ArgumentException("La URL del stream no es válida.", nameof(url));
             ReportFinalError("La dirección de esta emisora no es válida.", exception);
@@ -221,6 +219,9 @@ public sealed class MediaPlayerService : IMediaPlayerService
                     cancellationToken);
                 EnsureCurrentGeneration(generation, cancellationToken);
 
+                if (!NetworkUriPolicy.IsPublicHttpsUri(probeResult.FinalUri))
+                    throw new InvalidDataException("El stream fue redirigido a un destino no permitido.");
+
                 CloseEngine();
                 stateMachine.TransitionTo(PlayerState.Buffering);
                 engine.Open(probeResult.FinalUri);
@@ -231,12 +232,21 @@ public sealed class MediaPlayerService : IMediaPlayerService
             {
                 throw;
             }
+            catch (InvalidDataException exception)
+            {
+                // Destino bloqueado o contenido que no es audio: reintentar no lo corrige.
+                ReportFinalError(
+                    "Esta emisora no respondió con un stream de audio válido o permitido.",
+                    exception);
+                return;
+            }
             catch (Exception exception) when (
                 exception is HttpRequestException or IOException or InvalidOperationException or
                     NotSupportedException or TimeoutException)
             {
                 lastException = exception;
-                logger.Warning($"Falló la conexión al stream (intento {attempt + 1}).", exception);
+                logger.Warning(
+                    $"Falló la conexión al stream (intento {attempt + 1}): {AppLogger.Summarize(exception)}");
             }
         }
 
@@ -322,7 +332,7 @@ public sealed class MediaPlayerService : IMediaPlayerService
 
     private void OnEngineFailed(object? sender, PlaybackEngineFailedEventArgs e)
     {
-        logger.Warning("MediaPlayer informó un fallo de reproducción.", e.Exception);
+        logger.Warning($"MediaPlayer informó un fallo de reproducción: {AppLogger.Summarize(e.Exception)}");
 
         lock (syncRoot)
         {
@@ -347,7 +357,8 @@ public sealed class MediaPlayerService : IMediaPlayerService
     private void ReportFinalError(string friendlyMessage, Exception exception)
     {
         stateMachine.TransitionTo(PlayerState.Error, friendlyMessage);
-        logger.LogError(friendlyMessage, exception);
+        // Un stream caído es un fallo esperado de un servicio externo: se registra sin stack trace.
+        logger.Warning($"{friendlyMessage} {AppLogger.Summarize(exception)}");
         PlaybackError?.Invoke(this, new PlaybackErrorEventArgs(friendlyMessage, exception));
     }
 
