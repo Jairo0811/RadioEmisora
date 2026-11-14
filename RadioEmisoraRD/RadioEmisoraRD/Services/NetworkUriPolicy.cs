@@ -139,10 +139,36 @@ public static class NetworkUriPolicy
 
             Uri nextUri = location.IsAbsoluteUri ? location : new Uri(currentUri, location);
             if (!IsPublicHttpsUri(nextUri))
-                throw new InvalidDataException("Se bloqueó una redirección hacia un destino no permitido.");
+            {
+                throw new InvalidDataException(
+                    $"Se bloqueó una redirección hacia un destino no permitido ({DescribeForLog(nextUri)}).");
+            }
 
             currentUri = nextUri;
         }
+    }
+
+    /// <summary>
+    /// Describe un destino para diagnóstico sin ruta, consulta ni credenciales (pueden contener tokens).
+    /// </summary>
+    internal static string DescribeForLog(Uri uri)
+    {
+        ArgumentNullException.ThrowIfNull(uri);
+
+        if (!uri.IsAbsoluteUri)
+            return "URL relativa";
+
+        string description = uri.IsDefaultPort
+            ? $"{uri.Scheme}://{uri.Host}"
+            : $"{uri.Scheme}://{uri.Host}:{uri.Port}";
+
+        if (!string.IsNullOrEmpty(uri.UserInfo))
+            description += ", con credenciales";
+
+        if (uri.OriginalString.Length > MaxUriLength)
+            description += ", URL demasiado larga";
+
+        return AppLogger.Sanitize(description);
     }
 
     internal static bool IsPublicAddress(IPAddress address)
