@@ -38,7 +38,8 @@
             <Grid>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="130"/>
+                    <!-- Auto: con 130 px fijos las cifras de 36 pt se recortaban a la mitad. -->
+                    <RowDefinition Height="Auto"/>
                     <RowDefinition Height="Auto"/>
                     <RowDefinition Height="*"/>
                     <RowDefinition Height="Auto"/>
@@ -62,21 +63,21 @@
                              Columns="4"
                              Margin="0,0,0,20">
 
-                    <Border Background="#121A30" CornerRadius="22" Margin="8" Padding="22">
+                    <Border Background="#121A30" CornerRadius="22" Margin="8" Padding="22,14">
                         <StackPanel>
                             <TextBlock Text="📻 Emisoras" Foreground="#AAB4CD" FontSize="15"/>
                             <TextBlock Text="{Binding TotalEmisoras}" Foreground="White" FontSize="36" FontWeight="Bold"/>
                         </StackPanel>
                     </Border>
 
-                    <Border Background="#121A30" CornerRadius="22" Margin="8" Padding="22">
+                    <Border Background="#121A30" CornerRadius="22" Margin="8" Padding="22,14">
                         <StackPanel>
                             <TextBlock Text="⭐ Favoritas" Foreground="#AAB4CD" FontSize="15"/>
                             <TextBlock Text="{Binding TotalFavoritas}" Foreground="#FFD86B" FontSize="36" FontWeight="Bold"/>
                         </StackPanel>
                     </Border>
 
-                    <Border Background="#121A30" CornerRadius="22" Margin="8" Padding="22">
+                    <Border Background="#121A30" CornerRadius="22" Margin="8" Padding="22,14">
                         <StackPanel>
                             <TextBlock Text="📡 FM / AM" Foreground="#AAB4CD" FontSize="15"/>
                             <TextBlock Text="{Binding FmAmTexto}"
@@ -86,7 +87,7 @@
                         </StackPanel>
                     </Border>
 
-                    <Border Background="#121A30" CornerRadius="22" Margin="8" Padding="22">
+                    <Border Background="#121A30" CornerRadius="22" Margin="8" Padding="22,14">
                         <StackPanel>
                             <TextBlock Text="🌐 Online" Foreground="#AAB4CD" FontSize="15"/>
                             <TextBlock Text="{Binding TotalOnline}" Foreground="#2DB4FF" FontSize="36" FontWeight="Bold"/>

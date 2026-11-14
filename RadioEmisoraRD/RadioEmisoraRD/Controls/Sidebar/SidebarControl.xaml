@@ -15,6 +15,7 @@
 
             <StackPanel Grid.Row="0" VerticalAlignment="Center">
                 <TextBlock Text="🎧"
+                           Foreground="{StaticResource InfoBrush}"
                            FontSize="54"
                            HorizontalAlignment="Center"
                            Margin="0,0,0,8"/>
@@ -65,6 +66,8 @@
                              Background="Transparent"
                              BorderThickness="0"
                              Foreground="#DDE5FF"
+                             CaretBrush="#DDE5FF"
+                             SelectionBrush="#6A35FF"
                              FontSize="15"
                              Padding="12,8"
                              ToolTip="Buscar por nombre, frecuencia, categoría, provincia o grupo"

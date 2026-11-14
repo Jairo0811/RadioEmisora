@@ -1,6 +1,6 @@
 # Troubleshooting de RadioEmisora RD
 
-Esta guía cubre los problemas más comunes de la versión 3.1.0.
+Esta guía cubre los problemas más comunes de la versión 3.1.1.
 
 ## Ubicación de datos y logs
 
@@ -42,7 +42,7 @@ La aplicación nunca depende del servidor remoto para iniciar. Si la consulta fa
 
 - Usa `Ctrl + R` para reintentar.
 - Comprueba acceso a `raw.githubusercontent.com`.
-- Revisa `CatalogUrl` en `config.json`; debe ser una URL HTTPS.
+- Revisa `CatalogUrl` en `config.json`; debe ser una URL HTTPS pública. Las direcciones locales, privadas o link-local y las URLs con credenciales se rechazan.
 - Si la configuración contiene una URL inválida, RadioEmisora RD restaura automáticamente la URL oficial.
 
 ## Configuración o favoritos dañados
@@ -62,15 +62,23 @@ Para restablecer manualmente, cierra la aplicación y mueve fuera de la carpeta 
 - Comprueba espacio libre y protección contra ransomware de Windows Defender.
 - Busca `UnauthorizedAccessException` o `IOException` en el log.
 
+## Radio Popular 950 AM no reproduce
+
+Desde noviembre de 2026 el endpoint del proveedor de Radio Popular responde `503 Service Unavailable`. Es un problema externo: la aplicación muestra el error y permite reintentar; el resto del catálogo no se ve afectado.
+
 ## SmartScreen muestra una advertencia
 
-Los ZIP publicados no están firmados con un certificado comercial. Descarga únicamente desde la página Releases del repositorio y compara:
+Si el instalador o los ZIP de una release no están firmados con Authenticode (no hay un certificado de firma de código configurado), SmartScreen puede advertir al ejecutarlos. Descarga únicamente desde la página Releases del repositorio y compara:
 
 ```powershell
-Get-FileHash .\RadioEmisoraRD-win-x64.zip -Algorithm SHA256
+Get-FileHash .\RadioEmisoraRD-Setup-win-x64.exe -Algorithm SHA256
 ```
 
-El resultado debe coincidir con `SHA256SUMS.txt`.
+El resultado debe coincidir con `SHA256SUMS.txt`. Si coincide, usa **Más información → Ejecutar de todas formas**.
+
+## Desinstalar o reinstalar
+
+Desinstala desde **Configuración → Aplicaciones → Aplicaciones instaladas → RadioEmisora RD**. La desinstalación conserva `%APPDATA%\RadioEmisoraRD` (favoritos, historial, preferencias y logs) para que una reinstalación los recupere. Para empezar de cero, elimina esa carpeta manualmente después de desinstalar.
 
 ## Diagnóstico para desarrolladores
 
@@ -84,8 +92,8 @@ dotnet test .\RadioEmisoraRD\RadioEmisoraRD.slnx -c Release --logger trx
 Requisitos de compilación:
 
 - SDK de .NET 10.
-- Windows 10 1809 o superior.
-- Visual Studio con desarrollo de escritorio .NET cuando se use la interfaz gráfica.
+- Windows 11 x64 recomendado (Windows 10 1809 o superior sigue siendo técnicamente compatible).
+- Visual Studio 2026 con desarrollo de escritorio .NET cuando se use el IDE (Visual Studio 2022 no admite oficialmente `net10.0`).
 
 ## Reportar un problema
 

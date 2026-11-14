@@ -8,10 +8,20 @@ namespace RadioEmisoraRD
         public AboutWindow()
         {
             InitializeComponent();
-            Version? version = Assembly.GetExecutingAssembly().GetName().Version;
-            VersionText.Text = version is null
-                ? "Versión 3.1.0 (WPF)"
-                : $"Versión {version.ToString(3)} (WPF)";
+            VersionText.Text = $"Versión {GetDisplayVersion()} · WPF · .NET 10";
+        }
+
+        internal static string GetDisplayVersion()
+        {
+            Assembly assembly = Assembly.GetExecutingAssembly();
+            string? informational = assembly
+                .GetCustomAttribute<AssemblyInformationalVersionAttribute>()?
+                .InformationalVersion;
+
+            if (!string.IsNullOrWhiteSpace(informational))
+                return informational.Split('+')[0];
+
+            return assembly.GetName().Version?.ToString(3) ?? "desconocida";
         }
 
         private void btnAceptar_Click(object sender, RoutedEventArgs e)

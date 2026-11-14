@@ -24,10 +24,12 @@
     <Copyright>Copyright © 2018-2026 Francis Jairo Matías Rosario</Copyright>
     <RepositoryUrl>https://github.com/Jairo0811/RadioEmisora</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
-    <Version>3.1.0</Version>
-    <AssemblyVersion>3.1.0.0</AssemblyVersion>
-    <FileVersion>3.1.0.0</FileVersion>
-    <InformationalVersion>3.1.0</InformationalVersion>
+    <!-- Única fuente de versión. app.manifest, el instalador y el tag se validan contra este valor en CI. -->
+    <Version>3.1.1</Version>
+    <AssemblyVersion>$(Version).0</AssemblyVersion>
+    <FileVersion>$(Version).0</FileVersion>
+    <InformationalVersion>$(Version)</InformationalVersion>
+    <IncludeSourceRevisionInInformationalVersion>false</IncludeSourceRevisionInInformationalVersion>
   </PropertyGroup>
 
   <ItemGroup>

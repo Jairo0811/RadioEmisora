@@ -1,0 +1,14 @@
+<Project>
+  <!--
+    Auditoría de dependencias NuGet para todos los proyectos de la solución.
+    - NuGetAuditMode=all incluye dependencias transitivas.
+    - NuGetAuditLevel=moderate ignora avisos de severidad baja (NU1901).
+    - Los avisos moderados, altos y críticos (NU1902-NU1904) bloquean restore/build.
+  -->
+  <PropertyGroup>
+    <NuGetAudit>true</NuGetAudit>
+    <NuGetAuditMode>all</NuGetAuditMode>
+    <NuGetAuditLevel>moderate</NuGetAuditLevel>
+    <WarningsAsErrors>$(WarningsAsErrors);NU1902;NU1903;NU1904</WarningsAsErrors>
+  </PropertyGroup>
+</Project>

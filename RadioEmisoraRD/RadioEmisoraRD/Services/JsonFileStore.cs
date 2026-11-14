@@ -6,10 +6,13 @@ namespace RadioEmisoraRD.Services;
 internal sealed class JsonFileStore<T>
     where T : class
 {
+    internal const long MaxFileSizeBytes = 1024 * 1024;
+
     private static readonly JsonSerializerOptions SerializerOptions = new()
     {
         PropertyNameCaseInsensitive = true,
         WriteIndented = true,
+        MaxDepth = 16,
         Converters = { new JsonStringEnumConverter() }
     };
 
@@ -75,6 +78,12 @@ internal sealed class JsonFileStore<T>
 
         try
         {
+            if (new FileInfo(path).Length > MaxFileSizeBytes)
+            {
+                logger.Warning($"Se rechazó '{Path.GetFileName(path)}' porque supera {MaxFileSizeBytes / 1024} KB.");
+                return false;
+            }
+
             using FileStream stream = new(
                 path,
                 FileMode.Open,
@@ -86,7 +95,7 @@ internal sealed class JsonFileStore<T>
         catch (Exception exception) when (
             exception is JsonException or IOException or UnauthorizedAccessException)
         {
-            logger.Warning($"No se pudo leer '{path}'.", exception);
+            logger.Warning($"No se pudo leer '{Path.GetFileName(path)}': {AppLogger.Summarize(exception)}");
             return false;
         }
     }
@@ -129,7 +138,7 @@ internal sealed class JsonFileStore<T>
         catch (Exception exception) when (
             exception is IOException or UnauthorizedAccessException or JsonException)
         {
-            logger.LogError($"No se pudo guardar '{filePath}'.", exception);
+            logger.LogError($"No se pudo guardar '{Path.GetFileName(filePath)}'.", exception);
             errorMessage = "No se pudieron guardar los cambios en el disco.";
 
             try

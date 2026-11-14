@@ -31,7 +31,11 @@ public sealed class Emisora : INotifyPropertyChanged
     public bool EsFavorita
     {
         get => esFavorita;
-        set => SetField(ref esFavorita, value);
+        set
+        {
+            if (SetField(ref esFavorita, value))
+                OnPropertyChanged(nameof(DescripcionAccesible));
+        }
     }
 
     public bool EstaReproduciendo
@@ -43,6 +47,7 @@ public sealed class Emisora : INotifyPropertyChanged
                 return;
 
             OnPropertyChanged(nameof(EstadoCard));
+            OnPropertyChanged(nameof(DescripcionAccesible));
         }
     }
 
@@ -55,6 +60,7 @@ public sealed class Emisora : INotifyPropertyChanged
                 return;
 
             OnPropertyChanged(nameof(EstadoCard));
+            OnPropertyChanged(nameof(DescripcionAccesible));
         }
     }
 
@@ -73,6 +79,19 @@ public sealed class Emisora : INotifyPropertyChanged
     }
 
     public string Estado => string.IsNullOrWhiteSpace(StreamUrl) ? "● OFFLINE" : "● EN VIVO";
+
+    /// <summary>
+    /// Texto que leen los lectores de pantalla para cada tarjeta del catálogo.
+    /// </summary>
+    public string DescripcionAccesible
+    {
+        get
+        {
+            string estado = EstaReproduciendo ? "sonando" : EstaPausada ? "en pausa" : "en vivo";
+            string favorita = EsFavorita ? ", favorita" : string.Empty;
+            return $"{Nombre}, {Frecuencia}, {Categoria}, {estado}{favorita}";
+        }
+    }
 
     public Emisora(
         string id,

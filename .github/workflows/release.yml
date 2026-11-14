@@ -5,25 +5,32 @@ on:
     tags: ["v*"]
   workflow_dispatch:
 
+# Mínimo privilegio: solo el job que crea la GitHub Release puede escribir.
 permissions:
-  contents: write
+  contents: read
+
+concurrency:
+  group: release-${{ github.ref }}
+  cancel-in-progress: false
 
 env:
   DOTNET_CLI_TELEMETRY_OPTOUT: "1"
   DOTNET_NOLOGO: "1"
 
 jobs:
-  release:
-    name: Test, sign and publish Windows packages
+  build:
+    name: Test, sign and package Windows builds
     runs-on: windows-latest
-    timeout-minutes: 35
+    timeout-minutes: 45
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
+        with:
+          persist-credentials: false
 
       - name: Setup .NET 10
-        uses: actions/setup-dotnet@v4
+        uses: actions/setup-dotnet@v6
         with:
           dotnet-version: 10.0.x
 
@@ -38,19 +45,37 @@ jobs:
             throw "No se pudo instalar o localizar Inno Setup 6."
           }
 
-      - name: Restore, build and test
+      - name: Verify version, tag and release documents
+        id: version
+        shell: pwsh
+        env:
+          REF_TYPE: ${{ github.ref_type }}
+          REF_NAME: ${{ github.ref_name }}
+        run: |
+          $tag = if ($env:REF_TYPE -eq "tag") { $env:REF_NAME } else { "" }
+          $version = ./packaging/Get-ProjectVersion.ps1 -Tag $tag -RequireReleaseDocs
+          "version=$version" | Out-File -FilePath $env:GITHUB_OUTPUT -Append -Encoding utf8
+          Write-Host "Versión a publicar: $version"
+
+      - name: Restore (with NuGet Audit), build and test
         shell: pwsh
         run: |
           dotnet restore RadioEmisoraRD/RadioEmisoraRD.slnx
+          if ($LASTEXITCODE -ne 0) { throw "restore falló." }
           dotnet restore RadioEmisoraRD/RadioEmisoraRD/RadioEmisoraRD.csproj --runtime win-x64
+          if ($LASTEXITCODE -ne 0) { throw "restore win-x64 falló." }
           dotnet build RadioEmisoraRD/RadioEmisoraRD.slnx --configuration Release --no-restore --warnaserror
+          if ($LASTEXITCODE -ne 0) { throw "build falló." }
           dotnet test RadioEmisoraRD/RadioEmisoraRD.slnx --configuration Release --no-build
+          if ($LASTEXITCODE -ne 0) { throw "Las pruebas fallaron." }
 
       - name: Publish Windows builds
         shell: pwsh
         run: |
           dotnet publish RadioEmisoraRD/RadioEmisoraRD/RadioEmisoraRD.csproj --configuration Release --no-restore --property:PublishProfile=Portable --output artifacts/portable
+          if ($LASTEXITCODE -ne 0) { throw "publish portable falló." }
           dotnet publish RadioEmisoraRD/RadioEmisoraRD/RadioEmisoraRD.csproj --configuration Release --no-restore --property:PublishProfile=SelfContained --output artifacts/self-contained
+          if ($LASTEXITCODE -ne 0) { throw "publish self-contained falló." }
           Copy-Item packaging/portable.flag artifacts/portable/portable.flag
 
       - name: Prepare Authenticode certificate
@@ -87,30 +112,15 @@ jobs:
               "artifacts/self-contained/RadioEmisoraRD.exe"
             )
 
-      - name: Build archives and installer
+      - name: Build ZIP archives
         shell: pwsh
         run: |
           Compress-Archive -Path artifacts/portable/* -DestinationPath artifacts/RadioEmisoraRD-portable.zip
           Compress-Archive -Path artifacts/self-contained/* -DestinationPath artifacts/RadioEmisoraRD-win-x64.zip
 
-          [xml]$project = Get-Content RadioEmisoraRD/RadioEmisoraRD/RadioEmisoraRD.csproj
-          $version = [string](($project.Project.PropertyGroup | Where-Object { $_.Version } | Select-Object -First 1).Version)
-          if ("${{ github.ref_type }}" -eq "tag") {
-            $version = "${{ github.ref_name }}".TrimStart('v')
-          }
-          if ([string]::IsNullOrWhiteSpace($version)) {
-            throw "No se pudo determinar la versión del instalador."
-          }
-
-          $iscc = "${env:ProgramFiles(x86)}\Inno Setup 6\ISCC.exe"
-          & $iscc "/DMyAppVersion=$version" "packaging/RadioEmisoraRD.iss"
-          if ($LASTEXITCODE -ne 0) {
-            throw "La compilación del instalador falló."
-          }
-
-          if (-not (Test-Path artifacts/RadioEmisoraRD-Setup-win-x64.exe)) {
-            throw "El instalador esperado no fue generado."
-          }
+      - name: Build Windows installer
+        shell: pwsh
+        run: ./packaging/Build-Installer.ps1 -Version "${{ steps.version.outputs.version }}"
 
       - name: Sign installer
         if: steps.signing.outputs.enabled == 'true'
@@ -123,47 +133,80 @@ jobs:
             -Password $env:WINDOWS_SIGNING_CERT_PASSWORD `
             -Paths @("artifacts/RadioEmisoraRD-Setup-win-x64.exe")
 
-      - name: Generate SHA-256 checksums
-        shell: pwsh
-        run: |
-          $files = @(
-            "RadioEmisoraRD-portable.zip",
-            "RadioEmisoraRD-win-x64.zip",
-            "RadioEmisoraRD-Setup-win-x64.exe"
-          )
-          Remove-Item artifacts/SHA256SUMS.txt -ErrorAction SilentlyContinue
-          foreach ($file in $files) {
-            $hash = (Get-FileHash "artifacts/$file" -Algorithm SHA256).Hash.ToLowerInvariant()
-            "${hash}  ${file}" | Add-Content artifacts/SHA256SUMS.txt
-          }
-
       - name: Remove temporary signing certificate
         if: always() && steps.signing.outputs.enabled == 'true'
         shell: pwsh
         run: Remove-Item -LiteralPath "${{ steps.signing.outputs.certificate_path }}" -Force -ErrorAction SilentlyContinue
 
+      - name: Smoke test final installer
+        shell: pwsh
+        run: ./packaging/Test-Installer.ps1 -InstallerPath artifacts/RadioEmisoraRD-Setup-win-x64.exe -ExpectedVersion "${{ steps.version.outputs.version }}"
+
+      - name: Generate and verify SHA-256 checksums
+        shell: pwsh
+        run: |
+          $files = @(
+            "RadioEmisoraRD-Setup-win-x64.exe",
+            "RadioEmisoraRD-win-x64.zip",
+            "RadioEmisoraRD-portable.zip"
+          )
+          $sums = foreach ($file in $files) {
+            $hash = (Get-FileHash "artifacts/$file" -Algorithm SHA256).Hash.ToLowerInvariant()
+            "${hash}  ${file}"
+          }
+          # LF y sin BOM: compatible con `sha256sum -c` y con Get-FileHash.
+          [IO.File]::WriteAllText(
+            (Join-Path $PWD "artifacts/SHA256SUMS.txt"),
+            (($sums -join "`n") + "`n"),
+            [Text.UTF8Encoding]::new($false))
+          Get-Content artifacts/SHA256SUMS.txt
+          Copy-Item RELEASE_NOTES.md artifacts/RELEASE_NOTES.md
+
       - name: Upload release packages
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: RadioEmisoraRD-release
           path: |
-            artifacts/RadioEmisoraRD-portable.zip
-            artifacts/RadioEmisoraRD-win-x64.zip
             artifacts/RadioEmisoraRD-Setup-win-x64.exe
+            artifacts/RadioEmisoraRD-win-x64.zip
+            artifacts/RadioEmisoraRD-portable.zip
             artifacts/SHA256SUMS.txt
+            artifacts/RELEASE_NOTES.md
           if-no-files-found: error
+          retention-days: 30
+
+  release:
+    name: Publish GitHub Release
+    if: github.ref_type == 'tag'
+    needs: build
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: write
+
+    steps:
+      - name: Download verified packages
+        uses: actions/download-artifact@v8
+        with:
+          name: RadioEmisoraRD-release
+          path: release
+
+      - name: Verify checksums before publishing
+        working-directory: release
+        run: sha256sum --check --strict SHA256SUMS.txt
 
       - name: Create GitHub release
-        if: startsWith(github.ref, 'refs/tags/')
-        shell: pwsh
+        working-directory: release
         env:
           GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+          TAG: ${{ github.ref_name }}
         run: >-
-          gh release create "${{ github.ref_name }}"
-          artifacts/RadioEmisoraRD-portable.zip
-          artifacts/RadioEmisoraRD-win-x64.zip
-          artifacts/RadioEmisoraRD-Setup-win-x64.exe
-          artifacts/SHA256SUMS.txt
+          gh release create "$TAG"
+          RadioEmisoraRD-Setup-win-x64.exe
+          RadioEmisoraRD-win-x64.zip
+          RadioEmisoraRD-portable.zip
+          SHA256SUMS.txt
           --verify-tag
-          --title "RadioEmisora RD ${{ github.ref_name }}"
+          --title "RadioEmisora RD $TAG"
           --notes-file RELEASE_NOTES.md

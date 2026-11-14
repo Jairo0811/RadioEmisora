@@ -1,4 +1,4 @@
-using System.Windows;
+﻿using System.Windows;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Threading;
@@ -66,6 +66,9 @@ internal static class PortfolioCaptureService
 
         viewModel.FiltroActual = "Todas";
         viewModel.TextoBusqueda = "noticias";
+        // Mortal sigue sonando mientras se selecciona otra emisora: la captura documenta
+        // la diferencia visual entre "seleccionada" y "en reproducción".
+        viewModel.EmisoraSeleccionada = viewModel.EmisorasFiltradas.FirstOrDefault();
         await WaitForRenderAsync();
         BitmapSource search = Render(window);
         SavePng(search, Path.Combine(outputDirectory, "busqueda.png"));
@@ -100,8 +103,11 @@ internal static class PortfolioCaptureService
     private static RenderTargetBitmap Render(FrameworkElement element)
     {
         element.UpdateLayout();
-        int width = Math.Max(1, (int)Math.Ceiling(element.ActualWidth));
-        int height = Math.Max(1, (int)Math.Ceiling(element.ActualHeight));
+        // ActualWidth/Height de una Window incluyen el marco no cliente: se usa el área cliente
+        // para que las capturas no muestren bandas vacías a la derecha y abajo.
+        FrameworkElement area = GetClientArea(element);
+        int width = Math.Max(1, (int)Math.Ceiling(area.ActualWidth));
+        int height = Math.Max(1, (int)Math.Ceiling(area.ActualHeight));
         var bitmap = new RenderTargetBitmap(
             width,
             height,
@@ -118,9 +124,10 @@ internal static class PortfolioCaptureService
         FrameworkElement target,
         MainWindow relativeTo)
     {
-        Point origin = target.TranslatePoint(new Point(), relativeTo);
-        double scaleX = source.PixelWidth / relativeTo.ActualWidth;
-        double scaleY = source.PixelHeight / relativeTo.ActualHeight;
+        FrameworkElement area = GetClientArea(relativeTo);
+        Point origin = target.TranslatePoint(new Point(), area);
+        double scaleX = source.PixelWidth / area.ActualWidth;
+        double scaleY = source.PixelHeight / area.ActualHeight;
         int x = Math.Clamp((int)Math.Round(origin.X * scaleX), 0, source.PixelWidth - 1);
         int y = Math.Clamp((int)Math.Round(origin.Y * scaleY), 0, source.PixelHeight - 1);
         int width = Math.Clamp(
@@ -135,6 +142,9 @@ internal static class PortfolioCaptureService
         cropped.Freeze();
         return cropped;
     }
+
+    private static FrameworkElement GetClientArea(FrameworkElement element) =>
+        element is Window { Content: FrameworkElement content } ? content : element;
 
     private static void SavePng(BitmapSource bitmap, string path)
     {
