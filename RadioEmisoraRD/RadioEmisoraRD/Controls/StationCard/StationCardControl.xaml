@@ -61,7 +61,8 @@
             </Style>
         </Border.Style>
 
-        <Grid Width="245">
+        <!-- Sin ancho fijo: la tarjeta se ajusta a la barra lateral y la columna de ▶/★ no queda recortada. -->
+        <Grid>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="68"/>
                 <ColumnDefinition Width="*"/>
