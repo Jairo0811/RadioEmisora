@@ -238,6 +238,9 @@ public sealed class MainViewModel : INotifyPropertyChanged, IDisposable
     {
         get
         {
+            if (EmisoraSeleccionada is null)
+                return "▶ Reproducir";
+
             bool sameStation = ReferenceEquals(EmisoraSeleccionada, emisoraEnReproduccion);
 
             if (!sameStation)
@@ -269,7 +272,11 @@ public sealed class MainViewModel : INotifyPropertyChanged, IDisposable
         get
         {
             if (EmisoraSeleccionada is null)
-                return "Sin stream seleccionado";
+            {
+                return OtraEmisoraActiva is { } sonando
+                    ? $"Sonando ahora: {sonando.Nombre}. Selecciona una emisora del catálogo para cambiar."
+                    : "Sin stream seleccionado";
+            }
 
             if (string.IsNullOrWhiteSpace(EmisoraSeleccionada.StreamUrl))
                 return "Stream no disponible";
@@ -292,8 +299,10 @@ public sealed class MainViewModel : INotifyPropertyChanged, IDisposable
     {
         get
         {
+            // Sin selección no se muestra "REPRODUCIENDO" junto a "Selecciona FM": el panel
+            // "Ahora suena" ya indica qué emisora está sonando.
             if (EmisoraSeleccionada is null)
-                return EstadoReproductor;
+                return OtraEmisoraActiva is null ? EstadoReproductor : "○ SIN SELECCIÓN";
 
             if (!ReferenceEquals(EmisoraSeleccionada, emisoraEnReproduccion))
                 return OtraEmisoraActiva is null ? EmisoraSeleccionada.Estado : "○ SELECCIONADA";
@@ -337,7 +346,8 @@ public sealed class MainViewModel : INotifyPropertyChanged, IDisposable
         GetBrush((emisoraEnReproduccion ?? EmisoraSeleccionada)?.ColorTema ?? DefaultThemeColor);
 
     /// <summary>
-    /// Emisora que está sonando, conectando o en pausa y que no es la seleccionada.
+    /// Emisora que está sonando, conectando o en pausa y que no es la seleccionada
+    /// (o cualquier emisora activa cuando no hay selección).
     /// </summary>
     private Emisora? OtraEmisoraActiva =>
         emisoraEnReproduccion is not null &&
@@ -662,6 +672,7 @@ public sealed class MainViewModel : INotifyPropertyChanged, IDisposable
 
     private void FilterStations()
     {
+        Emisora? selected = EmisoraSeleccionada;
         IReadOnlyList<Emisora> result = RadioService
             .Filter(TodasLasEmisoras, textoBusqueda, filtroActual)
             .ToList();
@@ -669,6 +680,15 @@ public sealed class MainViewModel : INotifyPropertyChanged, IDisposable
         EmisorasFiltradas.Clear();
         foreach (Emisora station in result)
             EmisorasFiltradas.Add(station);
+
+        // Al reconstruir la lista, el ListBox enlazado deja la selección en null. Si la emisora
+        // seleccionada sigue visible con el nuevo filtro, se conserva para no vaciar el hero.
+        if (selected is not null &&
+            !ReferenceEquals(EmisoraSeleccionada, selected) &&
+            EmisorasFiltradas.Contains(selected))
+        {
+            EmisoraSeleccionada = selected;
+        }
 
         OnPropertyChanged(nameof(TotalFiltradas));
     }
