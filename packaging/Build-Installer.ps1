@@ -47,7 +47,7 @@ if (-not (Test-Path -LiteralPath $setup -PathType Leaf)) {
     throw "El instalador esperado no fue generado."
 }
 
-$setupVersion = (Get-Item -LiteralPath $setup).VersionInfo.ProductVersion
+$setupVersion = ([string](Get-Item -LiteralPath $setup).VersionInfo.ProductVersion).Trim()
 if ($setupVersion -ne $Version) {
     throw "El instalador declara la versión '$setupVersion'; se esperaba $Version."
 }

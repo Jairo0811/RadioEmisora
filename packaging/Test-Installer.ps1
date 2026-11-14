@@ -42,7 +42,7 @@ function Assert-Installed {
         throw "No se encontró la aplicación instalada en '$exePath'."
     }
 
-    $fileVersion = (Get-Item -LiteralPath $exePath).VersionInfo.ProductVersion
+    $fileVersion = ([string](Get-Item -LiteralPath $exePath).VersionInfo.ProductVersion).Trim()
     if (-not $fileVersion.StartsWith($ExpectedVersion)) {
         throw "El ejecutable instalado informa la versión '$fileVersion'; se esperaba $ExpectedVersion."
     }
