@@ -1,0 +1,55 @@
+name: TMP diagnostics (temporary, branch will be deleted)
+on:
+  push:
+    branches: ["tmp/**"]
+permissions:
+  contents: read
+jobs:
+  streams:
+    runs-on: windows-latest
+    steps:
+      - name: Probe redirects
+        shell: pwsh
+        run: |
+          foreach ($u in @("https://stream-175.surfernetwork.com/v5y1wkvoilivv", "https://stream.surfernetwork.com/v5y1wkvoilivv")) {
+            Write-Host "===== CHAIN $u"
+            $out = curl.exe -s -v -o NUL -L --max-redirs 8 --max-time 20 $u 2>&1
+            $out | Select-String -Pattern "(^< HTTP|^< [Ll]ocation|^< [Cc]ontent-[Tt]ype|Connected to|Trying|timed out|Could not|rror)" | ForEach-Object { ($_.Line -replace '\?.*$','?<q>') }
+          }
+          $urls = @()
+          foreach ($u in $urls) {
+            Write-Host "===== $u"
+            curl.exe -s -o NUL -D - --max-time 8 -A "RadioEmisoraRD/3.1.1" $u | Select-String -Pattern "^(HTTP|Location|location|Content-Type|content-type)"
+            $loc = (curl.exe -s -o NUL -D - --max-time 8 $u | Select-String -Pattern "^[Ll]ocation:\s*(\S+)").Matches.Groups[1].Value
+            if ($loc) {
+              $https = $loc -replace '^http://', 'https://'
+              $https = $https -replace ':80/', '/'
+              Write-Host "--- upgraded: $($https -replace '\?.*$','?<token>')"
+              curl.exe -s -o NUL --max-time 6 -w "status=%{http_code} type=%{content_type} ssl=%{ssl_verify_result} size=%{size_download}`n" $https
+              Write-Host "--- original http: $($loc -replace '\?.*$','?<token>')"
+              curl.exe -s -o NUL --max-time 6 -w "status=%{http_code} type=%{content_type} size=%{size_download}`n" $loc
+            } else {
+              curl.exe -s -o NUL --max-time 6 -w "status=%{http_code} type=%{content_type} size=%{size_download}`n" $u
+            }
+          }
+          exit 0
+  media:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+      - uses: actions/setup-dotnet@v6
+        with:
+          dotnet-version: 10.0.x
+      - name: Capture
+        shell: pwsh
+        run: |
+          dotnet build RadioEmisoraRD/RadioEmisoraRD/RadioEmisoraRD.csproj -c Release
+          dotnet run --project RadioEmisoraRD/RadioEmisoraRD/RadioEmisoraRD.csproj -c Release --no-build -- --capture-docs "$PWD/media"
+          Get-ChildItem media | ForEach-Object {
+            Write-Host "BEGIN-FILE $($_.Name)"
+            $b64 = [Convert]::ToBase64String([IO.File]::ReadAllBytes($_.FullName))
+            for ($i = 0; $i -lt $b64.Length; $i += 4000) { Write-Host ("B64 " + $b64.Substring($i, [Math]::Min(4000, $b64.Length - $i))) }
+            Write-Host "END-FILE $($_.Name)"
+          }
