@@ -9,14 +9,15 @@ public static class StationCatalogValidator
     internal const int MaxIdLength = 64;
     internal const int MaxNameLength = 100;
 
+    // \z (no $): en .NET "$" también acepta un salto de línea final, lo que dejaría pasar "id\n".
     private static readonly Regex StationIdPattern = new(
-        "^[a-z0-9]+(?:-[a-z0-9]+)*$",
+        "^[a-z0-9]+(?:-[a-z0-9]+)*\\z",
         RegexOptions.Compiled | RegexOptions.CultureInvariant);
     private static readonly Regex LogoFileNamePattern = new(
-        "^[a-z0-9][a-z0-9-]{0,62}\\.png$",
+        "^[a-z0-9][a-z0-9-]{0,62}\\.png\\z",
         RegexOptions.Compiled | RegexOptions.CultureInvariant);
     private static readonly Regex ThemeColorPattern = new(
-        "^#[0-9A-Fa-f]{6}$",
+        "^#[0-9A-Fa-f]{6}\\z",
         RegexOptions.Compiled | RegexOptions.CultureInvariant);
 
     public static bool TryValidate(StationCatalog? catalog, out IReadOnlyList<string> errors)

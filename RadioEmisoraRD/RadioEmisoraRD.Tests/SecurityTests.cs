@@ -317,6 +317,7 @@ public sealed class SecurityTests
     [DataRow("Mortal.PNG")]
     [DataRow(".png")]
     [DataRow("mortal.png ")]
+    [DataRow("mortal.png\n")]
     public void CatalogValidatorRejectsUnsafeLogoNames(string logo)
     {
         StationCatalog catalog = CreateCatalog(1);
@@ -334,12 +335,29 @@ public sealed class SecurityTests
     [DataRow("mortal--1049")]
     [DataRow("-mortal")]
     [DataRow("mortal/1049")]
+    [DataRow("mortal-1049\n")]
     public void CatalogValidatorRejectsInvalidIdentifiers(string id)
     {
         StationCatalog catalog = CreateCatalog(1);
         catalog.Stations[0].Id = id;
 
         Assert.IsFalse(StationCatalogValidator.TryValidate(catalog, out _));
+    }
+
+    [TestMethod]
+    [DataRow("#DC283C\n")]
+    [DataRow("#DC283")]
+    [DataRow("red")]
+    [DataRow("#DC283C00")]
+    public void CatalogValidatorRejectsInvalidThemeColors(string color)
+    {
+        StationCatalog catalog = CreateCatalog(1);
+        catalog.Stations[0].ColorTema = color;
+
+        bool valid = StationCatalogValidator.TryValidate(catalog, out IReadOnlyList<string> errors);
+
+        Assert.IsFalse(valid);
+        Assert.IsTrue(errors.Any(error => error.Contains("color", StringComparison.OrdinalIgnoreCase)));
     }
 
     [TestMethod]
