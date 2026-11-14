@@ -2,18 +2,22 @@
 
 RadioEmisora RD is an independent software project created for academic and portfolio purposes. It is not affiliated with, sponsored by, endorsed by, or officially associated with the radio stations, media groups, streaming providers, or trademark owners referenced by the application.
 
+RadioEmisora RD was originally developed as a final project at the Instituto Tecnológico de Las Américas (ITLA). It is an independent academic project and **not an official ITLA application**.
+
 ## Scope of the MIT license
 
 The repository's `LICENSE` applies to source code authored for RadioEmisora RD.
 
 It does **not** grant rights over third-party material, including:
 
+- the ITLA logo, name, and institutional identity shown in the "About" window and documentation;
 - radio station names;
 - station logos and visual identities;
 - trademarks and service marks;
 - live audio programming;
 - streaming infrastructure or endpoints;
-- metadata supplied by broadcasters or streaming providers.
+- metadata supplied by broadcasters or streaming providers;
+- the names and identities of media groups and streaming providers.
 
 All such rights remain with their respective owners.
 
@@ -24,6 +28,10 @@ RadioEmisora RD does not host, rebroadcast, proxy, record, or redistribute audio
 Endpoint availability, content, geographic restrictions, terms of use, advertising, and technical behavior are controlled by the corresponding station or provider and may change without notice.
 
 An endpoint listed in `catalog/emisoras.json` should not be interpreted as a commercial license, partnership, endorsement, or guarantee of continued availability.
+
+## ITLA logo and name
+
+The ITLA logo (`RadioEmisoraRD/RadioEmisoraRD/Assets/itla.png`) and the institution's name are trademarks of the Instituto Tecnológico de Las Américas. They are used only to identify the academic origin of the project (course, period, and instructor) and are excluded from the repository's MIT license. Their presence does not imply endorsement by ITLA.
 
 ## Logos and station identities
 

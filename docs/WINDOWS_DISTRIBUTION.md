@@ -8,6 +8,10 @@ RadioEmisora RD dispone de tres formatos de distribución para Windows x64:
 | `RadioEmisoraRD-win-x64.zip` | Ejecución autocontenida sin instalador |
 | `RadioEmisoraRD-portable.zip` | Uso portable; requiere .NET Desktop Runtime 10 |
 
+## Versión
+
+`RadioEmisoraRD/RadioEmisoraRD/RadioEmisoraRD.csproj` es la única fuente de versión. `packaging/Get-ProjectVersion.ps1` comprueba en CI que `app.manifest`, el instalador y, al publicar, el tag `vX.Y.Z`, `CHANGELOG.md` y `RELEASE_NOTES.md` coinciden con ella.
+
 ## Instalador
 
 El instalador se genera con Inno Setup 6 a partir del build autocontenido de Windows.
@@ -23,7 +27,8 @@ Características:
 - licencia mostrada durante la instalación;
 - aviso de contenido y servicios de terceros;
 - compresión LZMA2;
-- comprobación automática del instalador en CI;
+- comprobación automática en CI con `packaging/Test-Installer.ps1`: instalación limpia en una ruta con espacios y Unicode, ejecución, actualización, desinstalación y reinstalación;
+- conservación de `%APPDATA%\RadioEmisoraRD` (favoritos, historial, preferencias y logs) al desinstalar;
 - hash SHA-256 publicado junto a cada release.
 
 La definición se encuentra en [`packaging/RadioEmisoraRD.iss`](../packaging/RadioEmisoraRD.iss).
@@ -36,7 +41,7 @@ El flujo de release admite firma Authenticode de:
 2. `artifacts/self-contained/RadioEmisoraRD.exe`;
 3. `artifacts/RadioEmisoraRD-Setup-win-x64.exe`.
 
-La firma utiliza SHA-256, timestamp RFC 3161 y `signtool.exe`. Después de firmar, cada artefacto se verifica con la política Authenticode de Windows antes de continuar la publicación.
+La firma utiliza SHA-256, timestamp RFC 3161 (con reintentos) y `signtool.exe`. Antes de firmar, el script rechaza certificados autofirmados, vencidos, sin clave privada o sin uso de firma de código. Después de firmar, cada artefacto se verifica (firma válida y con timestamp); si la verificación falla, la release se detiene.
 
 ### GitHub Secrets requeridos
 
@@ -65,6 +70,13 @@ Si los secretos de firma no están configurados, el workflow continúa generando
 
 Esto permite mantener builds reproducibles de portafolio sin almacenar material criptográfico privado en GitHub.
 
+## Flujo de release
+
+Al publicar un tag `vX.Y.Z`, `.github/workflows/release.yml` ejecuta dos jobs:
+
+1. **build** (`contents: read`): valida versión y documentos, compila, ejecuta las pruebas, publica, firma si hay certificado, genera el instalador, lo prueba y calcula `SHA256SUMS.txt`.
+2. **release** (`contents: write`): descarga los paquetes del job anterior, verifica los hashes con `sha256sum --check` y crea la GitHub Release.
+
 ## Compilar el instalador localmente
 
 Primero genera el build autocontenido:
@@ -74,10 +86,10 @@ dotnet publish .\RadioEmisoraRD\RadioEmisoraRD\RadioEmisoraRD.csproj `
   -c Release -p:PublishProfile=SelfContained -o .\artifacts\self-contained
 ```
 
-Con Inno Setup 6 instalado:
+Con Inno Setup 6 instalado (la versión se lee del `.csproj`):
 
 ```powershell
-& "${env:ProgramFiles(x86)}\Inno Setup 6\ISCC.exe" .\packaging\RadioEmisoraRD.iss
+.\packaging\Build-Installer.ps1
 ```
 
 El resultado será:

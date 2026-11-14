@@ -17,7 +17,7 @@ flowchart LR
     VM --> Config["ConfigService"]
 
     Player --> Media["WPF MediaPlayer"]
-    Player --> Streams["Streams HTTP / HTTPS"]
+    Player --> Streams["Streams HTTPS públicos"]
 
     Catalog --> Bundled["catalog/emisoras.json"]
     Catalog --> Remote["Catálogo remoto en GitHub"]
