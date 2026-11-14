@@ -10,6 +10,10 @@ on:
 permissions:
   contents: read
 
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
 env:
   DOTNET_CLI_TELEMETRY_OPTOUT: "1"
   DOTNET_NOLOGO: "1"
@@ -18,14 +22,16 @@ jobs:
   validate:
     name: Build, test and package
     runs-on: windows-latest
-    timeout-minutes: 30
+    timeout-minutes: 40
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
+        with:
+          persist-credentials: false
 
       - name: Setup .NET 10
-        uses: actions/setup-dotnet@v4
+        uses: actions/setup-dotnet@v6
         with:
           dotnet-version: 10.0.x
           cache: true
@@ -42,7 +48,15 @@ jobs:
             throw "No se pudo instalar o localizar Inno Setup 6."
           }
 
-      - name: Restore
+      - name: Verify version consistency
+        id: version
+        shell: pwsh
+        run: |
+          $version = ./packaging/Get-ProjectVersion.ps1
+          "version=$version" | Out-File -FilePath $env:GITHUB_OUTPUT -Append -Encoding utf8
+          Write-Host "Versión del proyecto: $version"
+
+      - name: Restore (with NuGet Audit)
         shell: pwsh
         run: |
           dotnet restore RadioEmisoraRD/RadioEmisoraRD.slnx
@@ -54,30 +68,36 @@ jobs:
       - name: Run tests
         run: dotnet test RadioEmisoraRD/RadioEmisoraRD.slnx --configuration Release --no-build --logger "trx;LogFileName=tests.trx"
 
+      - name: Smoke test catalog streams (informational)
+        # Depende de servicios externos: informa en el resumen, pero no bloquea la build.
+        continue-on-error: true
+        env:
+          RADIOEMISORARD_LIVE_STREAMS: "1"
+        run: dotnet test RadioEmisoraRD/RadioEmisoraRD.slnx --configuration Release --no-build --filter "TestCategory=LiveStreams"
+
       - name: Publish portable build
-        run: dotnet publish RadioEmisoraRD/RadioEmisoraRD/RadioEmisoraRD.csproj --configuration Release --no-restore --property:PublishProfile=Portable --output artifacts/portable
+        shell: pwsh
+        run: |
+          dotnet publish RadioEmisoraRD/RadioEmisoraRD/RadioEmisoraRD.csproj --configuration Release --no-restore --property:PublishProfile=Portable --output artifacts/portable
+          Copy-Item packaging/portable.flag artifacts/portable/portable.flag
 
       - name: Publish self-contained build
         run: dotnet publish RadioEmisoraRD/RadioEmisoraRD/RadioEmisoraRD.csproj --configuration Release --no-restore --property:PublishProfile=SelfContained --output artifacts/self-contained
 
       - name: Build Windows installer
         shell: pwsh
-        run: |
-          $iscc = "${env:ProgramFiles(x86)}\Inno Setup 6\ISCC.exe"
-          & $iscc "packaging/RadioEmisoraRD.iss"
-          if ($LASTEXITCODE -ne 0) {
-            throw "La compilación del instalador falló."
-          }
-          if (-not (Test-Path artifacts/RadioEmisoraRD-Setup-win-x64.exe)) {
-            throw "El instalador esperado no fue generado."
-          }
+        run: ./packaging/Build-Installer.ps1 -Version "${{ steps.version.outputs.version }}"
+
+      - name: Smoke test Windows installer
+        shell: pwsh
+        run: ./packaging/Test-Installer.ps1 -InstallerPath artifacts/RadioEmisoraRD-Setup-win-x64.exe -ExpectedVersion "${{ steps.version.outputs.version }}"
 
       - name: Generate real portfolio media
         run: dotnet run --project RadioEmisoraRD/RadioEmisoraRD/RadioEmisoraRD.csproj --configuration Release --no-build -- --capture-docs "$PWD/artifacts/portfolio-media"
 
       - name: Upload test results
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: test-results
           path: "**/TestResults/*.trx"
@@ -85,7 +105,7 @@ jobs:
           retention-days: 14
 
       - name: Upload portable build
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: RadioEmisoraRD-portable
           path: artifacts/portable
@@ -93,7 +113,7 @@ jobs:
           retention-days: 14
 
       - name: Upload Windows installer
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: RadioEmisoraRD-installer
           path: artifacts/RadioEmisoraRD-Setup-win-x64.exe
@@ -101,7 +121,7 @@ jobs:
           retention-days: 14
 
       - name: Upload portfolio media
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: portfolio-media
           path: artifacts/portfolio-media
