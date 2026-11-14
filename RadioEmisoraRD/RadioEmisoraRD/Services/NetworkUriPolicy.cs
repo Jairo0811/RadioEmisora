@@ -137,7 +137,7 @@ public static class NetworkUriPolicy
             if (redirect >= MaxRedirects)
                 throw new InvalidDataException("Se superó el número máximo de redirecciones.");
 
-            Uri nextUri = location.IsAbsoluteUri ? location : new Uri(currentUri, location);
+            Uri nextUri = UpgradeToHttps(location.IsAbsoluteUri ? location : new Uri(currentUri, location));
             if (!IsPublicHttpsUri(nextUri))
             {
                 throw new InvalidDataException(
@@ -146,6 +146,33 @@ public static class NetworkUriPolicy
 
             currentUri = nextUri;
         }
+    }
+
+    /// <summary>
+    /// Convierte un destino de redirección <c>http://</c> en <c>https://</c>.
+    /// Algunos proveedores (por ejemplo, los nodos de audio de radiojar) responden a una petición HTTPS
+    /// con una redirección a HTTP aunque el mismo destino también se sirve por HTTPS. Igual que hacen
+    /// los navegadores con el audio de contenido mixto, se intenta el destino por HTTPS: la aplicación
+    /// nunca abre conexiones HTTP sin cifrar. Si el destino no admite HTTPS, la conexión falla.
+    /// El destino resultante se valida igualmente con la política completa.
+    /// </summary>
+    internal static Uri UpgradeToHttps(Uri uri)
+    {
+        ArgumentNullException.ThrowIfNull(uri);
+
+        if (!uri.IsAbsoluteUri ||
+            !string.Equals(uri.Scheme, Uri.UriSchemeHttp, StringComparison.OrdinalIgnoreCase))
+        {
+            return uri;
+        }
+
+        var builder = new UriBuilder(uri)
+        {
+            Scheme = Uri.UriSchemeHttps,
+            // El puerto 80 implícito o explícito pasa al 443 de HTTPS; un puerto distinto se conserva.
+            Port = uri.IsDefaultPort ? -1 : uri.Port
+        };
+        return builder.Uri;
     }
 
     /// <summary>

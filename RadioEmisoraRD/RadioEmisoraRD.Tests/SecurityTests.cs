@@ -101,8 +101,11 @@ public sealed class SecurityTests
 
     [TestMethod]
     [DataRow("https://192.168.0.10/audio")]
-    [DataRow("http://cdn.example.test/audio")]
+    [DataRow("http://192.168.0.10/audio")]
+    [DataRow("http://localhost/audio")]
     [DataRow("https://localhost/audio")]
+    [DataRow("http://user:secret@cdn.example.test/audio")]
+    [DataRow("ftp://cdn.example.test/audio")]
     public async Task StreamProbeBlocksUnsafeRedirectWithoutFollowingIt(string location)
     {
         var handler = new RecordingHandler(_ => Redirect(location));
@@ -132,6 +135,33 @@ public sealed class SecurityTests
             CancellationToken.None);
 
         Assert.AreEqual(new Uri("https://cdn.example.test/live?token=abc"), result.FinalUri);
+        Assert.AreEqual(2, handler.Calls);
+    }
+
+    [TestMethod]
+    [DataRow("http://n0a.radio.example.test/live?rj-tok=abc", "https://n0a.radio.example.test/live?rj-tok=abc")]
+    [DataRow("http://n0a.radio.example.test:80/live", "https://n0a.radio.example.test/live")]
+    [DataRow("http://cdn.example.test:8000/live", "https://cdn.example.test:8000/live")]
+    public async Task StreamProbeUpgradesHttpRedirectsToHttpsAndNeverRequestsHttp(
+        string location,
+        string expectedFinalUri)
+    {
+        var requested = new List<Uri>();
+        var handler = new RecordingHandler(request =>
+        {
+            requested.Add(request.RequestUri!);
+            return request.RequestUri!.Host == "radio.example.test" ? Redirect(location) : Audio();
+        });
+        using var client = new HttpClient(handler);
+        using var probe = new StreamProbe(client);
+
+        StreamProbeResult result = await probe.ProbeAsync(
+            new Uri("https://radio.example.test/live"),
+            TimeSpan.FromSeconds(1),
+            CancellationToken.None);
+
+        Assert.AreEqual(new Uri(expectedFinalUri), result.FinalUri);
+        Assert.IsTrue(requested.TrueForAll(static uri => uri.Scheme == Uri.UriSchemeHttps));
         Assert.AreEqual(2, handler.Calls);
     }
 
@@ -244,7 +274,7 @@ public sealed class SecurityTests
     {
         using var directory = new TemporaryDirectory();
         string localPath = await WriteLocalCatalogAsync(directory);
-        var handler = new RecordingHandler(_ => Redirect("https://127.0.0.1/catalog.json"));
+        var handler = new RecordingHandler(_ => Redirect("http://127.0.0.1/catalog.json"));
         using var client = new HttpClient(handler);
         using var service = new RadioCatalogService(client, localPath, directory.Path, new TestLogger());
 
