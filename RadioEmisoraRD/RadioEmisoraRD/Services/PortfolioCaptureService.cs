@@ -66,7 +66,7 @@ internal static class PortfolioCaptureService
         await WaitForRenderAsync(150);
         SavePng(Render(window), Path.Combine(outputDirectory, "pausado.png"));
         viewModel.ReproducirCommand.Execute(null);
-        await WaitForRenderAsync(150);
+        await WaitForRenderAsync(4500); // el aviso flotante dura 4 s
 
         playerService.Simulate(PlayerState.Reconectando);
         await WaitForRenderAsync(150);
@@ -80,20 +80,23 @@ internal static class PortfolioCaptureService
 
         viewModel.FiltroActual = "AM";
         await WaitForRenderAsync();
+        viewModel.EmisoraSeleccionada = viewModel.EmisorasFiltradas.First();
+        await WaitForRenderAsync();
         SavePng(Render(window), Path.Combine(outputDirectory, "filtro-am.png"));
 
         viewModel.FiltroActual = "Todas";
         viewModel.TextoBusqueda = "z";
         await WaitForRenderAsync();
+        viewModel.EmisoraSeleccionada = viewModel.EmisorasFiltradas.First(e => e.Nombre == "Z 101");
+        await WaitForRenderAsync();
         SavePng(Render(window), Path.Combine(outputDirectory, "busqueda-z.png"));
-        viewModel.TextoBusqueda = "";
-        viewModel.EmisoraSeleccionada = viewModel.TodasLasEmisoras.First(e => e.Nombre == "Z 101");
         viewModel.ReproducirCommand.Execute(null);
-        await WaitForRenderAsync(250);
+        await WaitForRenderAsync(400);
         SavePng(Render(window), Path.Combine(outputDirectory, "cambio-z101.png"));
+        viewModel.TextoBusqueda = "";
         viewModel.EmisoraSeleccionada = viewModel.TodasLasEmisoras.First();
         viewModel.ReproducirCommand.Execute(null);
-        await WaitForRenderAsync(250);
+        await WaitForRenderAsync(4500);
 
         viewModel.FiltroActual = "Favoritas";
         await WaitForRenderAsync();
