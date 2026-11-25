@@ -1,0 +1,27 @@
+name: TMP trailer captures (temporary branch)
+on:
+  push:
+    branches: ["tmp/**"]
+permissions:
+  contents: read
+jobs:
+  media:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+      - uses: actions/setup-dotnet@v6
+        with:
+          dotnet-version: 10.0.x
+      - name: Capture
+        shell: pwsh
+        run: |
+          dotnet build RadioEmisoraRD/RadioEmisoraRD/RadioEmisoraRD.csproj -c Release
+          dotnet run --project RadioEmisoraRD/RadioEmisoraRD/RadioEmisoraRD.csproj -c Release --no-build -- --capture-docs "$PWD/media"
+          Get-ChildItem media -Filter *.png | ForEach-Object {
+            Write-Host "BEGIN-FILE $($_.Name)"
+            $b64 = [Convert]::ToBase64String([IO.File]::ReadAllBytes($_.FullName))
+            for ($i = 0; $i -lt $b64.Length; $i += 4000) { Write-Host ("B64 " + $b64.Substring($i, [Math]::Min(4000, $b64.Length - $i))) }
+            Write-Host "END-FILE $($_.Name)"
+          }

@@ -58,6 +58,43 @@ internal static class PortfolioCaptureService
         SavePng(player, Path.Combine(outputDirectory, "reproductor.png"));
         animationFrames.Add(player);
 
+        viewModel.Volumen = 0.9;
+        await WaitForRenderAsync();
+        SavePng(Render(window), Path.Combine(outputDirectory, "volumen.png"));
+
+        viewModel.ReproducirCommand.Execute(null);
+        await WaitForRenderAsync(150);
+        SavePng(Render(window), Path.Combine(outputDirectory, "pausado.png"));
+        viewModel.ReproducirCommand.Execute(null);
+        await WaitForRenderAsync(150);
+
+        playerService.Simulate(PlayerState.Reconectando);
+        await WaitForRenderAsync(150);
+        SavePng(Render(window), Path.Combine(outputDirectory, "reconectando.png"));
+        playerService.Simulate(PlayerState.Reproduciendo);
+        await WaitForRenderAsync(150);
+
+        viewModel.FiltroActual = "FM";
+        await WaitForRenderAsync();
+        SavePng(Render(window), Path.Combine(outputDirectory, "filtro-fm.png"));
+
+        viewModel.FiltroActual = "AM";
+        await WaitForRenderAsync();
+        SavePng(Render(window), Path.Combine(outputDirectory, "filtro-am.png"));
+
+        viewModel.FiltroActual = "Todas";
+        viewModel.TextoBusqueda = "z";
+        await WaitForRenderAsync();
+        SavePng(Render(window), Path.Combine(outputDirectory, "busqueda-z.png"));
+        viewModel.TextoBusqueda = "";
+        viewModel.EmisoraSeleccionada = viewModel.TodasLasEmisoras.First(e => e.Nombre == "Z 101");
+        viewModel.ReproducirCommand.Execute(null);
+        await WaitForRenderAsync(250);
+        SavePng(Render(window), Path.Combine(outputDirectory, "cambio-z101.png"));
+        viewModel.EmisoraSeleccionada = viewModel.TodasLasEmisoras.First();
+        viewModel.ReproducirCommand.Execute(null);
+        await WaitForRenderAsync(250);
+
         viewModel.FiltroActual = "Favoritas";
         await WaitForRenderAsync();
         BitmapSource favorites = Render(window);
@@ -109,10 +146,10 @@ internal static class PortfolioCaptureService
         int width = Math.Max(1, (int)Math.Ceiling(area.ActualWidth));
         int height = Math.Max(1, (int)Math.Ceiling(area.ActualHeight));
         var bitmap = new RenderTargetBitmap(
-            width,
-            height,
-            96,
-            96,
+            width * 2,
+            height * 2,
+            192,
+            192,
             PixelFormats.Pbgra32);
         bitmap.Render(element);
         bitmap.Freeze();
@@ -198,6 +235,8 @@ internal static class PortfolioCaptureService
         }
 
         public void Pause() => TransitionTo(PlayerState.Pausado);
+
+        public void Simulate(PlayerState state) => TransitionTo(state);
 
         public void ResumePlayback() => TransitionTo(PlayerState.Reproduciendo);
 
